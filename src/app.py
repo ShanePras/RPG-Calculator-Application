@@ -75,6 +75,7 @@ class BattlerContainer(ctk.CTkFrame):
         self.status_label = ctk.CTkLabel(master=self, text=status_string)
         self.status_label.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
+    
 
 class App(ctk.CTk):
     def __init__(self):
