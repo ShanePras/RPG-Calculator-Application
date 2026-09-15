@@ -7,9 +7,142 @@ import csv
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("dark-blue")
 
+b_settings = bu.BattleSettings()
+
 class ScrollFrame(ctk.CTkScrollableFrame):
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)      
+
+class OptionWindow(ctk.CTkToplevel):
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)
+
+        self.title("RPG Calculator Settings")
+        self.geometry("1280x720")
+
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+
+        self.after(100, self.focus)
+
+        self.scroll_frame_1 = ctk.CTkScrollableFrame(master=self)
+        self.scroll_frame_1.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
+
+        self.conf_change_btn = ctk.CTkButton(master=self, corner_radius=5, text="Confirm Changes", command=lambda: conf_changes())
+        self.conf_change_btn.grid(row=1, column=0, padx=20, pady=20, sticky="ns")
+
+        self.l_atk_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Light Attack Multiplier:")
+        self.l_atk_label.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        self.l_atk_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.l_atk_mtplr))
+        self.l_atk_entry.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.m_atk_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Medium Attack Multiplier:")
+        self.m_atk_label.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+        self.m_atk_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.m_atk_mtplr))
+        self.m_atk_entry.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.h_atk_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Heavy Attack Multiplier:")
+        self.h_atk_label.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
+        self.h_atk_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.h_atk_mtplr))
+        self.h_atk_entry.grid(row=2, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.s_atk_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Severe Attack Multiplier:")
+        self.s_atk_label.grid(row=3, column=0, padx=10, pady=10, sticky="nsew")
+        self.s_atk_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.s_atk_mtplr))
+        self.s_atk_entry.grid(row=3, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.c_atk_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Colossal Attack Multiplier:")
+        self.c_atk_label.grid(row=4, column=0, padx=10, pady=10, sticky="nsew")
+        self.c_atk_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.c_atk_mtplr))
+        self.c_atk_entry.grid(row=4, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.res_wk_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Weak Multiplier:")
+        self.res_wk_label.grid(row=5, column=0, padx=10, pady=10, sticky="nsew")
+        self.res_wk_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.res_weak_mtplr))
+        self.res_wk_entry.grid(row=5, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.res_re_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Resist Multiplier:")
+        self.res_re_label.grid(row=6, column=0, padx=10, pady=10, sticky="nsew")
+        self.res_re_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.res_weak_mtplr))
+        self.res_re_entry.grid(row=6, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.bf_1_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Buff Level 1 Multiplier:")
+        self.bf_1_label.grid(row=7, column=0, padx=10, pady=10, sticky="nsew")
+        self.bf_1_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.buff_1_mtplr))
+        self.bf_1_entry.grid(row=7, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.bf_2_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Buff Level 2 Multiplier:")
+        self.bf_2_label.grid(row=8, column=0, padx=10, pady=10, sticky="nsew")
+        self.bf_2_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.buff_2_mtplr))
+        self.bf_2_entry.grid(row=8, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.bf_3_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Buff Level 3 Multiplier:")
+        self.bf_3_label.grid(row=9, column=0, padx=10, pady=10, sticky="nsew")
+        self.bf_3_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.buff_3_mtplr))
+        self.bf_3_entry.grid(row=9, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.bf_n1_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Buff Level -1 Multiplier:")
+        self.bf_n1_label.grid(row=10, column=0, padx=10, pady=10, sticky="nsew")
+        self.bf_n1_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.buff_n1_mtplr))
+        self.bf_n1_entry.grid(row=10, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.bf_n2_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Buff Level -2 Multiplier:")
+        self.bf_n2_label.grid(row=11, column=0, padx=10, pady=10, sticky="nsew")
+        self.bf_n2_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.buff_n2_mtplr))
+        self.bf_n2_entry.grid(row=11, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.bf_n3_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Buff Level -3 Multiplier:")
+        self.bf_n3_label.grid(row=12, column=0, padx=10, pady=10, sticky="nsew")
+        self.bf_n3_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.buff_n3_mtplr))
+        self.bf_n3_entry.grid(row=12, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.form_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Backwards Formation Multiplier:")
+        self.form_label.grid(row=13, column=0, padx=10, pady=10, sticky="nsew")
+        self.form_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.form_b_mtplr))
+        self.form_entry.grid(row=13, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.charge_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Charge Multiplier:")
+        self.charge_label.grid(row=14, column=0, padx=10, pady=10, sticky="nsew")
+        self.charge_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.charge_mtplr))
+        self.charge_entry.grid(row=14, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.guard_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Guard Multiplier:")
+        self.guard_label.grid(row=15, column=0, padx=10, pady=10, sticky="nsew")
+        self.guard_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.guard_mtplr))
+        self.guard_entry.grid(row=15, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.atk_const_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Attack Constant:")
+        self.atk_const_label.grid(row=16, column=0, padx=10, pady=10, sticky="nsew")
+        self.atk_const_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.atk_const))
+        self.atk_const_entry.grid(row=16, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.ddg_const_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Dodge Constant:")
+        self.ddg_const_label.grid(row=17, column=0, padx=10, pady=10, sticky="nsew")
+        self.ddg_const_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.ddg_const))
+        self.ddg_const_entry.grid(row=17, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.crt_const_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Crit Chance Constant:")
+        self.crt_const_label.grid(row=18, column=0, padx=10, pady=10, sticky="nsew")
+        self.crt_const_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.crt_const))
+        self.crt_const_entry.grid(row=18, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.heal_l_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Light Heal Multiplier:")
+        self.heal_l_label.grid(row=19, column=0, padx=10, pady=10, sticky="nsew")
+        self.heal_l_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.heal_l_mtplr))
+        self.heal_l_entry.grid(row=19, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.heal_m_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Medium Heal Multiplier:")
+        self.heal_m_label.grid(row=20, column=0, padx=10, pady=10, sticky="nsew")
+        self.heal_m_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.heal_m_mtplr))
+        self.heal_m_entry.grid(row=20, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.heal_h_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Heavy Heal Multiplier:")
+        self.heal_h_label.grid(row=21, column=0, padx=10, pady=10, sticky="nsew")
+        self.heal_h_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.heal_h_mtplr))
+        self.heal_h_entry.grid(row=21, column=1, padx=10, pady=10, sticky="nsew")
+
+        def conf_changes():
+                pass
 
 class BattlerContainer(ctk.CTkFrame):
     def __init__(self, master, **kwargs):
@@ -75,8 +208,6 @@ class BattlerContainer(ctk.CTkFrame):
         self.status_label = ctk.CTkLabel(master=self, text=status_string)
         self.status_label.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
-    
-
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -91,10 +222,14 @@ class App(ctk.CTk):
         self.resizable(True, True)
 
         #Widget stretch config
-        self.columnconfigure(0, weight=1)
-        self.columnconfigure(1, weight=1)
+        self.columnconfigure(0, weight=15)
+        self.columnconfigure(1, weight=15)
+        self.columnconfigure(2, weight=1)
         self.rowconfigure(0, weight=1)
-        self.rowconfigure(1, weight=6)
+        self.rowconfigure(1, weight=1)
+        self.rowconfigure(2, weight=8)
+
+        self.option_window = None
 
         def show_msg(title:str, msg:str):
             messagebox.showinfo(title, msg)
@@ -152,18 +287,27 @@ class App(ctk.CTk):
 
             else:
                 show_msg("Error", "No file selected.")
+
+        def open_settings():
+            if self.option_window is None or not self.option_window.winfo_exists():
+                self.option_window = OptionWindow(master=self)
+            else:
+                self.option_window.focus()
         
-        self.frame_a = ScrollFrame(master=self, corner_radius=1, border_width=2, border_color="#e6f7ff", fg_color="#3a4b5c")
-        self.frame_a.grid(row=1, column=0, padx=20, pady=20, sticky="nsew") #sticky="nsew" means the frame "sticks" to the 4 directions, north south east west
+        self.option_button = ctk.CTkButton(master=self, corner_radius=5, text="Settings", command=lambda: open_settings())
+        self.option_button.grid(row=0, column=2, padx=20, pady=20)
+        
+        self.frame_a = ScrollFrame(master=self, corner_radius=5, border_width=2, border_color="#e6f7ff", fg_color="#3a4b5c")
+        self.frame_a.grid(row=2, column=0, padx=20, pady=20, sticky="nsew") #sticky="nsew" means the frame "sticks" to the 4 directions, north south east west
 
-        self.frame_b = ScrollFrame(master=self, corner_radius=1, border_width=2, border_color="#e6f7ff", fg_color="#3a4b5c")
-        self.frame_b.grid(row=1, column=1, padx=20, pady=20, sticky="nsew") 
+        self.frame_b = ScrollFrame(master=self, corner_radius=5, border_width=2, border_color="#e6f7ff", fg_color="#3a4b5c")
+        self.frame_b.grid(row=2, column=1, padx=20, pady=20, sticky="nsew") 
 
-        import_but_a = ctk.CTkButton(self, text="Import File for Team A", command=lambda: import_file(self.frame_a, True)) #command must be lambda wrapped to prevent it from executing on start
-        import_but_a.grid(row=0, column=0, padx=20, pady=20, sticky="n")
+        self.import_but_a = ctk.CTkButton(self, text="Import File for Team A", command=lambda: import_file(self.frame_a, True)) #command must be lambda wrapped to prevent it from executing on start
+        self.import_but_a.grid(row=1, column=0, padx=20, pady=20, sticky="n")
 
-        import_but_b = ctk.CTkButton(self, text="Import File for Team B", command=lambda: import_file(self.frame_b, False)) 
-        import_but_b.grid(row=0, column=1, padx=20, pady=20, sticky="n")
+        self.import_but_b = ctk.CTkButton(self, text="Import File for Team B", command=lambda: import_file(self.frame_b, False)) 
+        self.import_but_b.grid(row=1, column=1, padx=20, pady=20, sticky="n")
 
         #Need to run the zoom after canvas finishes rendering
         self.after(100, lambda: app.state("zoomed"))
