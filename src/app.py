@@ -165,10 +165,52 @@ class OptionWindow(ctk.CTkToplevel):
         self.heal_h_entry.grid(row=21, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.heal_h_entry)
 
+        self.l_atk_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Light Attack MP:")
+        self.l_atk_mp_label.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
+        self.l_atk_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.mp_lst[0]))
+        self.l_atk_mp_entry.grid(row=0, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.l_atk_mp_entry)
+
+        self.m_atk_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Medium Attack MP:")
+        self.m_atk_mp_label.grid(row=1, column=2, padx=10, pady=10, sticky="nsew")
+        self.m_atk_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.mp_lst[1]))
+        self.m_atk_mp_entry.grid(row=1, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.m_atk_mp_entry)
+
+        self.h_atk_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Heavy Attack MP:")
+        self.h_atk_mp_label.grid(row=2, column=2, padx=10, pady=10, sticky="nsew")
+        self.h_atk_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.mp_lst[2]))
+        self.h_atk_mp_entry.grid(row=2, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.h_atk_mp_entry)
+
+        self.s_atk_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Severe Attack MP:")
+        self.s_atk_mp_label.grid(row=3, column=2, padx=10, pady=10, sticky="nsew")
+        self.s_atk_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.mp_lst[3]))
+        self.s_atk_mp_entry.grid(row=3, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.s_atk_mp_entry)
+
+        self.c_atk_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Colossal Attack MP:")
+        self.c_atk_mp_label.grid(row=4, column=2, padx=10, pady=10, sticky="nsew")
+        self.c_atk_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.mp_lst[4]))
+        self.c_atk_mp_entry.grid(row=4, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.c_atk_mp_entry)
+
+        self.atk_all_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Attack All MP Increase:")
+        self.atk_all_mp_label.grid(row=5, column=2, padx=10, pady=10, sticky="nsew")
+        self.atk_all_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.mp_lst[5]))
+        self.atk_all_mp_entry.grid(row=5, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.atk_all_mp_entry)
+
+        self.multi_atk_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Multi Attack MP Increase:")
+        self.multi_atk_mp_label.grid(row=6, column=2, padx=10, pady=10, sticky="nsew")
+        self.multi_atk_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.mp_lst[6]))
+        self.multi_atk_mp_entry.grid(row=6, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.multi_atk_mp_entry)
+
         def conf_changes(): 
                 any_value_updated = False
                 try:               
-                    for i in range(22):
+                    for i in range(27):
                         if self.entries[i].get() != "":
                             any_value_updated = True
                             b_settings.set_lst[i] = float(self.entries[i].get())
@@ -176,6 +218,8 @@ class OptionWindow(ctk.CTkToplevel):
                         messagebox.showinfo("Options Updated", "Values Successfully Updated!")
                 except ValueError:
                     messagebox.showinfo("Error", "Invalid Type in an Entry. Please Input Only Float Values.")
+                finally:
+                    self.destroy()
 
 class BattlerContainer(ctk.CTkFrame):
     def __init__(self, master, **kwargs):
@@ -219,23 +263,29 @@ class BattlerContainer(ctk.CTkFrame):
         self.agi_lvl_label = ctk.CTkLabel(master=self, text=agi_lvl_string)
         self.agi_lvl_label.grid(row=0, column=5, padx=10, pady=10, sticky="nsew")
 
-        formation_string = "Position: "
-        if(self.battler.formation): formation_string += "Front"
-        else: formation_string += "Back"
-        self.formation_label = ctk.CTkLabel(master=self, text=formation_string)
-        self.formation_label.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
+        def form_switch():
+            if self.formation_var.get():
+                self.formation_switch.configure(text="Position: Back")
+            else:
+                self.formation_switch.configure(text="Position: Front")
+        self.formation_var = ctk.BooleanVar(value=False)
+        self.formation_switch = ctk.CTkSwitch(master=self, text="Position: Front", command=lambda: form_switch(), variable=self.formation_var, onvalue=True, offvalue=False)
+        self.formation_switch.grid(row=1, column=1, padx=10, pady=10, sticky="ns")
+
+        def guard_switch():
+            if self.guard_var.get():
+                self.guard_switch.configure(text=" Is Guarding ")
+            else:
+                self.guard_switch.configure(text="Not Guarding")
+        self.guard_var = ctk.BooleanVar(value=False)
+        self.guard_switch = ctk.CTkSwitch(master=self, text="Not Guarding", command=lambda: guard_switch(), variable=self.guard_var, onvalue=True, offvalue=False)
+        self.guard_switch.grid(row=1, column=2, padx=10, pady=10, sticky="ns")
 
         charge_string = ""
         if(self.battler.charge): charge_string += "Charged"
         else: charge_string += "Not Charged"
         self.charge_label = ctk.CTkLabel(master=self, text=charge_string)
-        self.charge_label.grid(row=1, column=2, padx=10, pady=10, sticky="nsew")
-
-        guard_string = ""
-        if(self.battler.guard): guard_string += "Guarding"
-        else: guard_string += "Not Guarding"
-        self.guard_label = ctk.CTkLabel(master=self, text=guard_string)
-        self.guard_label.grid(row=1, column=3, padx=10, pady=10, sticky="nsew")
+        self.charge_label.grid(row=1, column=3, padx=10, pady=10, sticky="nsew")
 
         status_string = "Status: " + self.battler.status
         self.status_label = ctk.CTkLabel(master=self, text=status_string)
@@ -259,12 +309,15 @@ class App(ctk.CTk):
         self.columnconfigure(1, weight=15)
         self.columnconfigure(2, weight=15)
         self.columnconfigure(3, weight=15)
-        self.columnconfigure(4, weight=1)
+        self.columnconfigure(4, weight=15)
+        self.columnconfigure(5, weight=15)
+        self.columnconfigure(6, weight=1)
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=1)
-        self.rowconfigure(2, weight=8)
+        self.rowconfigure(2, weight=12)
         self.rowconfigure(3, weight=1)
-        self.rowconfigure(4, weight=1)
+        self.rowconfigure(4, weight=2)
+        self.rowconfigure(5, weight=2)
 
         self.option_window = None
 
@@ -347,42 +400,78 @@ class App(ctk.CTk):
                 self.option_window = OptionWindow(master=self)
             else:
                 self.option_window.focus()
+
+        def attack_menu():
+            pass
+
+        def heal_menu():
+            pass
+
+        def buff_menu():
+            pass
+
+        def charge():
+            pass
+
+        def scan():
+            pass
+
+        def status_menu():
+            pass
         
         self.option_button = ctk.CTkButton(master=self, corner_radius=5, text="Settings", command=lambda: open_settings())
-        self.option_button.grid(row=0, column=4, padx=20, pady=20)
+        self.option_button.grid(row=0, column=6, padx=20, pady=20)
         
         self.frame_a = ctk.CTkScrollableFrame(master=self, corner_radius=5, border_width=2, border_color="#e6f7ff", fg_color="#3a4b5c")
-        self.frame_a.grid(row=2, column=0, columnspan=2, padx=20, pady=20, sticky="nsew") #sticky="nsew" means the frame "sticks" to the 4 directions, north south east west
+        self.frame_a.grid(row=2, column=0, columnspan=3, padx=20, pady=20, sticky="nsew") #sticky="nsew" means the frame "sticks" to the 4 directions, north south east west
 
         self.frame_b = ctk.CTkScrollableFrame(master=self, corner_radius=5, border_width=2, border_color="#e6f7ff", fg_color="#3a4b5c")
-        self.frame_b.grid(row=2, column=2, columnspan=2, padx=20, pady=20, sticky="nsew") 
+        self.frame_b.grid(row=2, column=3, columnspan=3, padx=20, pady=20, sticky="nsew") 
 
         self.import_but_a = ctk.CTkButton(self, text="Import File for Team A", command=lambda: import_file(self.frame_a, True)) #command must be lambda wrapped to prevent it from executing on start
-        self.import_but_a.grid(row=1, column=0, padx=20, pady=20, sticky="n")
+        self.import_but_a.grid(row=1, column=1, padx=20, pady=20, sticky="n")
 
         self.import_but_b = ctk.CTkButton(self, text="Import File for Team B", command=lambda: import_file(self.frame_b, False)) 
-        self.import_but_b.grid(row=1, column=2, padx=20, pady=20, sticky="n")
+        self.import_but_b.grid(row=1, column=4, padx=20, pady=20, sticky="n")
 
         self.sw_label = ctk.CTkLabel(master=self, text="Selected Attacking Team")
-        self.sw_label.grid(row=3, column=1, padx=20, pady=20, sticky="e")
+        self.sw_label.grid(row=3, column=2, padx=20, pady=20, sticky="e")
 
         self.is_b = ctk.StringVar(value="Team A")
         self.team_sw = ctk.CTkSwitch(master=self, text="Team A", command=lambda: a_b_switch(), variable=self.is_b, onvalue="Team B", offvalue="Team A")
-        self.team_sw.grid(row=3, column=2, padx=10, pady=10, sticky="w")
+        self.team_sw.grid(row=3, column=3, padx=10, pady=10, sticky="w")
 
         self.names_a_lbl = ctk.CTkLabel(master=self, text="Team A - Selected Fighter:")
-        self.names_a_lbl.grid(row=4, column=0, padx=10, pady=10, sticky="e")
+        self.names_a_lbl.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky="e")
 
         self.battlers_a_menu = ctk.CTkOptionMenu(master=self, values=[])
         self.battlers_a_menu.set("")
-        self.battlers_a_menu.grid(row=4, column=1, padx=10, pady=10, sticky="w")
+        self.battlers_a_menu.grid(row=4, column=2, padx=10, pady=10, sticky="w")
 
         self.names_b_lbl = ctk.CTkLabel(master=self, text="Team B - Selected Fighter:")
-        self.names_b_lbl.grid(row=4, column=2, padx=10, pady=10, sticky="e")
+        self.names_b_lbl.grid(row=4, column=3, padx=10, pady=10, sticky="e")
 
         self.battlers_b_menu = ctk.CTkOptionMenu(master=self, values=[])
         self.battlers_b_menu.set("")
-        self.battlers_b_menu.grid(row=4, column=3, padx=10, pady=10, sticky="w")
+        self.battlers_b_menu.grid(row=4, column=4, columnspan=2, padx=10, pady=10, sticky="w")
+
+        self.atk_button = ctk.CTkButton(master=self, text="Attack", command=lambda: attack_menu())
+        self.atk_button.grid(row=5, column=0, padx=20, pady=20, sticky="nsew")
+
+        self.heal_button = ctk.CTkButton(master=self, text="Heal", command=lambda: heal_menu())
+        self.heal_button.grid(row=5, column=1, padx=20, pady=20, sticky="nsew")
+
+        self.buff_button = ctk.CTkButton(master=self, text="Buff/Debuff", command=lambda: buff_menu())
+        self.buff_button.grid(row=5, column=2, padx=20, pady=20, sticky="nsew")
+
+        self.charge_button = ctk.CTkButton(master=self, text="Charge", command=lambda: charge())
+        self.charge_button.grid(row=5, column=3, padx=20, pady=20, sticky="nsew")
+
+        self.scan_button = ctk.CTkButton(master=self, text="Scan", command=lambda: scan())
+        self.scan_button.grid(row=5, column=4, padx=20, pady=20, sticky="nsew")
+
+        self.status_button = ctk.CTkButton(master=self, text="Inflict Status", command=lambda: status_menu())
+        self.status_button.grid(row=5, column=5, padx=20, pady=20, sticky="nsew")
 
 
 #This runs the app, always call it last. 

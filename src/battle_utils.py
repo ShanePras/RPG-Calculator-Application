@@ -6,6 +6,7 @@ import math
 class BattleSettings:
     def __init__(self):
         self.set_lst = []
+        self.mp_lst = []
 
         self.set_lst.append(1.3) #light attack multiplier
         self.set_lst.append(1.9) #medium attack multiplier
@@ -36,6 +37,15 @@ class BattleSettings:
         self.set_lst.append(3.5) #light heal multiplier
         self.set_lst.append(5.0) #medium heal multiplier
         self.set_lst.append(6.5) #heavy heal multiplier
+
+        self.mp_lst.append(10) #light atk 1 mp
+        self.mp_lst.append(24) #med atk 1 mp
+        self.mp_lst.append(40) #heavy atk 1 mp
+        self.mp_lst.append(65) #severe atk 1 mp
+        self.mp_lst.append(100) #colossal atk 1 mp
+
+        self.mp_lst.append(15) #attack all mp cost add
+        self.mp_lst.append(5) #multiattack mp cost add
 
 class Battler:
     def __init__(self, stats: list):
