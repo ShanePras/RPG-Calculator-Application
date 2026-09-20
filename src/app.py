@@ -31,191 +31,225 @@ class OptionWindow(ctk.CTkToplevel):
 
         self.l_atk_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Light Attack Multiplier:")
         self.l_atk_label.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
-        self.l_atk_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.set_lst[0]))
+        self.l_atk_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getLAtkMtp()))
         self.l_atk_entry.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.l_atk_entry)
 
         self.m_atk_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Medium Attack Multiplier:")
         self.m_atk_label.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
-        self.m_atk_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.set_lst[1]))
+        self.m_atk_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getMAtkMtp()))
         self.m_atk_entry.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.m_atk_entry)
 
         self.h_atk_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Heavy Attack Multiplier:")
         self.h_atk_label.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
-        self.h_atk_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.set_lst[2]))
+        self.h_atk_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getHAtkMtp()))
         self.h_atk_entry.grid(row=2, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.h_atk_entry)
 
         self.s_atk_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Severe Attack Multiplier:")
         self.s_atk_label.grid(row=3, column=0, padx=10, pady=10, sticky="nsew")
-        self.s_atk_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.set_lst[3]))
+        self.s_atk_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getSAtkMtp()))
         self.s_atk_entry.grid(row=3, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.s_atk_entry)
 
         self.c_atk_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Colossal Attack Multiplier:")
         self.c_atk_label.grid(row=4, column=0, padx=10, pady=10, sticky="nsew")
-        self.c_atk_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.set_lst[4]))
+        self.c_atk_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getCAtkMtp()))
         self.c_atk_entry.grid(row=4, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.c_atk_entry)
 
         self.res_wk_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Weak Multiplier:")
         self.res_wk_label.grid(row=5, column=0, padx=10, pady=10, sticky="nsew")
-        self.res_wk_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.set_lst[5]))
+        self.res_wk_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getWeakMtp()))
         self.res_wk_entry.grid(row=5, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.res_wk_entry)
 
         self.res_re_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Resist Multiplier:")
         self.res_re_label.grid(row=6, column=0, padx=10, pady=10, sticky="nsew")
-        self.res_re_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.set_lst[6]))
+        self.res_re_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getResMtp()))
         self.res_re_entry.grid(row=6, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.res_re_entry)
 
         self.bf_1_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Buff Level 1 Multiplier:")
         self.bf_1_label.grid(row=7, column=0, padx=10, pady=10, sticky="nsew")
-        self.bf_1_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.set_lst[7]))
+        self.bf_1_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getBuff1Mtp()))
         self.bf_1_entry.grid(row=7, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.bf_1_entry)
 
         self.bf_2_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Buff Level 2 Multiplier:")
         self.bf_2_label.grid(row=8, column=0, padx=10, pady=10, sticky="nsew")
-        self.bf_2_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.set_lst[8]))
+        self.bf_2_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getBuff2Mtp()))
         self.bf_2_entry.grid(row=8, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.bf_2_entry)
 
         self.bf_3_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Buff Level 3 Multiplier:")
         self.bf_3_label.grid(row=9, column=0, padx=10, pady=10, sticky="nsew")
-        self.bf_3_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.set_lst[9]))
+        self.bf_3_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getBuff3Mtp()))
         self.bf_3_entry.grid(row=9, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.bf_3_entry)
 
         self.bf_n1_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Buff Level -1 Multiplier:")
         self.bf_n1_label.grid(row=10, column=0, padx=10, pady=10, sticky="nsew")
-        self.bf_n1_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.set_lst[10]))
+        self.bf_n1_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getBuffn1Mtp()))
         self.bf_n1_entry.grid(row=10, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.bf_n1_entry)
 
         self.bf_n2_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Buff Level -2 Multiplier:")
         self.bf_n2_label.grid(row=11, column=0, padx=10, pady=10, sticky="nsew")
-        self.bf_n2_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.set_lst[11]))
+        self.bf_n2_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getBuffn2Mtp()))
         self.bf_n2_entry.grid(row=11, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.bf_n2_entry)
 
         self.bf_n3_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Buff Level -3 Multiplier:")
         self.bf_n3_label.grid(row=12, column=0, padx=10, pady=10, sticky="nsew")
-        self.bf_n3_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.set_lst[12]))
+        self.bf_n3_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getBuffn3Mtp()))
         self.bf_n3_entry.grid(row=12, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.bf_n3_entry)
 
         self.form_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Backwards Formation Multiplier:")
         self.form_label.grid(row=13, column=0, padx=10, pady=10, sticky="nsew")
-        self.form_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.set_lst[13]))
+        self.form_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getFormMtp()))
         self.form_entry.grid(row=13, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.form_entry)
 
         self.charge_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Charge Multiplier:")
         self.charge_label.grid(row=14, column=0, padx=10, pady=10, sticky="nsew")
-        self.charge_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.set_lst[14]))
+        self.charge_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getChargeMtp()))
         self.charge_entry.grid(row=14, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.charge_entry)
 
         self.guard_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Guard Multiplier:")
         self.guard_label.grid(row=15, column=0, padx=10, pady=10, sticky="nsew")
-        self.guard_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.set_lst[15]))
+        self.guard_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getGuardMtp()))
         self.guard_entry.grid(row=15, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.guard_entry)
 
         self.atk_const_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Attack Constant:")
         self.atk_const_label.grid(row=16, column=0, padx=10, pady=10, sticky="nsew")
-        self.atk_const_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.set_lst[16]))
+        self.atk_const_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getAtkConst()))
         self.atk_const_entry.grid(row=16, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.atk_const_entry)
 
         self.ddg_const_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Dodge Constant:")
         self.ddg_const_label.grid(row=17, column=0, padx=10, pady=10, sticky="nsew")
-        self.ddg_const_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.set_lst[17]))
+        self.ddg_const_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getDdgConst()))
         self.ddg_const_entry.grid(row=17, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.ddg_const_entry)
 
         self.crt_const_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Crit Chance Constant:")
         self.crt_const_label.grid(row=18, column=0, padx=10, pady=10, sticky="nsew")
-        self.crt_const_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.set_lst[18]))
+        self.crt_const_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getCrtConst()))
         self.crt_const_entry.grid(row=18, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.crt_const_entry)
 
         self.heal_l_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Light Heal Multiplier:")
         self.heal_l_label.grid(row=19, column=0, padx=10, pady=10, sticky="nsew")
-        self.heal_l_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.set_lst[19]))
+        self.heal_l_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getLHealMtp()))
         self.heal_l_entry.grid(row=19, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.heal_l_entry)
 
         self.heal_m_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Medium Heal Multiplier:")
         self.heal_m_label.grid(row=20, column=0, padx=10, pady=10, sticky="nsew")
-        self.heal_m_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.set_lst[20]))
+        self.heal_m_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getMHealMtp()))
         self.heal_m_entry.grid(row=20, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.heal_m_entry)
 
         self.heal_h_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Heavy Heal Multiplier:")
         self.heal_h_label.grid(row=21, column=0, padx=10, pady=10, sticky="nsew")
-        self.heal_h_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.set_lst[21]))
+        self.heal_h_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getHHealMtp()))
         self.heal_h_entry.grid(row=21, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.heal_h_entry)
 
         self.l_atk_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Light Attack MP:")
         self.l_atk_mp_label.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
-        self.l_atk_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.mp_lst[0]))
+        self.l_atk_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getLAtkMp()))
         self.l_atk_mp_entry.grid(row=0, column=3, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.l_atk_mp_entry)
 
         self.m_atk_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Medium Attack MP:")
         self.m_atk_mp_label.grid(row=1, column=2, padx=10, pady=10, sticky="nsew")
-        self.m_atk_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.mp_lst[1]))
+        self.m_atk_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getMAtkMp()))
         self.m_atk_mp_entry.grid(row=1, column=3, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.m_atk_mp_entry)
 
         self.h_atk_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Heavy Attack MP:")
         self.h_atk_mp_label.grid(row=2, column=2, padx=10, pady=10, sticky="nsew")
-        self.h_atk_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.mp_lst[2]))
+        self.h_atk_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getHAtkMp()))
         self.h_atk_mp_entry.grid(row=2, column=3, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.h_atk_mp_entry)
 
         self.s_atk_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Severe Attack MP:")
         self.s_atk_mp_label.grid(row=3, column=2, padx=10, pady=10, sticky="nsew")
-        self.s_atk_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.mp_lst[3]))
+        self.s_atk_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getSAtkMp()))
         self.s_atk_mp_entry.grid(row=3, column=3, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.s_atk_mp_entry)
 
         self.c_atk_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Colossal Attack MP:")
         self.c_atk_mp_label.grid(row=4, column=2, padx=10, pady=10, sticky="nsew")
-        self.c_atk_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.mp_lst[4]))
+        self.c_atk_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getCAtkMp()))
         self.c_atk_mp_entry.grid(row=4, column=3, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.c_atk_mp_entry)
 
         self.atk_all_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Attack All MP Increase:")
         self.atk_all_mp_label.grid(row=5, column=2, padx=10, pady=10, sticky="nsew")
-        self.atk_all_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.mp_lst[5]))
+        self.atk_all_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getAtkAllMpAdd()))
         self.atk_all_mp_entry.grid(row=5, column=3, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.atk_all_mp_entry)
 
         self.multi_atk_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Multi Attack MP Increase:")
         self.multi_atk_mp_label.grid(row=6, column=2, padx=10, pady=10, sticky="nsew")
-        self.multi_atk_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.mp_lst[6]))
+        self.multi_atk_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getMultiattackMpAdd()))
         self.multi_atk_mp_entry.grid(row=6, column=3, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.multi_atk_mp_entry)
 
+        self.nor_mp_gain_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Normal MP Gain Percentage:")
+        self.nor_mp_gain_label.grid(row=7, column=2, padx=10, pady=10, sticky="nsew")
+        self.nor_mp_gain_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getNorMPGain()))
+        self.nor_mp_gain_entry.grid(row=7, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.nor_mp_gain_entry)
+
+        self.res_mp_gain_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Resist MP Gain Percentage:")
+        self.res_mp_gain_label.grid(row=8, column=2, padx=10, pady=10, sticky="nsew")
+        self.res_mp_gain_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getResMPGain()))
+        self.res_mp_gain_entry.grid(row=8, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.res_mp_gain_entry)
+
+        self.wk_mp_gain_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Weak MP Gain Percentage:")
+        self.wk_mp_gain_label.grid(row=9, column=2, padx=10, pady=10, sticky="nsew")
+        self.wk_mp_gain_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getWeakMPGain()))
+        self.wk_mp_gain_entry.grid(row=9, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.wk_mp_gain_entry)
+
+        self.nu_mp_gain_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Null MP Gain Percentage:")
+        self.nu_mp_gain_label.grid(row=10, column=2, padx=10, pady=10, sticky="nsew")
+        self.nu_mp_gain_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getNullMPGain()))
+        self.nu_mp_gain_entry.grid(row=10, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.nu_mp_gain_entry)
+
+        self.ddg_mp_gain_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Dodge MP Gain Percentage:")
+        self.ddg_mp_gain_label.grid(row=11, column=2, padx=10, pady=10, sticky="nsew")
+        self.ddg_mp_gain_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getDodgeMPGain()))
+        self.ddg_mp_gain_entry.grid(row=11, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.ddg_mp_gain_entry)
+
         def conf_changes(): 
-                any_value_updated = False
-                try:               
-                    for i in range(27):
-                        if self.entries[i].get() != "":
-                            any_value_updated = True
-                            b_settings.set_lst[i] = float(self.entries[i].get())
-                    if any_value_updated:
-                        messagebox.showinfo("Options Updated", "Values Successfully Updated!")
-                except ValueError:
-                    messagebox.showinfo("Error", "Invalid Type in an Entry. Please Input Only Float Values.")
-                finally:
-                    self.destroy()
+            any_value_updated = False
+            try:               
+                for i in range(22):
+                    if self.entries[i].get() != "":
+                        any_value_updated = True
+                        b_settings.set_lst[i] = float(self.entries[i].get())
+                for i in range(22, 34):
+                    if self.entries[i].get() != "":
+                        any_value_updated = True
+                        b_settings.mp_lst[i-22] = float(self.entries[i].get())
+                if any_value_updated:
+                    messagebox.showinfo("Options Updated", "Values Successfully Updated!")
+            except ValueError:
+                messagebox.showinfo("Error", "Invalid Type in an Entry. Please Input Only Float Values.")
+            finally:
+                self.destroy()
 
 class BattlerContainer(ctk.CTkFrame):
     def __init__(self, master, **kwargs):
@@ -307,6 +341,25 @@ class AttackWindow(ctk.CTkToplevel):
         self.after(100, self.focus)
 
         def perform_attack():
+            def phys_magic_bool():
+                if self.pm_menu.get() == "Physical": return True
+                else: return False
+
+            def elem_int():
+                match self.ele_menu.get():
+                    case "Slash": return 0
+                    case "Strike": return 1
+                    case "Pierce": return 2
+                    case "Fire": return 3
+                    case "Water": return 4
+                    case "Lightning": return 5
+                    case "Earth": return 6
+                    case "Wind": return 7
+                    case "Other": return 8
+                    case _: 
+                        print("Type Error in elem_int()")
+                        return 0
+
             if self.type_menu_var.get() == "Attack":
                 if master.is_b.get() == "Team A":
                     attacker = master.findBattler(master.battlers_a_menu.get(), True)
@@ -314,7 +367,19 @@ class AttackWindow(ctk.CTkToplevel):
                 else:
                     attacker = master.findBattler(master.battlers_b_menu.get(), False)
                     defender = master.findBattler(master.battlers_a_menu.get(), True)
-                #Code the attack method in the battle utils script
+
+                battle_info = bu.basicAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int())
+
+                master.log_console.configure(text=battle_info[2])
+
+                if master.is_b.get() == "Team A":
+                    master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[0])
+                    master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[1])
+                else:
+                    master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
+                    master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[1])
+
+                self.destroy()
 
         self.type_lbl = ctk.CTkLabel(master=self, text="Attack Type:")
         self.type_lbl.grid(row=0, column=0, padx=10, pady=10, sticky="e")
@@ -546,6 +611,16 @@ class App(ctk.CTk):
             for cont in self.b_container:
                 if cont.battler.label == tag:
                     return cont.battler
+
+    def changeBattlerInfo(self, tag:str, is_a:bool, new_battler:"bu.Battler"):
+        if is_a:
+            for cont in self.a_container:
+                if cont.battler.label == tag:
+                    cont.assignBattler(new_battler)
+        else:
+            for cont in self.b_container:
+                if cont.battler.label == tag:
+                    cont.assignBattler(new_battler)
 
 #This runs the app, always call it last. 
 #__name__ = "__main__" makes sure this only runs if called directly from this file
