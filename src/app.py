@@ -7,11 +7,7 @@ import csv
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("dark-blue")
 
-b_settings = bu.BattleSettings()
-
-class ScrollFrame(ctk.CTkScrollableFrame):
-    def __init__(self, master, **kwargs):
-        super().__init__(master, **kwargs)      
+b_settings = bu.BattleSettings()    
 
 class OptionWindow(ctk.CTkToplevel):
     def __init__(self, master, **kwargs):
@@ -274,7 +270,7 @@ class BattlerContainer(ctk.CTkFrame):
 
         def guard_switch():
             if self.guard_var.get():
-                self.guard_switch.configure(text=" Is Guarding ")
+                self.guard_switch.configure(text="  Is Guarding  ")
             else:
                 self.guard_switch.configure(text="Not Guarding")
         self.guard_var = ctk.BooleanVar(value=False)
@@ -291,12 +287,69 @@ class BattlerContainer(ctk.CTkFrame):
         self.status_label = ctk.CTkLabel(master=self, text=status_string)
         self.status_label.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
+class AttackWindow(ctk.CTkToplevel):
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)
+
+        self.title("Attack Menu")
+        self.geometry("1280x720")
+
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_rowconfigure(2, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_columnconfigure(2, weight=1)
+        self.grid_columnconfigure(3, weight=1)
+        self.grid_columnconfigure(4, weight=1)
+        self.grid_columnconfigure(5, weight=1)
+
+        self.after(100, self.focus)
+
+        def perform_attack():
+            if self.type_menu_var.get() == "Attack":
+                if master.is_b.get() == "Team A":
+                    attacker = master.findBattler(master.battlers_a_menu.get(), True)
+                    defender = master.findBattler(master.battlers_b_menu.get(), False)
+                else:
+                    attacker = master.findBattler(master.battlers_b_menu.get(), False)
+                    defender = master.findBattler(master.battlers_a_menu.get(), True)
+                #Code the attack method in the battle utils script
+
+        self.type_lbl = ctk.CTkLabel(master=self, text="Attack Type:")
+        self.type_lbl.grid(row=0, column=0, padx=10, pady=10, sticky="e")
+
+        def type_menu_callback(choice:str):
+            print(choice)
+            #this will change the rest of the render depending on choice
+        self.type_menu_var = ctk.StringVar(value="Attack")
+        self.type_menu = ctk.CTkOptionMenu(master=self, values=["Attack", "Power Attack", "Multi Attack", "Drain Attack", "Row Attack", "Splash Attack"], command=type_menu_callback, variable=self.type_menu_var)
+        self.type_menu.grid(row=0, column=1, padx=10, pady=10, sticky="w")
+
+        self.pm_lbl = ctk.CTkLabel(master=self, text="Physical or Ranged:")
+        self.pm_lbl.grid(row=0, column=2, padx=10, pady=10, sticky="e")
+
+        self.pm_menu = ctk.CTkOptionMenu(master=self, values=["Physical", "Ranged"])
+        self.pm_menu.grid(row=0, column=3, padx=10, pady=10, sticky="w")
+
+        self.ele_lbl = ctk.CTkLabel(master=self, text="Element:")
+        self.ele_lbl.grid(row=0, column=4, padx=10, pady=10, sticky="e")
+
+        self.ele_menu = ctk.CTkOptionMenu(master=self, values=["Slash", "Strike", "Pierce", "Fire", "Water", "Lightning", "Earth", "Wind", "Other"])
+        self.ele_menu.grid(row=0, column=5, padx=10, pady=10, sticky="w")
+
+        self.mp_cost_lbl = ctk.CTkLabel(master=self, text="MP Cost: 0")
+        self.mp_cost_lbl.grid(row=2, column=1, padx=10, pady=10, sticky="s")
+
+        self.atk_btn = ctk.CTkButton(master=self, text="Confirm", command=perform_attack)
+        self.atk_btn.grid(row=2, column=3, padx=10, pady=10, sticky="s")
+
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        self.a_containers = []
-        self.b_containers = []
+        self.a_container = []
+        self.b_container = []
 
         #Starting settings
         self.title("Custom RPG Calculator")
@@ -314,12 +367,14 @@ class App(ctk.CTk):
         self.columnconfigure(6, weight=1)
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=1)
-        self.rowconfigure(2, weight=12)
+        self.rowconfigure(2, weight=16)
         self.rowconfigure(3, weight=1)
         self.rowconfigure(4, weight=2)
-        self.rowconfigure(5, weight=2)
+        self.rowconfigure(5, weight=4)
+        self.rowconfigure(6, weight=8)
 
         self.option_window = None
+        self.attack_window = None
 
         #Need to run the zoom after canvas finishes rendering
         self.after(100, lambda: app.state("zoomed"))
@@ -352,7 +407,7 @@ class App(ctk.CTk):
                             data_list.append(new_row)
                         if(is_a): 
                             self.battlers_a_menu.set("")
-                            for container in self.a_containers:
+                            for container in self.a_container:
                                 container.destroy() #Destroys container elements on canvas for new ones
                             for row in data_list:
                                 #refactor data from data_list in battler classes
@@ -363,14 +418,14 @@ class App(ctk.CTk):
                                 cnt.assignBattler(battler)
 
                                 #add buttons to a list so they can be sorted through
-                                self.a_containers.append(cnt)
+                                self.a_container.append(cnt)
 
                                 #Add labels to list to be added to options menu
                                 label_list.append(battler.label)
                             self.battlers_a_menu.configure(values=label_list)
                         else:
                             self.battlers_b_menu.set("")
-                            for container in self.b_containers:
+                            for container in self.b_container:
                                 container.destroy() 
                             for row in data_list:
                                 battler = bu.Battler(row)
@@ -378,7 +433,7 @@ class App(ctk.CTk):
                                 cnt = BattlerContainer(master=frame)
                                 cnt.assignBattler(battler)
 
-                                self.b_containers.append(cnt)
+                                self.b_container.append(cnt)
 
                                 label_list.append(battler.label)
                             self.battlers_b_menu.configure(values=label_list)
@@ -402,7 +457,13 @@ class App(ctk.CTk):
                 self.option_window.focus()
 
         def attack_menu():
-            pass
+            if self.battlers_a_menu.get() != "" and self.battlers_b_menu.get() != "":
+                if self.attack_window is None or not self.attack_window.winfo_exists():
+                    self.attack_window = AttackWindow(master=self)
+                else:
+                    self.attack_window.focus()
+            else:
+                show_msg("Error", "Please select fighters in the A and B dropdown before pressing a command.")
 
         def heal_menu():
             pass
@@ -473,6 +534,18 @@ class App(ctk.CTk):
         self.status_button = ctk.CTkButton(master=self, text="Inflict Status", command=lambda: status_menu())
         self.status_button.grid(row=5, column=5, padx=20, pady=20, sticky="nsew")
 
+        self.log_console = ctk.CTkLabel(master=self, text="", corner_radius=10, border_width=2, border_color="#e6f7ff", fg_color="#3a4b5c")
+        self.log_console.grid(row=6, column=2, columnspan=5, padx=20, pady=20, sticky="nsew")
+
+    def findBattler(self, tag:str, is_a:bool):
+        if is_a:
+            for cont in self.a_container:
+                if cont.battler.label == tag:
+                    return cont.battler
+        else:
+            for cont in self.b_container:
+                if cont.battler.label == tag:
+                    return cont.battler
 
 #This runs the app, always call it last. 
 #__name__ = "__main__" makes sure this only runs if called directly from this file
