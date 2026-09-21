@@ -129,7 +129,7 @@ class Battler:
 
 #ATTACK METHODS
 #ATTACK INFO
-def attackInfo(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", pm_phys:bool, dmg_type:int, element:int):
+def attackInfo(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", pm_phys:bool, severity:int, element:int):
     def damageCalc():
         def buffVal(buff_val:int):
             if buff_val==1: return b_settings.getBuff1Mtp()
@@ -160,8 +160,8 @@ def attackInfo(attacker:"Battler", defender:"Battler", b_settings:"BattleSetting
             if defender.formation==True: return 1.0
             else: return b_settings.getFormMtp()
 
-        def dmgTypeVal():
-            match dmg_type:
+        def sevTypeVal():
+            match severity:
                 case 1: return b_settings.getLAtkMtp()
                 case 2: return b_settings.getMAtkMtp()
                 case 3: return b_settings.getHAtkMtp()
@@ -191,7 +191,7 @@ def attackInfo(attacker:"Battler", defender:"Battler", b_settings:"BattleSetting
 
         buffed_attack = atkPMVal() * buffVal(attacker.attack_level) * chargeVal()
         buffed_defense = defender.defense * buffVal(defender.defense_level) * guardVal()
-        dmg = buffed_attack * (40/(40+buffed_defense)) * b_settings.getAtkConst() * formAtkVal() * formDefVal() * dmgTypeVal() * elemResVal()
+        dmg = buffed_attack * (40/(40+buffed_defense)) * b_settings.getAtkConst() * formAtkVal() * formDefVal() * sevTypeVal() * elemResVal()
 
         return math.floor(dmg)
 
@@ -238,7 +238,7 @@ def elementToString(element:int):
     match element:
         case 0: return "Slash"
         case 1: return "Strike"
-        case 2: return "Price"
+        case 2: return "Pierce"
         case 3: return "Fire"
         case 4: return "Water"
         case 5: return "Lightning"
@@ -282,7 +282,7 @@ def nullResAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSett
     s += defender.name + " blocks all " + elementToString(element) + " damage from " + attacker.name + ". "
     return [attacker, defender, s]
 
-def dodgeAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", element:int):
+def dodgeAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings"):
     s = ""
     defender.mp += math.floor(defender.max_mp*b_settings.getDodgeMPGain())
     attacker.equalizeHpMp()
@@ -290,41 +290,41 @@ def dodgeAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettin
     s += defender.name + " dodged the attack from " + attacker.name + ". "
     return [attacker, defender, s]
 
-def weakResAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", element:int, dmg:int, severity:int):
+def weakResAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", element:int, dmg:int, severity:int, atk_mp_gain:bool):
     s = ""
     defender.hp -= dmg
-    attacker.mp += math.floor(attacker.max_mp*b_settings.getResMPGain())
+    if atk_mp_gain: attacker.mp += math.floor(attacker.max_mp*b_settings.getResMPGain())
     defender.mp += math.floor(defender.max_mp*b_settings.getWeakMPGain())
     attacker.equalizeHpMp()
     defender.equalizeHpMp()
     s += defender.name + " takes " + str(dmg) + " weakness hitting " + severityToString(severity) + elementToString(element) + " damage from " + attacker.name + ". "
     return [attacker, defender, s]
 
-def critAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", element:int, dmg:int, severity:int):
+def critAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", element:int, dmg:int, severity:int, atk_mp_gain:bool):
     s = ""
     dmg *= 2
     defender.hp -= dmg
-    attacker.mp += math.floor(attacker.max_mp*b_settings.getNorMPGain())
+    if atk_mp_gain: attacker.mp += math.floor(attacker.max_mp*b_settings.getNorMPGain())
     defender.mp += math.floor(defender.max_mp*b_settings.getWeakMPGain())
     attacker.equalizeHpMp()
     defender.equalizeHpMp()
     s += defender.name + " takes " + str(dmg) + " critical hitting " + severityToString(severity) + elementToString(element) + " damage from " + attacker.name + ". "
     return [attacker, defender, s]
 
-def resResAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", element:int, dmg:int, severity:int):
+def resResAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", element:int, dmg:int, severity:int, atk_mp_gain:bool):
     s = ""
     defender.hp -= dmg
-    attacker.mp += math.floor(attacker.max_mp*b_settings.getNorMPGain())
+    if atk_mp_gain: attacker.mp += math.floor(attacker.max_mp*b_settings.getNorMPGain())
     defender.mp += math.floor(defender.max_mp*b_settings.getWeakMPGain())
     attacker.equalizeHpMp()
     defender.equalizeHpMp()
     s += defender.name + " takes " + str(dmg) + " resistance-mitigated " + severityToString(severity) + elementToString(element) + " damage from " + attacker.name + ". "
     return [attacker, defender, s]
 
-def norResAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", element:int, dmg:int, severity:int):
+def norResAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", element:int, dmg:int, severity:int, atk_mp_gain:bool):
     s = ""
     defender.hp -= dmg
-    attacker.mp += math.floor(attacker.max_mp*b_settings.getNorMPGain())
+    if atk_mp_gain: attacker.mp += math.floor(attacker.max_mp*b_settings.getNorMPGain())
     defender.mp += math.floor(defender.max_mp*b_settings.getWeakMPGain())
     attacker.equalizeHpMp()
     defender.equalizeHpMp()
@@ -348,20 +348,20 @@ def basicAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettin
     elif(element_resistance==3):
         battle_info = nullResAttack(attacker, defender, b_settings, element)
     elif(does_dodge == True):
-        battle_info = dodgeAttack(attacker, defender, b_settings, element)
+        battle_info = dodgeAttack(attacker, defender, b_settings)
     elif(element_resistance==1 and defender.guard==False):
-        battle_info = weakResAttack(attacker, defender, b_settings, element, dmg, 0)
+        battle_info = weakResAttack(attacker, defender, b_settings, element, dmg, 0, True)
     elif(does_crit == True):
-        battle_info = critAttack(attacker, defender, b_settings, element, dmg, 0)
+        battle_info = critAttack(attacker, defender, b_settings, element, dmg, 0, True)
     elif(element_resistance==2):
-        battle_info = resResAttack(attacker, defender, b_settings, element, dmg, 0)
+        battle_info = resResAttack(attacker, defender, b_settings, element, dmg, 0, True)
     else:
-        battle_info = norResAttack(attacker, defender, b_settings, element, dmg, 0)
+        battle_info = norResAttack(attacker, defender, b_settings, element, dmg, 0, True)
 
     return battle_info
 
-def powerAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", pm_phys:bool, dmg_type:int, element:int, severity:int, mp_cost:int):
-    info = attackInfo(attacker, defender, b_settings, pm_phys, dmg_type, element)
+def powerAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", pm_phys:bool, element:int, severity:int, mp_cost:int):
+    info = attackInfo(attacker, defender, b_settings, pm_phys, severity, element)
     dmg = info[0]
     does_dodge = info[1]
     does_crit = info[2]
@@ -378,14 +378,27 @@ def powerAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettin
     elif(element_resistance==3):
         battle_info = nullResAttack(attacker, defender, b_settings, element)
     elif(does_dodge == True):
-        battle_info = dodgeAttack(attacker, defender, b_settings, element)
+        battle_info = dodgeAttack(attacker, defender, b_settings)
     elif(element_resistance==1 and defender.guard==False):
-        battle_info = weakResAttack(attacker, defender, b_settings, element, dmg, severity)
+        battle_info = weakResAttack(attacker, defender, b_settings, element, dmg, severity, False)
     elif(does_crit == True):
-        battle_info = critAttack(attacker, defender, b_settings, element, dmg, severity)
+        battle_info = critAttack(attacker, defender, b_settings, element, dmg, severity, False)
     elif(element_resistance==2):
-        battle_info = resResAttack(attacker, defender, b_settings, element, dmg, severity)
+        battle_info = resResAttack(attacker, defender, b_settings, element, dmg, severity, False)
     else:
-        battle_info = norResAttack(attacker, defender, b_settings, element, dmg, severity)
+        battle_info = norResAttack(attacker, defender, b_settings, element, dmg, severity, False)
 
     return battle_info
+
+def attackAll(attacker:"Battler", defenders:list["Battler"], b_settings:"BattleSettings", pm_phys:bool, element:int, severity:int, mp_cost:int):
+    attacker.mp -= mp_cost
+    s = ""
+    new_defenders = []
+
+    for defender in defenders:
+        temp_info = powerAttack(attacker, defender, b_settings, pm_phys, element, severity, 0)
+        attacker = temp_info[0]
+        new_defenders.append(temp_info[1])
+        s += temp_info[2] + "\n"
+
+    return [attacker, new_defenders, s]

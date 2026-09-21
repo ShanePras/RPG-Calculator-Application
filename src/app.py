@@ -257,6 +257,7 @@ class BattlerContainer(ctk.CTkFrame):
 
     def assignBattler(self, _battler:bu.Battler):
         #This method should be called immediately after init. It just has a seperate method because constructor parameters cant take both battler and master
+        #This is also used to re-render each container when they update
         self.columnconfigure(0, weight=4)
         self.columnconfigure(1, weight=2)
         self.columnconfigure(2, weight=2)
@@ -331,14 +332,64 @@ class AttackWindow(ctk.CTkToplevel):
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
         self.grid_rowconfigure(2, weight=1)
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=1)
-        self.grid_columnconfigure(2, weight=1)
-        self.grid_columnconfigure(3, weight=1)
-        self.grid_columnconfigure(4, weight=1)
-        self.grid_columnconfigure(5, weight=1)
+        self.grid_columnconfigure(0, weight=2)
+        self.grid_columnconfigure(1, weight=2)
+        self.grid_columnconfigure(2, weight=2)
+        self.grid_columnconfigure(3, weight=2)
+        self.grid_columnconfigure(4, weight=2)
+        self.grid_columnconfigure(5, weight=2)
 
         self.after(100, self.focus)
+
+        self.mp_cost = 0
+
+        def type_menu_callback(choice:str):
+            match choice:
+                case "Attack":
+                    self.mp_limit_switch.grid_forget()
+                    self.mp_cost_lbl.configure(text="MP Cost: 0")
+
+                    self.mp_cost = 0
+
+                    self.severity_lbl.grid_forget()
+                    self.severity_menu.grid_forget()
+                case "Power Attack":
+                    self.mp_limit_switch.grid(row=1, column=4, columnspan=2, padx=10, pady=10)
+                    severity_menu_callback(self.severity_menu_var.get())
+
+                    self.severity_lbl.grid(row=1, column=0, padx=10, pady=10, sticky="e")
+                    self.severity_menu.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+                case "Attack All":
+                    self.mp_limit_switch.grid(row=1, column=4, columnspan=2, padx=10, pady=10)
+                    severity_menu_callback(self.severity_menu_var.get())
+
+                    self.severity_lbl.grid(row=1, column=0, padx=10, pady=10, sticky="e")
+                    self.severity_menu.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+
+        def severity_menu_callback(choice:str):
+            match choice:
+                case "Light":
+                    mp_cost = b_settings.getLAtkMp()
+                case "Medium":
+                    mp_cost = b_settings.getMAtkMp()
+                case "Heavy":
+                    mp_cost = b_settings.getHAtkMp()
+                case "Severe":
+                    mp_cost = b_settings.getSAtkMp()
+                case "Colossal":
+                    mp_cost = b_settings.getCAtkMp()
+
+            match self.type_menu_var.get():
+                case "Attack":
+                    pass
+                case "Power Attack":
+                    pass
+                case "Attack All":
+                    mp_cost += b_settings.getAtkAllMpAdd()
+
+            s = "MP Cost: " + str(mp_cost)
+            self.mp_cost_lbl.configure(text=s)
+            self.mp_cost = mp_cost
 
         def perform_attack():
             def phys_magic_bool():
@@ -360,35 +411,85 @@ class AttackWindow(ctk.CTkToplevel):
                         print("Type Error in elem_int()")
                         return 0
 
-            if self.type_menu_var.get() == "Attack":
-                if master.is_b.get() == "Team A":
-                    attacker = master.findBattler(master.battlers_a_menu.get(), True)
-                    defender = master.findBattler(master.battlers_b_menu.get(), False)
-                else:
-                    attacker = master.findBattler(master.battlers_b_menu.get(), False)
-                    defender = master.findBattler(master.battlers_a_menu.get(), True)
+            def severity_int():
+                match self.severity_menu_var.get():
+                    case "Light": return 1
+                    case "Medium": return 2
+                    case "Heavy": return 3
+                    case "Severe": return 4
+                    case "Colossal": return 5
+                    case _:
+                        print("Type error in severity_int.")
+                        return 1
 
-                battle_info = bu.basicAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int())
+            match self.type_menu_var.get():
+                case "Attack":
+                    if master.is_b.get() == "Team A":
+                        attacker = master.findBattler(master.battlers_a_menu.get(), True)
+                        defender = master.findBattler(master.battlers_b_menu.get(), False)
+                    else:
+                        attacker = master.findBattler(master.battlers_b_menu.get(), False)
+                        defender = master.findBattler(master.battlers_a_menu.get(), True)
+    
+                    battle_info = bu.basicAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int())
+                    master.log_console.configure(text=battle_info[2])
+    
+                    if master.is_b.get() == "Team A":
+                        master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[0])
+                        master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[1])
+                    else:
+                        master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
+                        master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[1])
+    
+                    self.destroy()
+                case "Power Attack":
+                    if master.is_b.get() == "Team A":
+                        attacker = master.findBattler(master.battlers_a_menu.get(), True)
+                        defender = master.findBattler(master.battlers_b_menu.get(), False)
+                    else:
+                        attacker = master.findBattler(master.battlers_b_menu.get(), False)
+                        defender = master.findBattler(master.battlers_a_menu.get(), True)
+    
+                    if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
+                        messagebox.showinfo("Error", "Error. MP too low.")
+                    else:
+                        battle_info = bu.powerAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.mp_cost)
+                        master.log_console.configure(text=battle_info[2])
+    
+                        if master.is_b.get() == "Team A":
+                            master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[0])
+                            master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[1])
+                        else:
+                            master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
+                            master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[1])
+                        self.destroy()
+                case "Attack All":
+                    if master.is_b.get() == "Team A":
+                        attacker = master.findBattler(master.battlers_a_menu.get(), True)
+                        defenders = master.getBattlersInList(False)
+                    else:
+                        attacker = master.findBattler(master.battlers_b_menu.get(), False)
+                        defenders = master.getBattlersInList(True)
 
-                master.log_console.configure(text=battle_info[2])
+                    if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
+                        messagebox.showinfo("Error", "Error. MP too low.")
+                    else:
+                        battle_info = bu.attackAll(attacker, defenders, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.mp_cost)
+                        master.log_console.configure(text=battle_info[2])
 
-                if master.is_b.get() == "Team A":
-                    master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[0])
-                    master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[1])
-                else:
-                    master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
-                    master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[1])
-
-                self.destroy()
+                        if master.is_b.get() == "Team A":
+                            master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[0])
+                            master.changeBattlerListInfo(False, battle_info[1])
+                        else:
+                            master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
+                            master.changeBattlerListInfo(True, battle_info[1])
+                        self.destroy()
 
         self.type_lbl = ctk.CTkLabel(master=self, text="Attack Type:")
         self.type_lbl.grid(row=0, column=0, padx=10, pady=10, sticky="e")
 
-        def type_menu_callback(choice:str):
-            print(choice)
-            #this will change the rest of the render depending on choice
         self.type_menu_var = ctk.StringVar(value="Attack")
-        self.type_menu = ctk.CTkOptionMenu(master=self, values=["Attack", "Power Attack", "Multi Attack", "Drain Attack", "Row Attack", "Splash Attack"], command=type_menu_callback, variable=self.type_menu_var)
+        self.type_menu = ctk.CTkOptionMenu(master=self, values=["Attack", "Power Attack", "Attack All", "Multi Attack", "Drain Attack", "Row Attack", "Splash Attack"], command=type_menu_callback, variable=self.type_menu_var)
         self.type_menu.grid(row=0, column=1, padx=10, pady=10, sticky="w")
 
         self.pm_lbl = ctk.CTkLabel(master=self, text="Physical or Ranged:")
@@ -403,11 +504,19 @@ class AttackWindow(ctk.CTkToplevel):
         self.ele_menu = ctk.CTkOptionMenu(master=self, values=["Slash", "Strike", "Pierce", "Fire", "Water", "Lightning", "Earth", "Wind", "Other"])
         self.ele_menu.grid(row=0, column=5, padx=10, pady=10, sticky="w")
 
+        def mp_limit(): self.mp_limit_switch.configure(text=self.mp_limit_var.get())
+        self.mp_limit_var = ctk.StringVar(value=" MP Requirement Enforced ")
+        self.mp_limit_switch = ctk.CTkSwitch(master=self, text=" MP Requirement Enforced ", command=lambda: mp_limit(), variable=self.mp_limit_var, onvalue=" MP Requirement Enforced ", offvalue="MP Requirement Unenforced")
+
         self.mp_cost_lbl = ctk.CTkLabel(master=self, text="MP Cost: 0")
         self.mp_cost_lbl.grid(row=2, column=1, padx=10, pady=10, sticky="s")
 
         self.atk_btn = ctk.CTkButton(master=self, text="Confirm", command=perform_attack)
         self.atk_btn.grid(row=2, column=3, padx=10, pady=10, sticky="s")
+
+        self.severity_menu_var = ctk.StringVar(value="Light")
+        self.severity_lbl = ctk.CTkLabel(master=self, text="Attack Severity:")
+        self.severity_menu = ctk.CTkOptionMenu(master=self, values=["Light", "Medium", "Heavy", "Severe", "Colossal"], command=severity_menu_callback, variable=self.severity_menu_var)
 
 class App(ctk.CTk):
     def __init__(self):
@@ -621,6 +730,24 @@ class App(ctk.CTk):
             for cont in self.b_container:
                 if cont.battler.label == tag:
                     cont.assignBattler(new_battler)
+
+    def getBattlersInList(self, is_a:bool):
+        battler_list = []
+        if is_a:
+            for cont in self.a_container:
+                battler_list.append(cont.battler)
+        else:
+            for cont in self.b_container:
+                battler_list.append(cont.battler)
+        return battler_list
+
+    def changeBattlerListInfo(self, is_a:bool, new_battlers:list["bu.Battler"]):
+        if is_a:
+            for i in range(len(new_battlers)):
+                self.a_container[i].assignBattler(new_battlers[i])
+        else:
+            for i in range(len(new_battlers)):
+                self.b_container[i].assignBattler(new_battlers[i])
 
 #This runs the app, always call it last. 
 #__name__ = "__main__" makes sure this only runs if called directly from this file
