@@ -10,3 +10,4 @@ Current Goals:
 - Finish Buff Menu
 - Finish Heal Menu
 - Add guard and charge functionality
+- Add a character creator window to help with imports
