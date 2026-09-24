@@ -16,6 +16,7 @@ class OptionWindow(ctk.CTkToplevel):
 
         self.title("RPG Calculator Settings")
         self.geometry("1280x720")
+        self.iconbitmap("RPG Calculator Program/SunSymbol.ico")
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -246,10 +247,34 @@ class OptionWindow(ctk.CTkToplevel):
         self.ddg_mp_gain_entry.grid(row=13, column=3, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.ddg_mp_gain_entry)
 
+        self.l_hl_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Light Heal MP:")
+        self.l_hl_mp_label.grid(row=14, column=2, padx=10, pady=10, sticky="nsew")
+        self.l_hl_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getLHealMp()))
+        self.l_hl_mp_entry.grid(row=14, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.l_hl_mp_entry)
+
+        self.m_hl_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Medium Heal MP:")
+        self.m_hl_mp_label.grid(row=15, column=2, padx=10, pady=10, sticky="nsew")
+        self.m_hl_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getMHealMp()))
+        self.m_hl_mp_entry.grid(row=15, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.m_hl_mp_entry)
+
+        self.h_hl_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Heavy Heal MP:")
+        self.h_hl_mp_label.grid(row=16, column=2, padx=10, pady=10, sticky="nsew")
+        self.h_hl_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getHHealMp()))
+        self.h_hl_mp_entry.grid(row=16, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.h_hl_mp_entry)
+
+        self.hl_all_mp_gain_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Heal All MP Gain:")
+        self.hl_all_mp_gain_label.grid(row=17, column=2, padx=10, pady=10, sticky="nsew")
+        self.hl_all_mp_gain_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getHealAllMpAdd()))
+        self.hl_all_mp_gain_entry.grid(row=17, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.hl_all_mp_gain_entry)
+
         def conf_changes(): 
             any_value_updated = False
             try:               
-                for i in range(34):
+                for i in range(40):
                     if self.entries[i].get() != "":
                         any_value_updated = True
                         b_settings.set_lst[i] = float(self.entries[i].get())
@@ -349,6 +374,7 @@ class AttackWindow(ctk.CTkToplevel):
 
         self.title("Attack Menu")
         self.geometry("1280x720")
+        self.iconbitmap("RPG Calculator Program/SunSymbol.ico")
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -803,6 +829,105 @@ class AttackWindow(ctk.CTkToplevel):
         self.row_fm_var = ctk.StringVar(value="Targetting Front")
         self.row_fm_switch = ctk.CTkSwitch(master=self, text="Targetting Front", command=lambda: fm_switch(), variable=self.row_fm_var, onvalue="Targetting Front", offvalue="Targetting Back")
 
+class HealWindow(ctk.CTkToplevel):
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)
+
+        self.title("Heal Menu")
+        self.geometry("1280x720")
+        self.iconbitmap("RPG Calculator Program/SunSymbol.ico")
+
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_rowconfigure(2, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_columnconfigure(2, weight=1)
+        self.grid_columnconfigure(3, weight=1)
+        self.grid_columnconfigure(4, weight=1)
+        self.grid_columnconfigure(5, weight=1)
+
+        def fill_name_menus():
+            a_names = master.getBattlerNamesInList(True)
+            self.a_caster_menu.configure(values=a_names)
+            self.a_target_menu.configure(values=a_names)
+
+            b_names = master.getBattlerNamesInList(False)
+            self.b_caster_menu.configure(values=b_names)
+            self.b_target_menu.configure(values=b_names)
+
+        def a_b_switch():
+            self.team_sw.configure(text=self.a_b.get())
+
+            if self.a_b.get() == "Team A":
+                self.b_caster_menu.grid_forget()
+                self.b_target_menu.grid_forget()
+
+                self.a_caster_menu.grid(row=0, column=3, padx=10, pady=10, sticky="w")
+                self.a_target_menu.grid(row=0, column=5, padx=10, pady=10, sticky="w")
+            else:
+                self.a_caster_menu.grid_forget()
+                self.a_target_menu.grid_forget()
+
+                self.b_caster_menu.grid(row=0, column=3, padx=10, pady=10, sticky="w")
+                self.b_target_menu.grid(row=0, column=5, padx=10, pady=10, sticky="w")
+
+        def heal_all_switch():
+            self.heal_all_switch.configure(text=self.heal_all_var.get())
+            severity_callback(self.severity_var.get())
+
+        def severity_callback(choice:str):
+            match choice:
+                case "Light":
+                    self.mp_cost.set(value=b_settings.getLHealMp())
+                case "Medium":
+                    self.mp_cost.set(value=b_settings.getMHealMp())
+                case "Heavy":
+                    self.mp_cost.set(value=b_settings.getHHealMp())
+
+            if(self.heal_all_var.get() == "Heal All"):
+                new_mp_cost = self.mp_cost.get()
+                new_mp_cost += b_settings.getHealAllMpAdd()
+                self.mp_cost.set(new_mp_cost)
+
+            s = "MP Cost: " + str(self.mp_cost.get())
+            self.mp_cost_lbl.configure(text=s)
+
+        self.a_b = ctk.StringVar(value="Team A")
+        self.team_sw = ctk.CTkSwitch(master=self, text="Team A", command=lambda: a_b_switch(), variable=self.a_b, onvalue="Team B", offvalue="Team A")
+        self.team_sw.grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+
+        self.caster_lbl = ctk.CTkLabel(master=self, text="Caster:")
+        self.caster_lbl.grid(row=0, column=2, padx=10, pady=10, sticky="e")
+
+        self.target_lbl = ctk.CTkLabel(master=self, text="Target:")
+        self.target_lbl.grid(row=0, column=4, padx=10, pady=10, sticky="e")
+        
+        self.a_caster_menu = ctk.CTkOptionMenu(master=self, values=[])
+        self.a_caster_menu.grid(row=0, column=3, padx=10, pady=10, sticky="w")
+
+        self.a_target_menu = ctk.CTkOptionMenu(master=self, values=[])
+        self.a_target_menu.grid(row=0, column=5, padx=10, pady=10, sticky="w")
+
+        self.b_caster_menu = ctk.CTkOptionMenu(master=self, values=[])
+        self.b_target_menu = ctk.CTkOptionMenu(master=self, values=[])
+
+        fill_name_menus()
+
+        self.severity_var = ctk.StringVar(value="Light")
+        self.severity_lbl = ctk.CTkLabel(master=self, text="Severity:")
+        self.severity_lbl.grid(row=1, column=0, padx=10, pady=10, sticky="e")
+        self.severity_menu = ctk.CTkOptionMenu(master=self, values=["Light", "Medium", "Heavy"], command=severity_callback, variable=self.severity_var)
+        self.severity_menu.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+
+        self.heal_all_var = ctk.StringVar(value="Heal One")
+        self.heal_all_switch = ctk.CTkSwitch(master=self, text="Heal One", command=heal_all_switch, variable=self.heal_all_var, onvalue="Heal All", offvalue="Heal One")
+        self.heal_all_switch.grid(row=1, column=4, columnspan=2, padx=10, pady=10)
+
+        self.mp_cost = ctk.IntVar(value=b_settings.getLHealMp())
+        self.mp_cost_lbl = ctk.CTkLabel(master=self, text="MP Cost: 25")
+        self.mp_cost_lbl.grid(row=2, column=0, columnspan=2, padx=10, pady=10, sticky="s")
+
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -834,6 +959,8 @@ class App(ctk.CTk):
 
         self.option_window = None
         self.attack_window = None
+        self.heal_window = None
+        self.buff_window = None
 
         #Need to run the zoom after canvas finishes rendering
         self.after(100, lambda: app.state("zoomed"))
@@ -905,6 +1032,10 @@ class App(ctk.CTk):
                     show_msg("Error", "Error: CSV file is missing data.")
                 finally:
                     f.close()
+                    if self.attack_window is not None:
+                        self.attack_window.destroy()
+                    if self.heal_window is not None:
+                        self.heal_window.destroy()
 
             else:
                 show_msg("Error", "No file selected.")
@@ -922,10 +1053,16 @@ class App(ctk.CTk):
                 else:
                     self.attack_window.focus()
             else:
-                show_msg("Error", "Please select fighters in the A and B dropdown before pressing a command.")
+                show_msg("Error", "Please select fighters in the A and B dropdown before pressing the command.")
 
         def heal_menu():
-            pass
+            if self.battlers_a_menu._values != [] and self.battlers_b_menu._values != []:
+                if self.heal_window is None or not self.heal_window.winfo_exists():
+                    self.heal_window = HealWindow(master=self)
+                else:
+                    self.heal_window.focus()
+            else:
+                show_msg("Error", "Please import fighters for the A and B dropdowns before pressing the command.")
 
         def buff_menu():
             pass
@@ -1024,6 +1161,16 @@ class App(ctk.CTk):
         else:
             for cont in self.b_container:
                 battler_list.append(cont.battler)
+        return battler_list
+
+    def getBattlerNamesInList(self, is_a:bool):
+        battler_list = []
+        if is_a:
+            for cont in self.a_container:
+                battler_list.append(cont.battler.name)
+        else:
+            for cont in self.b_container:
+                battler_list.append(cont.battler.name)
         return battler_list
 
     def changeBattlerListInfo(self, is_a:bool, new_battlers:list["bu.Battler"]):

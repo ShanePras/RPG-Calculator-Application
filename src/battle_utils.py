@@ -54,6 +54,12 @@ class BattleSettings:
         self.set_lst.append(0.1) #null mp gain; 34
         self.set_lst.append(0.15) #dodge mp gain; 35
 
+        self.set_lst.append(25) #light heal mp; 36
+        self.set_lst.append(40) #medium heal mp; 37
+        self.set_lst.append(65) #heavy heal mp; 38
+
+        self.set_lst.append(15) #heal all mp add; 39
+
     def getLAtkMtp(self): return self.set_lst[0]
     def getMAtkMtp(self): return self.set_lst[1]
     def getHAtkMtp(self): return self.set_lst[2]
@@ -91,6 +97,10 @@ class BattleSettings:
     def getWeakMPGain(self): return self.set_lst[33]
     def getNullMPGain(self): return self.set_lst[34]
     def getDodgeMPGain(self): return self.set_lst[35]
+    def getLHealMp(self): return self.set_lst[36]
+    def getMHealMp(self): return self.set_lst[37]
+    def getHHealMp(self): return self.set_lst[38]
+    def getHealAllMpAdd(self): return self.set_lst[39]
 
 class Battler:
     def __init__(self, stats: list):
