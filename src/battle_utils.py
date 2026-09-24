@@ -6,7 +6,6 @@ import math
 class BattleSettings:
     def __init__(self):
         self.set_lst = []
-        self.mp_lst = []
 
         self.set_lst.append(1.3) #light attack multiplier; 0
         self.set_lst.append(1.9) #medium attack multiplier; 1
@@ -38,20 +37,22 @@ class BattleSettings:
         self.set_lst.append(5.0) #medium heal multiplier; 20
         self.set_lst.append(6.5) #heavy heal multiplier; 21
 
-        self.mp_lst.append(10) #light atk 1 mp; 0
-        self.mp_lst.append(24) #med atk 1 mp; 1
-        self.mp_lst.append(40) #heavy atk 1 mp; 2
-        self.mp_lst.append(65) #severe atk 1 mp; 3
-        self.mp_lst.append(100) #colossal atk 1 mp; 4
+        self.set_lst.append(10) #light atk 1 mp; 22
+        self.set_lst.append(24) #med atk 1 mp; 23
+        self.set_lst.append(40) #heavy atk 1 mp; 24
+        self.set_lst.append(65) #severe atk 1 mp; 25
+        self.set_lst.append(100) #colossal atk 1 mp; 26
 
-        self.mp_lst.append(15) #attack all mp cost add; 5
-        self.mp_lst.append(5) #multiattack mp cost add; 6
+        self.set_lst.append(15) #attack all mp cost add; 27
+        self.set_lst.append(3) #multiattack mp cost add; 28
+        self.set_lst.append(18) #drain/splash attack mp cost add; 29
+        self.set_lst.append(12) #row attack mp cost add; 30
 
-        self.mp_lst.append(0.05) #normal mp gain; 7
-        self.mp_lst.append(0.07) #res mp gain; 8
-        self.mp_lst.append(0.03) #weak mp gain; 9
-        self.mp_lst.append(0.1) #null mp gain; 10
-        self.mp_lst.append(0.15) #dodge mp gain; 11
+        self.set_lst.append(0.05) #normal mp gain; 31
+        self.set_lst.append(0.07) #res mp gain; 32
+        self.set_lst.append(0.03) #weak mp gain; 33
+        self.set_lst.append(0.1) #null mp gain; 34
+        self.set_lst.append(0.15) #dodge mp gain; 35
 
     def getLAtkMtp(self): return self.set_lst[0]
     def getMAtkMtp(self): return self.set_lst[1]
@@ -76,18 +77,20 @@ class BattleSettings:
     def getMHealMtp(self): return self.set_lst[20]
     def getHHealMtp(self): return self.set_lst[21]
 
-    def getLAtkMp(self): return self.mp_lst[0]
-    def getMAtkMp(self): return self.mp_lst[1]
-    def getHAtkMp(self): return self.mp_lst[2]
-    def getSAtkMp(self): return self.mp_lst[3]
-    def getCAtkMp(self): return self.mp_lst[4]
-    def getAtkAllMpAdd(self): return self.mp_lst[5]
-    def getMultiattackMpAdd(self): return self.mp_lst[6]
-    def getNorMPGain(self): return self.mp_lst[7]
-    def getResMPGain(self): return self.mp_lst[8]
-    def getWeakMPGain(self): return self.mp_lst[9]
-    def getNullMPGain(self): return self.mp_lst[10]
-    def getDodgeMPGain(self): return self.mp_lst[11]
+    def getLAtkMp(self): return self.set_lst[22]
+    def getMAtkMp(self): return self.set_lst[23]
+    def getHAtkMp(self): return self.set_lst[24]
+    def getSAtkMp(self): return self.set_lst[25]
+    def getCAtkMp(self): return self.set_lst[26]
+    def getAtkAllMpAdd(self): return self.set_lst[27]
+    def getMultiattackMpAdd(self): return self.set_lst[28]
+    def getDrnSplAtkMpAdd(self): return self.set_lst[29]
+    def getRowAtkMpAdd(self): return self.set_lst[30]
+    def getNorMPGain(self): return self.set_lst[31]
+    def getResMPGain(self): return self.set_lst[32]
+    def getWeakMPGain(self): return self.set_lst[33]
+    def getNullMPGain(self): return self.set_lst[34]
+    def getDodgeMPGain(self): return self.set_lst[35]
 
 class Battler:
     def __init__(self, stats: list):
@@ -360,12 +363,16 @@ def basicAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettin
 
     return battle_info
 
-def powerAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", pm_phys:bool, element:int, severity:int, mp_cost:int):
+def powerAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", pm_phys:bool, element:int, severity:int, mp_cost:int, force_hit:bool, force_dodge:bool):
     info = attackInfo(attacker, defender, b_settings, pm_phys, severity, element)
     dmg = info[0]
     does_dodge = info[1]
     does_crit = info[2]
     element_resistance = info[3]
+
+    #Used for row attack
+    if force_hit == True: does_dodge = False
+    if force_dodge == True: does_dodge = True
 
     attacker.mp -= mp_cost
 
@@ -396,7 +403,113 @@ def attackAll(attacker:"Battler", defenders:list["Battler"], b_settings:"BattleS
     new_defenders = []
 
     for defender in defenders:
-        temp_info = powerAttack(attacker, defender, b_settings, pm_phys, element, severity, 0)
+        temp_info = powerAttack(attacker, defender, b_settings, pm_phys, element, severity, 0, False, False)
+        attacker = temp_info[0]
+        new_defenders.append(temp_info[1])
+        s += temp_info[2] + "\n"
+
+    return [attacker, new_defenders, s]
+
+def multiAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", pm_phys:bool, element:int, severity:int, attack_amount:int, mp_cost:int):
+    info = attackInfo(attacker, defender, b_settings, pm_phys, severity, element)
+    dmg = info[0]
+    does_dodge = info[1]
+    does_crit = info[2]
+    element_resistance = info[3]
+
+    attacker.mp -= mp_cost
+    s = ""
+
+    for i in range(attack_amount):
+        if(element_resistance==5):
+            battle_info = drainResAttack(attacker, defender, b_settings, element, dmg)
+        elif(element_resistance==4):
+            battle_info = reflectResAttack(attacker, defender, b_settings, element, dmg)
+        elif(element_resistance==3):
+            battle_info = nullResAttack(attacker, defender, b_settings, element)
+        elif(does_dodge == True):
+            battle_info = dodgeAttack(attacker, defender, b_settings)
+        elif(element_resistance==1 and defender.guard==False):
+            battle_info = weakResAttack(attacker, defender, b_settings, element, dmg, severity, False)
+        elif(does_crit == True):
+            battle_info = critAttack(attacker, defender, b_settings, element, dmg, severity, False)
+        elif(element_resistance==2):
+            battle_info = resResAttack(attacker, defender, b_settings, element, dmg, severity, False)
+        else:
+            battle_info = norResAttack(attacker, defender, b_settings, element, dmg, severity, False)
+
+        attacker = battle_info[0]
+        defender = battle_info[1]
+        s += battle_info[2] + "\n"
+
+    return [attacker, defender, s]
+
+def drainAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", pm_phys:bool, element:int, severity:int, mp_cost:int):
+    info = attackInfo(attacker, defender, b_settings, pm_phys, severity, element)
+    dmg = info[0]
+    does_dodge = info[1]
+    does_crit = info[2]
+    element_resistance = info[3]
+
+    attacker.mp -= mp_cost
+    does_drain = False
+
+    #0-Normal, 1-Weak, 2-Resists, 3-Null, 4-Reflect, 5-Drain
+
+    if(element_resistance==5):
+        battle_info = drainResAttack(attacker, defender, b_settings, element, dmg)
+    elif(element_resistance==4):
+        battle_info = reflectResAttack(attacker, defender, b_settings, element, dmg)
+    elif(element_resistance==3):
+        battle_info = nullResAttack(attacker, defender, b_settings, element)
+    elif(does_dodge == True):
+        battle_info = dodgeAttack(attacker, defender, b_settings)
+    elif(element_resistance==1 and defender.guard==False):
+        battle_info = weakResAttack(attacker, defender, b_settings, element, dmg, severity, False)
+        does_drain = True
+    elif(does_crit == True):
+        battle_info = critAttack(attacker, defender, b_settings, element, dmg, severity, False)
+        does_drain = True
+    elif(element_resistance==2):
+        battle_info = resResAttack(attacker, defender, b_settings, element, dmg, severity, False)
+        does_drain = True
+    else:
+        battle_info = norResAttack(attacker, defender, b_settings, element, dmg, severity, False)
+        does_drain = True
+
+    if does_drain:
+        battle_info[0].hp += dmg
+        battle_info[0].equalizeHpMp()
+        battle_info[2] += "\n" + attacker.name + " drains " + str(dmg) + " from " + defender.name + "."
+
+    return battle_info
+
+def splashAttack(attacker:"Battler", primary_defender_tag:str, defenders:list["Battler"], b_settings:"BattleSettings", pm_phys:bool, element:int, splash_element:int, severity:int, mp_cost:int):
+    attacker.mp -= mp_cost
+    s = ""
+    new_defenders = []
+
+    for defender in defenders:
+        if defender.label == primary_defender_tag:
+            temp_info = powerAttack(attacker, defender, b_settings, pm_phys, element, severity, 0, False, False)
+        else:
+            temp_info = basicAttack(attacker, defender, b_settings, False, splash_element)
+        attacker = temp_info[0]
+        new_defenders.append(temp_info[1])
+        s += temp_info[2] + "\n"
+
+    return [attacker, new_defenders, s]
+
+def rowAttack(attacker:"Battler", defenders:list["Battler"], b_settings:"BattleSettings", pm_phys:bool, element:int, severity:int, fb_front:bool, mp_cost:int):
+    attacker.mp -= mp_cost
+    s = ""
+    new_defenders = []
+
+    for defender in defenders:
+        if defender.formation == fb_front:
+            temp_info = powerAttack(attacker, defender, b_settings, pm_phys, element, severity, 0, True, False)
+        else:
+            temp_info = powerAttack(attacker, defender, b_settings, pm_phys, element, severity, 0, False, True)
         attacker = temp_info[0]
         new_defenders.append(temp_info[1])
         s += temp_info[2] + "\n"

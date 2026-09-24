@@ -3,6 +3,7 @@ import battle_utils as bu
 from tkinter import filedialog
 from tkinter import messagebox
 import csv
+import math
 
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("dark-blue")
@@ -203,47 +204,55 @@ class OptionWindow(ctk.CTkToplevel):
         self.multi_atk_mp_entry.grid(row=6, column=3, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.multi_atk_mp_entry)
 
+        self.multi_drnspl_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Drain/Splash Attack MP Increase:")
+        self.multi_drnspl_mp_label.grid(row=7, column=2, padx=10, pady=10, sticky="nsew")
+        self.multi_drnspl_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getDrnSplAtkMpAdd()))
+        self.multi_drnspl_mp_entry.grid(row=7, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.multi_drnspl_mp_entry)
+
+        self.row_atk_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Row Attack MP Increase:")
+        self.row_atk_mp_label.grid(row=8, column=2, padx=10, pady=10, sticky="nsew")
+        self.row_atk_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getRowAtkMpAdd()))
+        self.row_atk_mp_entry.grid(row=8, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.row_atk_mp_entry)
+
         self.nor_mp_gain_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Normal MP Gain Percentage:")
-        self.nor_mp_gain_label.grid(row=7, column=2, padx=10, pady=10, sticky="nsew")
+        self.nor_mp_gain_label.grid(row=9, column=2, padx=10, pady=10, sticky="nsew")
         self.nor_mp_gain_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getNorMPGain()))
-        self.nor_mp_gain_entry.grid(row=7, column=3, padx=10, pady=10, sticky="nsew")
+        self.nor_mp_gain_entry.grid(row=9, column=3, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.nor_mp_gain_entry)
 
         self.res_mp_gain_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Resist MP Gain Percentage:")
-        self.res_mp_gain_label.grid(row=8, column=2, padx=10, pady=10, sticky="nsew")
+        self.res_mp_gain_label.grid(row=10, column=2, padx=10, pady=10, sticky="nsew")
         self.res_mp_gain_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getResMPGain()))
-        self.res_mp_gain_entry.grid(row=8, column=3, padx=10, pady=10, sticky="nsew")
+        self.res_mp_gain_entry.grid(row=10, column=3, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.res_mp_gain_entry)
 
         self.wk_mp_gain_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Weak MP Gain Percentage:")
-        self.wk_mp_gain_label.grid(row=9, column=2, padx=10, pady=10, sticky="nsew")
+        self.wk_mp_gain_label.grid(row=11, column=2, padx=10, pady=10, sticky="nsew")
         self.wk_mp_gain_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getWeakMPGain()))
-        self.wk_mp_gain_entry.grid(row=9, column=3, padx=10, pady=10, sticky="nsew")
+        self.wk_mp_gain_entry.grid(row=11, column=3, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.wk_mp_gain_entry)
 
         self.nu_mp_gain_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Null MP Gain Percentage:")
-        self.nu_mp_gain_label.grid(row=10, column=2, padx=10, pady=10, sticky="nsew")
+        self.nu_mp_gain_label.grid(row=12, column=2, padx=10, pady=10, sticky="nsew")
         self.nu_mp_gain_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getNullMPGain()))
-        self.nu_mp_gain_entry.grid(row=10, column=3, padx=10, pady=10, sticky="nsew")
+        self.nu_mp_gain_entry.grid(row=12, column=3, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.nu_mp_gain_entry)
 
         self.ddg_mp_gain_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Dodge MP Gain Percentage:")
-        self.ddg_mp_gain_label.grid(row=11, column=2, padx=10, pady=10, sticky="nsew")
+        self.ddg_mp_gain_label.grid(row=13, column=2, padx=10, pady=10, sticky="nsew")
         self.ddg_mp_gain_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getDodgeMPGain()))
-        self.ddg_mp_gain_entry.grid(row=11, column=3, padx=10, pady=10, sticky="nsew")
+        self.ddg_mp_gain_entry.grid(row=13, column=3, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.ddg_mp_gain_entry)
 
         def conf_changes(): 
             any_value_updated = False
             try:               
-                for i in range(22):
+                for i in range(34):
                     if self.entries[i].get() != "":
                         any_value_updated = True
                         b_settings.set_lst[i] = float(self.entries[i].get())
-                for i in range(22, 34):
-                    if self.entries[i].get() != "":
-                        any_value_updated = True
-                        b_settings.mp_lst[i-22] = float(self.entries[i].get())
                 if any_value_updated:
                     messagebox.showinfo("Options Updated", "Values Successfully Updated!")
             except ValueError:
@@ -296,20 +305,32 @@ class BattlerContainer(ctk.CTkFrame):
 
         def form_switch():
             if self.formation_var.get():
-                self.formation_switch.configure(text="Position: Back")
-            else:
                 self.formation_switch.configure(text="Position: Front")
-        self.formation_var = ctk.BooleanVar(value=False)
-        self.formation_switch = ctk.CTkSwitch(master=self, text="Position: Front", command=lambda: form_switch(), variable=self.formation_var, onvalue=True, offvalue=False)
+                self.battler.formation = True
+            else:
+                self.formation_switch.configure(text="Position: Back")
+                self.battler.formation = False
+        if self.battler.formation == True: 
+            self.formation_var = ctk.BooleanVar(value=True)
+            self.formation_switch = ctk.CTkSwitch(master=self, text="Position: Front", command=lambda: form_switch(), variable=self.formation_var, onvalue=True, offvalue=False)
+        else: 
+            self.formation_var = ctk.BooleanVar(value=False)
+            self.formation_switch = ctk.CTkSwitch(master=self, text="Position: Back", command=lambda: form_switch(), variable=self.formation_var, onvalue=True, offvalue=False)
         self.formation_switch.grid(row=1, column=1, padx=10, pady=10, sticky="ns")
 
         def guard_switch():
             if self.guard_var.get():
                 self.guard_switch.configure(text="  Is Guarding  ")
+                self.battler.guard = True
             else:
                 self.guard_switch.configure(text="Not Guarding")
-        self.guard_var = ctk.BooleanVar(value=False)
-        self.guard_switch = ctk.CTkSwitch(master=self, text="Not Guarding", command=lambda: guard_switch(), variable=self.guard_var, onvalue=True, offvalue=False)
+                self.battler.guard = False
+        if self.battler.guard == True: 
+            self.guard_var = ctk.BooleanVar(value=True)
+            self.guard_switch = ctk.CTkSwitch(master=self, text="  Is Guarding  ", command=lambda: guard_switch(), variable=self.guard_var, onvalue=True, offvalue=False)
+        else: 
+            self.guard_var = ctk.BooleanVar(value=False)
+            self.guard_switch = ctk.CTkSwitch(master=self, text="Not Guarding", command=lambda: guard_switch(), variable=self.guard_var, onvalue=True, offvalue=False)
         self.guard_switch.grid(row=1, column=2, padx=10, pady=10, sticky="ns")
 
         charge_string = ""
@@ -335,9 +356,10 @@ class AttackWindow(ctk.CTkToplevel):
         self.grid_columnconfigure(0, weight=2)
         self.grid_columnconfigure(1, weight=2)
         self.grid_columnconfigure(2, weight=2)
-        self.grid_columnconfigure(3, weight=2)
-        self.grid_columnconfigure(4, weight=2)
+        self.grid_columnconfigure(3, weight=1)
+        self.grid_columnconfigure(4, weight=1)
         self.grid_columnconfigure(5, weight=2)
+        self.grid_columnconfigure(6, weight=2)
 
         self.after(100, self.focus)
 
@@ -353,18 +375,105 @@ class AttackWindow(ctk.CTkToplevel):
 
                     self.severity_lbl.grid_forget()
                     self.severity_menu.grid_forget()
+
+                    self.multi_atk_lbl.grid_forget()
+                    self.multi_atk_p_button.grid_forget()
+                    self.multi_atk_m_button.grid_forget()
+
+                    self.second_element_lbl.grid_forget()
+                    self.second_element_menu.grid_forget()
+
+                    self.row_fm_switch.grid_forget()
                 case "Power Attack":
-                    self.mp_limit_switch.grid(row=1, column=4, columnspan=2, padx=10, pady=10)
+                    self.mp_limit_switch.grid(row=1, column=5, columnspan=2, padx=10, pady=10)
                     severity_menu_callback(self.severity_menu_var.get())
 
                     self.severity_lbl.grid(row=1, column=0, padx=10, pady=10, sticky="e")
                     self.severity_menu.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+
+                    self.multi_atk_lbl.grid_forget()
+                    self.multi_atk_p_button.grid_forget()
+                    self.multi_atk_m_button.grid_forget()
+
+                    self.second_element_lbl.grid_forget()
+                    self.second_element_menu.grid_forget()
+
+                    self.row_fm_switch.grid_forget()
                 case "Attack All":
-                    self.mp_limit_switch.grid(row=1, column=4, columnspan=2, padx=10, pady=10)
+                    self.mp_limit_switch.grid(row=1, column=5, columnspan=2, padx=10, pady=10)
                     severity_menu_callback(self.severity_menu_var.get())
 
                     self.severity_lbl.grid(row=1, column=0, padx=10, pady=10, sticky="e")
                     self.severity_menu.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+
+                    self.multi_atk_lbl.grid_forget()
+                    self.multi_atk_p_button.grid_forget()
+                    self.multi_atk_m_button.grid_forget()
+
+                    self.second_element_lbl.grid_forget()
+                    self.second_element_menu.grid_forget()
+
+                    self.row_fm_switch.grid_forget()
+                case "Multi Attack":
+                    self.mp_limit_switch.grid(row=1, column=5, columnspan=2, padx=10, pady=10)
+
+                    self.severity_lbl.grid(row=1, column=0, padx=10, pady=10, sticky="e")
+                    self.severity_menu.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+
+                    self.multi_atk_lbl.grid(row=1, column=2, padx=10, pady=10, sticky="e")
+                    self.multi_atk_m_button.grid(row=1, column=3, padx=10, pady=10)
+                    self.multi_atk_p_button.grid(row=1, column=4, padx=10, pady=10)
+                    severity_menu_callback(self.severity_menu_var.get())
+
+                    self.second_element_lbl.grid_forget()
+                    self.second_element_menu.grid_forget()
+
+                    self.row_fm_switch.grid_forget()
+                case "Drain Attack":
+                    self.mp_limit_switch.grid(row=1, column=5, columnspan=2, padx=10, pady=10)
+                    severity_menu_callback(self.severity_menu_var.get())
+
+                    self.severity_lbl.grid(row=1, column=0, padx=10, pady=10, sticky="e")
+                    self.severity_menu.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+
+                    self.multi_atk_lbl.grid_forget()
+                    self.multi_atk_p_button.grid_forget()
+                    self.multi_atk_m_button.grid_forget()
+
+                    self.second_element_lbl.grid_forget()
+                    self.second_element_menu.grid_forget()
+
+                    self.row_fm_switch.grid_forget()
+                case "Splash Attack":
+                    self.mp_limit_switch.grid(row=1, column=5, columnspan=2, padx=10, pady=10)
+                    severity_menu_callback(self.severity_menu_var.get())
+
+                    self.severity_lbl.grid(row=1, column=0, padx=10, pady=10, sticky="e")
+                    self.severity_menu.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+
+                    self.multi_atk_lbl.grid_forget()
+                    self.multi_atk_p_button.grid_forget()
+                    self.multi_atk_m_button.grid_forget()
+
+                    self.second_element_lbl.grid(row=1, column=2, padx=10, pady=10, sticky="e")
+                    self.second_element_menu.grid(row=1, column=3, columnspan=2, padx=10, pady=10, sticky="w")
+
+                    self.row_fm_switch.grid_forget()
+                case "Row Attack":
+                    self.mp_limit_switch.grid(row=1, column=5, columnspan=2, padx=10, pady=10)
+                    severity_menu_callback(self.severity_menu_var.get())
+
+                    self.severity_lbl.grid(row=1, column=0, padx=10, pady=10, sticky="e")
+                    self.severity_menu.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+
+                    self.multi_atk_lbl.grid_forget()
+                    self.multi_atk_p_button.grid_forget()
+                    self.multi_atk_m_button.grid_forget()
+
+                    self.second_element_lbl.grid_forget()
+                    self.second_element_menu.grid_forget()
+
+                    self.row_fm_switch.grid(row=1, column=2, columnspan=3, padx=10, pady=10)
 
         def severity_menu_callback(choice:str):
             match choice:
@@ -386,7 +495,66 @@ class AttackWindow(ctk.CTkToplevel):
                     pass
                 case "Attack All":
                     mp_cost += b_settings.getAtkAllMpAdd()
+                case "Multi Attack":
+                    mp_cost += (self.multi_atk_num.get() * b_settings.getMultiattackMpAdd())
+                case "Drain Attack":
+                    mp_cost += b_settings.getDrnSplAtkMpAdd()
+                case "Splash Attack":
+                    mp_cost += b_settings.getDrnSplAtkMpAdd()
+                case "Row Attack":
+                    mp_cost += b_settings.getRowAtkMpAdd()
 
+            s = "MP Cost: " + str(mp_cost)
+            self.mp_cost_lbl.configure(text=s)
+            self.mp_cost = mp_cost
+
+        def multi_atk_add_button():
+            num = self.multi_atk_num.get()
+            num += 1
+            self.multi_atk_num.set(num)
+            s2 = "Amount of Attacks: " + str(num)
+
+            self.multi_atk_lbl.configure(text=s2)
+
+            match self.severity_menu_var.get():
+                case "Light":
+                    mp_cost = b_settings.getLAtkMp()
+                case "Medium":
+                    mp_cost = b_settings.getMAtkMp()
+                case "Heavy":
+                    mp_cost = b_settings.getHAtkMp()
+                case "Severe":
+                    mp_cost = b_settings.getSAtkMp()
+                case "Colossal":
+                    mp_cost = b_settings.getCAtkMp()
+
+            mp_cost += (num * b_settings.getMultiattackMpAdd())
+            s = "MP Cost: " + str(mp_cost)
+            self.mp_cost_lbl.configure(text=s)
+            self.mp_cost = mp_cost
+
+        def multi_atk_subtract_button():
+            num = self.multi_atk_num.get()
+            num -= 1
+            if num < 1: num = 1
+            self.multi_atk_num.set(num)
+            s2 = "Amount of Attacks: " + str(num)
+            
+            self.multi_atk_lbl.configure(text=s2)
+
+            match self.severity_menu_var.get():
+                case "Light":
+                    mp_cost = b_settings.getLAtkMp()
+                case "Medium":
+                    mp_cost = b_settings.getMAtkMp()
+                case "Heavy":
+                    mp_cost = b_settings.getHAtkMp()
+                case "Severe":
+                    mp_cost = b_settings.getSAtkMp()
+                case "Colossal":
+                    mp_cost = b_settings.getCAtkMp()
+
+            mp_cost += (num * b_settings.getMultiattackMpAdd())
             s = "MP Cost: " + str(mp_cost)
             self.mp_cost_lbl.configure(text=s)
             self.mp_cost = mp_cost
@@ -394,6 +562,10 @@ class AttackWindow(ctk.CTkToplevel):
         def perform_attack():
             def phys_magic_bool():
                 if self.pm_menu.get() == "Physical": return True
+                else: return False
+
+            def fm_bool():
+                if self.row_fm_var.get() == "Targetting Front": return True
                 else: return False
 
             def elem_int():
@@ -409,6 +581,21 @@ class AttackWindow(ctk.CTkToplevel):
                     case "Other": return 8
                     case _: 
                         print("Type Error in elem_int()")
+                        return 0
+
+            def elem_int_2():
+                match self.second_element_menu.get():
+                    case "Slash": return 0
+                    case "Strike": return 1
+                    case "Pierce": return 2
+                    case "Fire": return 3
+                    case "Water": return 4
+                    case "Lightning": return 5
+                    case "Earth": return 6
+                    case "Wind": return 7
+                    case "Other": return 8
+                    case _: 
+                        print("Type Error in elem_int_2()")
                         return 0
 
             def severity_int():
@@ -453,7 +640,7 @@ class AttackWindow(ctk.CTkToplevel):
                     if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
                         messagebox.showinfo("Error", "Error. MP too low.")
                     else:
-                        battle_info = bu.powerAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.mp_cost)
+                        battle_info = bu.powerAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.mp_cost, False, False)
                         master.log_console.configure(text=battle_info[2])
     
                         if master.is_b.get() == "Team A":
@@ -484,25 +671,111 @@ class AttackWindow(ctk.CTkToplevel):
                             master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
                             master.changeBattlerListInfo(True, battle_info[1])
                         self.destroy()
+                case "Multi Attack":
+                    if master.is_b.get() == "Team A":
+                        attacker = master.findBattler(master.battlers_a_menu.get(), True)
+                        defender = master.findBattler(master.battlers_b_menu.get(), False)
+                    else:
+                        attacker = master.findBattler(master.battlers_b_menu.get(), False)
+                        defender = master.findBattler(master.battlers_a_menu.get(), True)
+    
+                    if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
+                        messagebox.showinfo("Error", "Error. MP too low.")
+                    else:
+                        battle_info = bu.multiAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.multi_atk_num.get(), self.mp_cost)
+                        master.log_console.configure(text=battle_info[2])
+    
+                        if master.is_b.get() == "Team A":
+                            master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[0])
+                            master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[1])
+                        else:
+                            master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
+                            master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[1])
+                        self.destroy()
+                case "Drain Attack":
+                    if master.is_b.get() == "Team A":
+                        attacker = master.findBattler(master.battlers_a_menu.get(), True)
+                        defender = master.findBattler(master.battlers_b_menu.get(), False)
+                    else:
+                        attacker = master.findBattler(master.battlers_b_menu.get(), False)
+                        defender = master.findBattler(master.battlers_a_menu.get(), True)
+    
+                    if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
+                        messagebox.showinfo("Error", "Error. MP too low.")
+                    else:
+                        battle_info = bu.drainAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.mp_cost)
+                        master.log_console.configure(text=battle_info[2])
+    
+                        if master.is_b.get() == "Team A":
+                            master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[0])
+                            master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[1])
+                        else:
+                            master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
+                            master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[1])
+                        self.destroy()
+                case "Splash Attack":
+                    if master.is_b.get() == "Team A":
+                        attacker = master.findBattler(master.battlers_a_menu.get(), True)
+                        defenders = master.getBattlersInList(False)
+                        primary_defender_tag = master.findBattler(master.battlers_b_menu.get(), False).label
+                    else:
+                        attacker = master.findBattler(master.battlers_b_menu.get(), False)
+                        defenders = master.getBattlersInList(True)
+                        primary_defender_tag = master.findBattler(master.battlers_b_menu.get(), True).label
+
+                    if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
+                        messagebox.showinfo("Error", "Error. MP too low.")
+                    else:
+                        battle_info = bu.splashAttack(attacker, primary_defender_tag, defenders, b_settings, phys_magic_bool(), elem_int(), elem_int_2(), severity_int(), self.mp_cost)
+                        master.log_console.configure(text=battle_info[2])
+
+                        if master.is_b.get() == "Team A":
+                            master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[0])
+                            master.changeBattlerListInfo(False, battle_info[1])
+                        else:
+                            master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
+                            master.changeBattlerListInfo(True, battle_info[1])
+                        self.destroy()
+                case "Row Attack":
+                    if master.is_b.get() == "Team A":
+                        attacker = master.findBattler(master.battlers_a_menu.get(), True)
+                        defenders = master.getBattlersInList(False)
+                    else:
+                        attacker = master.findBattler(master.battlers_b_menu.get(), False)
+                        defenders = master.getBattlersInList(True)
+
+                    if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
+                        messagebox.showinfo("Error", "Error. MP too low.")
+                    else:
+                        battle_info = bu.rowAttack(attacker, defenders, b_settings, phys_magic_bool(), elem_int(), severity_int(), fm_bool(), self.mp_cost)
+                        master.log_console.configure(text=battle_info[2])
+
+                        if master.is_b.get() == "Team A":
+                            master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[0])
+                            master.changeBattlerListInfo(False, battle_info[1])
+                        else:
+                            master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
+                            master.changeBattlerListInfo(True, battle_info[1])
+                        self.destroy()
 
         self.type_lbl = ctk.CTkLabel(master=self, text="Attack Type:")
         self.type_lbl.grid(row=0, column=0, padx=10, pady=10, sticky="e")
 
         self.type_menu_var = ctk.StringVar(value="Attack")
-        self.type_menu = ctk.CTkOptionMenu(master=self, values=["Attack", "Power Attack", "Attack All", "Multi Attack", "Drain Attack", "Row Attack", "Splash Attack"], command=type_menu_callback, variable=self.type_menu_var)
+        self.type_menu = ctk.CTkOptionMenu(master=self, values=["Attack", "Power Attack", "Attack All", "Multi Attack", "Drain Attack", "Splash Attack", "Row Attack"], command=type_menu_callback, variable=self.type_menu_var)
         self.type_menu.grid(row=0, column=1, padx=10, pady=10, sticky="w")
 
         self.pm_lbl = ctk.CTkLabel(master=self, text="Physical or Ranged:")
         self.pm_lbl.grid(row=0, column=2, padx=10, pady=10, sticky="e")
 
         self.pm_menu = ctk.CTkOptionMenu(master=self, values=["Physical", "Ranged"])
-        self.pm_menu.grid(row=0, column=3, padx=10, pady=10, sticky="w")
+        self.pm_menu.grid(row=0, column=3, columnspan=2, padx=10, pady=10, sticky="w")
 
         self.ele_lbl = ctk.CTkLabel(master=self, text="Element:")
-        self.ele_lbl.grid(row=0, column=4, padx=10, pady=10, sticky="e")
+        self.ele_lbl.grid(row=0, column=5, padx=10, pady=10, sticky="e")
 
         self.ele_menu = ctk.CTkOptionMenu(master=self, values=["Slash", "Strike", "Pierce", "Fire", "Water", "Lightning", "Earth", "Wind", "Other"])
-        self.ele_menu.grid(row=0, column=5, padx=10, pady=10, sticky="w")
+        self.ele_menu.grid(row=0, column=6, padx=10, pady=10, sticky="w")
 
         def mp_limit(): self.mp_limit_switch.configure(text=self.mp_limit_var.get())
         self.mp_limit_var = ctk.StringVar(value=" MP Requirement Enforced ")
@@ -512,11 +785,23 @@ class AttackWindow(ctk.CTkToplevel):
         self.mp_cost_lbl.grid(row=2, column=1, padx=10, pady=10, sticky="s")
 
         self.atk_btn = ctk.CTkButton(master=self, text="Confirm", command=perform_attack)
-        self.atk_btn.grid(row=2, column=3, padx=10, pady=10, sticky="s")
+        self.atk_btn.grid(row=2, column=3, columnspan=2, padx=10, pady=10, sticky="s")
 
         self.severity_menu_var = ctk.StringVar(value="Light")
         self.severity_lbl = ctk.CTkLabel(master=self, text="Attack Severity:")
         self.severity_menu = ctk.CTkOptionMenu(master=self, values=["Light", "Medium", "Heavy", "Severe", "Colossal"], command=severity_menu_callback, variable=self.severity_menu_var)
+
+        self.multi_atk_num = ctk.IntVar(value=3)
+        self.multi_atk_lbl = ctk.CTkLabel(master=self, text="Amount of Attacks: 3")
+        self.multi_atk_m_button = ctk.CTkButton(master=self, width=40, text="-", command=multi_atk_subtract_button)
+        self.multi_atk_p_button = ctk.CTkButton(master=self, width=40, text="+", command=multi_atk_add_button)
+
+        self.second_element_lbl = ctk.CTkLabel(master=self, text="Splash Element")
+        self.second_element_menu = ctk.CTkOptionMenu(master=self, values=["Slash", "Strike", "Pierce", "Fire", "Water", "Lightning", "Earth", "Wind", "Other"])
+
+        def fm_switch(): self.row_fm_switch.configure(text=self.row_fm_var.get())
+        self.row_fm_var = ctk.StringVar(value="Targetting Front")
+        self.row_fm_switch = ctk.CTkSwitch(master=self, text="Targetting Front", command=lambda: fm_switch(), variable=self.row_fm_var, onvalue="Targetting Front", offvalue="Targetting Back")
 
 class App(ctk.CTk):
     def __init__(self):
