@@ -848,11 +848,11 @@ class HealWindow(ctk.CTkToplevel):
         self.grid_columnconfigure(5, weight=1)
 
         def fill_name_menus():
-            a_names = master.getBattlerNamesInList(True)
+            a_names = master.getBattlerLabelsInList(True)
             self.a_caster_menu.configure(values=a_names)
             self.a_target_menu.configure(values=a_names)
 
-            b_names = master.getBattlerNamesInList(False)
+            b_names = master.getBattlerLabelsInList(False)
             self.b_caster_menu.configure(values=b_names)
             self.b_target_menu.configure(values=b_names)
 
@@ -865,12 +865,16 @@ class HealWindow(ctk.CTkToplevel):
 
                 self.a_caster_menu.grid(row=0, column=3, padx=10, pady=10, sticky="w")
                 self.a_target_menu.grid(row=0, column=5, padx=10, pady=10, sticky="w")
+                self.a_caster_menu.set("")
+                self.a_target_menu.set("")
             else:
                 self.a_caster_menu.grid_forget()
                 self.a_target_menu.grid_forget()
 
                 self.b_caster_menu.grid(row=0, column=3, padx=10, pady=10, sticky="w")
                 self.b_target_menu.grid(row=0, column=5, padx=10, pady=10, sticky="w")
+                self.b_caster_menu.set("")
+                self.b_target_menu.set("")
 
         def heal_all_switch():
             self.heal_all_switch.configure(text=self.heal_all_var.get())
@@ -893,6 +897,63 @@ class HealWindow(ctk.CTkToplevel):
             s = "MP Cost: " + str(self.mp_cost.get())
             self.mp_cost_lbl.configure(text=s)
 
+        def heal_button():
+            def severity_val():
+                match self.severity_var.get():
+                    case "Light": return 0
+                    case "Medium": return 1
+                    case "Heavy": return 2
+                    case _: 
+                        print("Error in severity_val")
+                        return 0
+
+            if self.a_b.get() == "Team A":
+                if self.a_target_menu.get() != "" or self.a_caster_menu.get() != "":
+                    caster = master.findBattler(self.a_caster_menu.get(), True)
+
+                    if caster.mp < self.mp_cost.get() and self.mp_limit_var.get() == "MP Requirement Unenforced":
+                        if self.heal_all_var.get() == "Heal One":
+                            target = master.findBattler(self.a_target_menu.get(), True)
+                            battle_info = bu.healOne(caster, target, b_settings, severity_val(), self.mp_cost.get())
+    
+                            master.changeBattlerInfo(self.a_target_menu.get(), True, battle_info[1])
+                        else:
+                            targets = master.getBattlersInList(True)
+                            battle_info = bu.healAll(caster, targets, b_settings, severity_val(), self.mp_cost.get())
+    
+                            master.changeBattlerListInfo(True, battle_info[1])
+                        
+                        master.changeBattlerInfo(self.a_caster_menu.get(), True, battle_info[0])
+                        master.log_console.configure(text=battle_info[2])
+                        self.destroy()
+                    else:
+                        messagebox.showinfo("Error", "Error. MP too low.")
+                else:
+                    messagebox.showinfo("Error", "Error. Please input a caster and target from Team A.")
+            else:
+                if self.b_target_menu.get() != "" or self.b_caster_menu.get() != "":
+                    caster = master.findBattler(self.b_caster_menu.get(), False)
+                    
+                    if caster.mp < self.mp_cost.get() and self.mp_limit_var.get() == "MP Requirement Unenforced":
+                        if self.heal_all_var.get() == "Heal One":
+                            target = master.findBattler(self.b_target_menu.get(), False)
+                            battle_info = bu.healOne(caster, target, b_settings, severity_val(), self.mp_cost.get())
+    
+                            master.changeBattlerInfo(self.b_target_menu.get(), False, battle_info[1])
+                        else:
+                            targets = master.getBattlersInList(False)
+                            battle_info = bu.healAll(caster, targets, b_settings, severity_val(), self.mp_cost.get())
+    
+                            master.changeBattlerListInfo(False, battle_info[1])
+                        
+                        master.changeBattlerInfo(self.b_caster_menu.get(), False, battle_info[0])
+                        master.log_console.configure(text=battle_info[2])
+                        self.destroy()
+                    else:
+                        messagebox.showinfo("Error", "Error. MP too low.")
+                else:
+                    messagebox.showinfo("Error", "Error. Please input a caster and target from Team B.")
+
         self.a_b = ctk.StringVar(value="Team A")
         self.team_sw = ctk.CTkSwitch(master=self, text="Team A", command=lambda: a_b_switch(), variable=self.a_b, onvalue="Team B", offvalue="Team A")
         self.team_sw.grid(row=0, column=0, columnspan=2, padx=10, pady=10)
@@ -904,9 +965,11 @@ class HealWindow(ctk.CTkToplevel):
         self.target_lbl.grid(row=0, column=4, padx=10, pady=10, sticky="e")
         
         self.a_caster_menu = ctk.CTkOptionMenu(master=self, values=[])
+        self.a_caster_menu.set("")
         self.a_caster_menu.grid(row=0, column=3, padx=10, pady=10, sticky="w")
 
         self.a_target_menu = ctk.CTkOptionMenu(master=self, values=[])
+        self.a_target_menu.set("")
         self.a_target_menu.grid(row=0, column=5, padx=10, pady=10, sticky="w")
 
         self.b_caster_menu = ctk.CTkOptionMenu(master=self, values=[])
@@ -922,11 +985,19 @@ class HealWindow(ctk.CTkToplevel):
 
         self.heal_all_var = ctk.StringVar(value="Heal One")
         self.heal_all_switch = ctk.CTkSwitch(master=self, text="Heal One", command=heal_all_switch, variable=self.heal_all_var, onvalue="Heal All", offvalue="Heal One")
-        self.heal_all_switch.grid(row=1, column=4, columnspan=2, padx=10, pady=10)
+        self.heal_all_switch.grid(row=1, column=2, columnspan=2, padx=10, pady=10)
+
+        def mp_limit(): self.mp_limit_switch.configure(text=self.mp_limit_var.get())
+        self.mp_limit_var = ctk.StringVar(value=" MP Requirement Enforced ")
+        self.mp_limit_switch = ctk.CTkSwitch(master=self, text=" MP Requirement Enforced ", command=lambda: mp_limit(), variable=self.mp_limit_var, onvalue=" MP Requirement Enforced ", offvalue="MP Requirement Unenforced")
+        self.mp_limit_switch.grid(row=1, column=4, columnspan=2, padx=10, pady=10)
 
         self.mp_cost = ctk.IntVar(value=b_settings.getLHealMp())
         self.mp_cost_lbl = ctk.CTkLabel(master=self, text="MP Cost: 25")
-        self.mp_cost_lbl.grid(row=2, column=0, columnspan=2, padx=10, pady=10, sticky="s")
+        self.mp_cost_lbl.grid(row=2, column=1, padx=10, pady=10, sticky="s")
+
+        self.heal_button = ctk.CTkButton(master=self, text="Confirm Heal", command=heal_button)
+        self.heal_button.grid(row=2, column=4, padx=10, pady=10, sticky="s")
 
 class App(ctk.CTk):
     def __init__(self):
@@ -1163,14 +1234,14 @@ class App(ctk.CTk):
                 battler_list.append(cont.battler)
         return battler_list
 
-    def getBattlerNamesInList(self, is_a:bool):
+    def getBattlerLabelsInList(self, is_a:bool):
         battler_list = []
         if is_a:
             for cont in self.a_container:
-                battler_list.append(cont.battler.name)
+                battler_list.append(cont.battler.label)
         else:
             for cont in self.b_container:
-                battler_list.append(cont.battler.name)
+                battler_list.append(cont.battler.label)
         return battler_list
 
     def changeBattlerListInfo(self, is_a:bool, new_battlers:list["bu.Battler"]):

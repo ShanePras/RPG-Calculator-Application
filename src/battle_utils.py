@@ -525,3 +525,35 @@ def rowAttack(attacker:"Battler", defenders:list["Battler"], b_settings:"BattleS
         s += temp_info[2] + "\n"
 
     return [attacker, new_defenders, s]
+
+#HEAL
+def healOne(caster:"Battler", target:"Battler", b_settings:"BattleSettings", severity:int, mp_cost:int):
+    def severity_val():
+        match severity:
+            case 0: return b_settings.getLHealMtp()
+            case 1: return b_settings.getMHealMtp()
+            case 2: return b_settings.getHHealMtp()
+    
+    heal = math.floor(caster.magic * severity_val())
+    target.hp += heal
+    caster.mp -= mp_cost
+    target.equalizeHpMp()
+    caster.equalizeHpMp()
+
+    s = ""
+    s += target.name + " recovered " + str(heal) + " HP."
+
+    return [caster, target, s]
+
+def healAll(caster:"Battler", targets:list["Battler"], b_settings:"BattleSettings", severity:int, mp_cost:int):
+    caster.mp -= mp_cost
+    s = ""
+    new_targets = []
+
+    for target in targets:
+        temp_info = healOne(caster, target, b_settings, severity, 0)
+        new_targets.append(temp_info[1])
+        s += temp_info[2] + "\n"
+
+    return [caster, new_targets, s]
+
