@@ -271,17 +271,38 @@ class OptionWindow(ctk.CTkToplevel):
         self.hl_all_mp_gain_entry.grid(row=17, column=3, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.hl_all_mp_gain_entry)
 
+        self.guard_mp_perc_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Guard MP Percentage:")
+        self.guard_mp_perc_label.grid(row=18, column=2, padx=10, pady=10, sticky="nsew")
+        self.guard_mp_perc_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getGuardMp()))
+        self.guard_mp_perc_entry.grid(row=18, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.guard_mp_perc_entry)
+
+        self.charge_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Charge MP Cost:")
+        self.charge_mp_label.grid(row=19, column=2, padx=10, pady=10, sticky="nsew")
+        self.charge_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getChargeMp()))
+        self.charge_mp_entry.grid(row=19, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.charge_mp_entry)
+
+        self.scan_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Scan MP Cost:")
+        self.scan_mp_label.grid(row=20, column=2, padx=10, pady=10, sticky="nsew")
+        self.scan_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getScanMp()))
+        self.scan_mp_entry.grid(row=20, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.scan_mp_entry)
+
         def conf_changes(): 
             any_value_updated = False
             try:               
-                for i in range(40):
+                for i in range(len(self.entries)):
                     if self.entries[i].get() != "":
                         any_value_updated = True
                         b_settings.set_lst[i] = float(self.entries[i].get())
                 if any_value_updated:
                     messagebox.showinfo("Options Updated", "Values Successfully Updated!")
+                    master.guardLabelChange()
+                    master.chargeLabelChange()
+                    master.scanLabelChange()
             except ValueError:
-                messagebox.showinfo("Error", "Invalid Type in an Entry. Please Input Only Float Values.")
+                messagebox.showerror("Error", "Invalid Type in an Entry. Please Input Only Float Values.")
             finally:
                 self.destroy()
 
@@ -345,9 +366,25 @@ class BattlerContainer(ctk.CTkFrame):
 
         def guard_switch():
             if self.guard_var.get():
+                mp_add = math.floor(self.battler.mp * b_settings.getGuardMp())
+                self.battler.mp += mp_add
+                if self.battler.mp > self.battler.max_mp:
+                    self.battler.mp = self.battler.max_mp
+                mp_string = "MP: " + str(self.battler.mp) + "/" + str(self.battler.max_mp)
+                self.mp_label.configure(text=mp_string)
+
                 self.guard_switch.configure(text="  Is Guarding  ")
                 self.battler.guard = True
             else:
+                ask = messagebox.askyesno("Warning", "Do you want to return MP?")
+                if ask:
+                    mp_subtract = math.floor(self.battler.mp * b_settings.getGuardMp())
+                    self.battler.mp -= mp_subtract
+                    if self.battler.mp < 0:
+                        self.battler.mp = 0
+                mp_string = "MP: " + str(self.battler.mp) + "/" + str(self.battler.max_mp)
+                self.mp_label.configure(text=mp_string)
+
                 self.guard_switch.configure(text="Not Guarding")
                 self.battler.guard = False
         if self.battler.guard == True: 
@@ -358,11 +395,39 @@ class BattlerContainer(ctk.CTkFrame):
             self.guard_switch = ctk.CTkSwitch(master=self, text="Not Guarding", command=lambda: guard_switch(), variable=self.guard_var, onvalue=True, offvalue=False)
         self.guard_switch.grid(row=1, column=2, padx=10, pady=10, sticky="ns")
 
-        charge_string = ""
-        if(self.battler.charge): charge_string += "Charged"
-        else: charge_string += "Not Charged"
-        self.charge_label = ctk.CTkLabel(master=self, text=charge_string)
-        self.charge_label.grid(row=1, column=3, padx=10, pady=10, sticky="nsew")
+        def charge_callback():
+            def charge():
+                self.battler.mp -= b_settings.getChargeMp()
+                if self.battler.mp < 0: self.battler.mp = 0
+                mp_string = "MP: " + str(self.battler.mp) + "/" + str(self.battler.max_mp)
+                self.mp_label.configure(text=mp_string)
+
+                self.battler.charge = True
+                self.charge_btn.configure(text="Charged", command=uncharge_callback)
+
+            if self.battler.mp < b_settings.getChargeMp():
+                ask = messagebox.askyesno("Warning", "Warning, MP too low. Do you want to ignore MP cost?")
+                if ask: charge()
+            else:
+                charge()
+
+        def uncharge_callback():
+            ask = messagebox.askyesno("Warning", "Do you want to return MP?")
+            if ask:
+                self.battler.mp += b_settings.getChargeMp()
+                if self.battler.mp > self.battler.max_mp:
+                    self.battler.mp = self.battler.max_mp
+            mp_string = "MP: " + str(self.battler.mp) + "/" + str(self.battler.max_mp)
+            self.mp_label.configure(text=mp_string)
+
+            self.battler.charge = False
+            self.charge_btn.configure(text="Charge", command=charge_callback)
+
+        if self.battler.charge:
+            self.charge_btn = ctk.CTkButton(master=self, text="Charged", command=uncharge_callback)
+        else:
+            self.charge_btn = ctk.CTkButton(master=self, text="Charge", command=charge_callback)
+        self.charge_btn.grid(row=1, column=3, padx=10, pady=10, sticky="nsew")
 
         status_string = "Status: " + self.battler.status
         self.status_label = ctk.CTkLabel(master=self, text=status_string)
@@ -664,7 +729,7 @@ class AttackWindow(ctk.CTkToplevel):
                         defender = master.findBattler(master.battlers_a_menu.get(), True)
     
                     if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
-                        messagebox.showinfo("Error", "Error. MP too low.")
+                        messagebox.showerror("Error", "Error. MP too low.")
                     else:
                         battle_info = bu.powerAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.mp_cost, False, False)
                         master.log_console.configure(text=battle_info[2])
@@ -685,7 +750,7 @@ class AttackWindow(ctk.CTkToplevel):
                         defenders = master.getBattlersInList(True)
 
                     if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
-                        messagebox.showinfo("Error", "Error. MP too low.")
+                        messagebox.showerror("Error", "Error. MP too low.")
                     else:
                         battle_info = bu.attackAll(attacker, defenders, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.mp_cost)
                         master.log_console.configure(text=battle_info[2])
@@ -706,7 +771,7 @@ class AttackWindow(ctk.CTkToplevel):
                         defender = master.findBattler(master.battlers_a_menu.get(), True)
     
                     if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
-                        messagebox.showinfo("Error", "Error. MP too low.")
+                        messagebox.showerror("Error", "Error. MP too low.")
                     else:
                         battle_info = bu.multiAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.multi_atk_num.get(), self.mp_cost)
                         master.log_console.configure(text=battle_info[2])
@@ -727,7 +792,7 @@ class AttackWindow(ctk.CTkToplevel):
                         defender = master.findBattler(master.battlers_a_menu.get(), True)
     
                     if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
-                        messagebox.showinfo("Error", "Error. MP too low.")
+                        messagebox.showerror("Error", "Error. MP too low.")
                     else:
                         battle_info = bu.drainAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.mp_cost)
                         master.log_console.configure(text=battle_info[2])
@@ -750,7 +815,7 @@ class AttackWindow(ctk.CTkToplevel):
                         primary_defender_tag = master.findBattler(master.battlers_b_menu.get(), True).label
 
                     if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
-                        messagebox.showinfo("Error", "Error. MP too low.")
+                        messagebox.showerror("Error", "Error. MP too low.")
                     else:
                         battle_info = bu.splashAttack(attacker, primary_defender_tag, defenders, b_settings, phys_magic_bool(), elem_int(), elem_int_2(), severity_int(), self.mp_cost)
                         master.log_console.configure(text=battle_info[2])
@@ -771,7 +836,7 @@ class AttackWindow(ctk.CTkToplevel):
                         defenders = master.getBattlersInList(True)
 
                     if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
-                        messagebox.showinfo("Error", "Error. MP too low.")
+                        messagebox.showerror("Error", "Error. MP too low.")
                     else:
                         battle_info = bu.rowAttack(attacker, defenders, b_settings, phys_magic_bool(), elem_int(), severity_int(), fm_bool(), self.mp_cost)
                         master.log_console.configure(text=battle_info[2])
@@ -1022,11 +1087,12 @@ class App(ctk.CTk):
         self.columnconfigure(6, weight=1)
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=1)
-        self.rowconfigure(2, weight=16)
-        self.rowconfigure(3, weight=1)
-        self.rowconfigure(4, weight=2)
-        self.rowconfigure(5, weight=4)
-        self.rowconfigure(6, weight=8)
+        self.rowconfigure(2, weight=1)
+        self.rowconfigure(3, weight=16)
+        self.rowconfigure(4, weight=1)
+        self.rowconfigure(5, weight=2)
+        self.rowconfigure(6, weight=4)
+        self.rowconfigure(7, weight=8)
 
         self.option_window = None
         self.attack_window = None
@@ -1038,9 +1104,6 @@ class App(ctk.CTk):
 
         def a_b_switch():
             self.team_sw.configure(text=self.is_b.get())
-
-        def show_msg(title:str, msg:str):
-            messagebox.showinfo(title, msg)
 
         def import_file(frame, is_a=True):
             file_path = filedialog.askopenfilename(
@@ -1096,11 +1159,11 @@ class App(ctk.CTk):
                             self.battlers_b_menu.configure(values=label_list)
 
                 except SyntaxError:
-                    show_msg("Error", "Error: CSV File is incorrectly formated.")
+                    messagebox.showerror("Error", "Error: CSV File is incorrectly formated.")
                 except ValueError:
-                    show_msg("Error", "Error: Bad type in CSV file. Please reformat.")
+                    messagebox.showerror("Error", "Error: Bad type in CSV file. Please reformat.")
                 except IndexError:
-                    show_msg("Error", "Error: CSV file is missing data.")
+                    messagebox.showerror("Error", "Error: CSV file is missing data.")
                 finally:
                     f.close()
                     if self.attack_window is not None:
@@ -1109,7 +1172,7 @@ class App(ctk.CTk):
                         self.heal_window.destroy()
 
             else:
-                show_msg("Error", "No file selected.")
+                messagebox.showerror("Error", "No file selected.")
 
         def open_settings():
             if self.option_window is None or not self.option_window.winfo_exists():
@@ -1124,7 +1187,7 @@ class App(ctk.CTk):
                 else:
                     self.attack_window.focus()
             else:
-                show_msg("Error", "Please select fighters in the A and B dropdown before pressing the command.")
+                messagebox.showerror("Error", "Please select fighters in the A and B dropdown before pressing the command.")
 
         def heal_menu():
             if self.battlers_a_menu._values != [] and self.battlers_b_menu._values != []:
@@ -1133,76 +1196,125 @@ class App(ctk.CTk):
                 else:
                     self.heal_window.focus()
             else:
-                show_msg("Error", "Please import fighters for the A and B dropdowns before pressing the command.")
+                messagebox.showerror("Error", "Please import fighters for the A and B dropdowns before pressing the command.")
 
         def buff_menu():
             pass
 
-        def charge():
+        def ele_menu():
             pass
 
         def scan():
-            pass
+            if self.is_b.get() == "Team A":
+                if self.battlers_a_menu.get() != "" and self.battlers_b_menu._values != []:
+                    scanner = self.findBattler(self.battlers_a_menu.get(), True)
+                    if isinstance(scanner, bu.Battler) and scanner.mp < b_settings.getScanMp():
+                        ask = messagebox.askyesno("Warning", "Warning, not enough MP. Ignore MP cost?")
+                        if ask: 
+                            targets = self.getBattlersInList(False)
+                            info = bu.targetScan(scanner, targets, b_settings.getScanMp())
+                            self.changeBattlerInfo(self.battlers_a_menu.get(), True, info[0])
+                            self.log_console.configure(text=info[1])
+                        else:
+                            messagebox.showinfo("Info", "Scan action canceled.")
+                    elif isinstance(scanner, bu.Battler):
+                        targets = self.getBattlersInList(False)
+                        info = bu.targetScan(scanner, targets, b_settings.getScanMp())
+                        self.changeBattlerInfo(self.battlers_a_menu.get(), True, info[0])
+                        self.log_console.configure(text=info[1])
+                else:
+                    messagebox.showerror("Error", "Please select a fighter in the A dropdown, and make sure fighters are imported in Team B.")  
+            else:
+                if self.battlers_b_menu.get() != "" and self.battlers_a_menu._values != []:
+                    scanner = self.findBattler(self.battlers_b_menu.get(), False)
+                    if isinstance(scanner, bu.Battler) and scanner.mp < b_settings.getScanMp():
+                        ask = messagebox.askyesno("Warning", "Warning, not enough MP. Ignore MP cost?")
+                        if ask: 
+                            targets = self.getBattlersInList(True)
+                            info = bu.targetScan(scanner, targets, b_settings.getScanMp())
+                            self.changeBattlerInfo(self.battlers_a_menu.get(), False, info[0])
+                            self.log_console.configure(text=info[1])
+                        else:
+                            messagebox.showinfo("Info", "Scan action canceled.")
+                    elif isinstance(scanner, bu.Battler):
+                        targets = self.getBattlersInList(True)
+                        info = bu.targetScan(scanner, targets, b_settings.getScanMp())
+                        self.changeBattlerInfo(self.battlers_a_menu.get(), False, info[0])
+                        self.log_console.configure(text=info[1])
+                else:
+                    messagebox.showerror("Error", "Please select a fighter in the B dropdown, and make sure fighters are imported in Team A.")
 
         def status_menu():
             pass
         
         self.option_button = ctk.CTkButton(master=self, corner_radius=5, text="Settings", command=lambda: open_settings())
         self.option_button.grid(row=0, column=6, padx=20, pady=20)
+
+        self.guard_mp_lbl = ctk.CTkLabel(master=self, text="")
+        self.guard_mp_lbl.grid(row=1, column=2, padx=20, pady=20)
+        self.guardLabelChange()
+
+        self.charge_mp_lbl = ctk.CTkLabel(master=self, text="")
+        self.charge_mp_lbl.grid(row=1, column=3, padx=20, pady=20)
+        self.chargeLabelChange()
+
+        self.scan_mp_lbl = ctk.CTkLabel(master=self, text="")
+        self.scan_mp_lbl.grid(row=1, column=4, padx=20, pady=20)
+        self.scanLabelChange()
         
         self.frame_a = ctk.CTkScrollableFrame(master=self, corner_radius=5, border_width=2, border_color="#e6f7ff", fg_color="#3a4b5c")
-        self.frame_a.grid(row=2, column=0, columnspan=3, padx=20, pady=20, sticky="nsew") #sticky="nsew" means the frame "sticks" to the 4 directions, north south east west
+        self.frame_a.grid(row=3, column=0, columnspan=3, padx=20, pady=20, sticky="nsew") #sticky="nsew" means the frame "sticks" to the 4 directions, north south east west
 
         self.frame_b = ctk.CTkScrollableFrame(master=self, corner_radius=5, border_width=2, border_color="#e6f7ff", fg_color="#3a4b5c")
-        self.frame_b.grid(row=2, column=3, columnspan=3, padx=20, pady=20, sticky="nsew") 
+        self.frame_b.grid(row=3, column=3, columnspan=3, padx=20, pady=20, sticky="nsew") 
 
         self.import_but_a = ctk.CTkButton(self, text="Import File for Team A", command=lambda: import_file(self.frame_a, True)) #command must be lambda wrapped to prevent it from executing on start
-        self.import_but_a.grid(row=1, column=1, padx=20, pady=20, sticky="n")
+        self.import_but_a.grid(row=2, column=1, padx=20, pady=20, sticky="n")
 
         self.import_but_b = ctk.CTkButton(self, text="Import File for Team B", command=lambda: import_file(self.frame_b, False)) 
-        self.import_but_b.grid(row=1, column=4, padx=20, pady=20, sticky="n")
+        self.import_but_b.grid(row=2, column=4, padx=20, pady=20, sticky="n")
 
         self.sw_label = ctk.CTkLabel(master=self, text="Selected Attacking Team")
-        self.sw_label.grid(row=3, column=2, padx=20, pady=20, sticky="e")
+        self.sw_label.grid(row=4, column=2, padx=20, pady=20, sticky="e")
 
         self.is_b = ctk.StringVar(value="Team A")
         self.team_sw = ctk.CTkSwitch(master=self, text="Team A", command=lambda: a_b_switch(), variable=self.is_b, onvalue="Team B", offvalue="Team A")
-        self.team_sw.grid(row=3, column=3, padx=10, pady=10, sticky="w")
+        self.team_sw.grid(row=4, column=3, padx=10, pady=10, sticky="w")
 
         self.names_a_lbl = ctk.CTkLabel(master=self, text="Team A - Selected Fighter:")
-        self.names_a_lbl.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky="e")
+        self.names_a_lbl.grid(row=5, column=0, columnspan=2, padx=10, pady=10, sticky="e")
 
         self.battlers_a_menu = ctk.CTkOptionMenu(master=self, values=[])
         self.battlers_a_menu.set("")
-        self.battlers_a_menu.grid(row=4, column=2, padx=10, pady=10, sticky="w")
+        self.battlers_a_menu.grid(row=5, column=2, padx=10, pady=10, sticky="w")
 
         self.names_b_lbl = ctk.CTkLabel(master=self, text="Team B - Selected Fighter:")
-        self.names_b_lbl.grid(row=4, column=3, padx=10, pady=10, sticky="e")
+        self.names_b_lbl.grid(row=5, column=3, padx=10, pady=10, sticky="e")
 
         self.battlers_b_menu = ctk.CTkOptionMenu(master=self, values=[])
         self.battlers_b_menu.set("")
-        self.battlers_b_menu.grid(row=4, column=4, columnspan=2, padx=10, pady=10, sticky="w")
+        self.battlers_b_menu.grid(row=5, column=4, columnspan=2, padx=10, pady=10, sticky="w")
 
         self.atk_button = ctk.CTkButton(master=self, text="Attack", command=lambda: attack_menu())
-        self.atk_button.grid(row=5, column=0, padx=20, pady=20, sticky="nsew")
+        self.atk_button.grid(row=6, column=0, padx=20, pady=20, sticky="nsew")
 
         self.heal_button = ctk.CTkButton(master=self, text="Heal", command=lambda: heal_menu())
-        self.heal_button.grid(row=5, column=1, padx=20, pady=20, sticky="nsew")
+        self.heal_button.grid(row=6, column=1, padx=20, pady=20, sticky="nsew")
 
         self.buff_button = ctk.CTkButton(master=self, text="Buff/Debuff", command=lambda: buff_menu())
-        self.buff_button.grid(row=5, column=2, padx=20, pady=20, sticky="nsew")
+        self.buff_button.grid(row=6, column=2, padx=20, pady=20, sticky="nsew")
 
-        self.charge_button = ctk.CTkButton(master=self, text="Charge", command=lambda: charge())
-        self.charge_button.grid(row=5, column=3, padx=20, pady=20, sticky="nsew")
+        self.charge_button = ctk.CTkButton(master=self, text="Element Change", command=lambda: ele_menu())
+        self.charge_button.grid(row=6, column=3, padx=20, pady=20, sticky="nsew")
 
         self.scan_button = ctk.CTkButton(master=self, text="Scan", command=lambda: scan())
-        self.scan_button.grid(row=5, column=4, padx=20, pady=20, sticky="nsew")
+        self.scan_button.grid(row=6, column=4, padx=20, pady=20, sticky="nsew")
 
         self.status_button = ctk.CTkButton(master=self, text="Inflict Status", command=lambda: status_menu())
-        self.status_button.grid(row=5, column=5, padx=20, pady=20, sticky="nsew")
+        self.status_button.grid(row=6, column=5, padx=20, pady=20, sticky="nsew")
 
         self.log_console = ctk.CTkLabel(master=self, text="", corner_radius=10, border_width=2, border_color="#e6f7ff", fg_color="#3a4b5c")
-        self.log_console.grid(row=6, column=2, columnspan=5, padx=20, pady=20, sticky="nsew")
+        self.log_console.grid(row=7, column=2, columnspan=5, padx=20, pady=20, sticky="nsew")
 
     def findBattler(self, tag:str, is_a:bool):
         if is_a:
@@ -1251,6 +1363,22 @@ class App(ctk.CTk):
         else:
             for i in range(len(new_battlers)):
                 self.b_container[i].assignBattler(new_battlers[i])
+
+    def guardLabelChange(self):
+        s = ""
+        percent = b_settings.getGuardMp() * 100
+        s += "Guard MP Gain: " + str(percent) + "% MaxMP"
+        self.guard_mp_lbl.configure(text=s)
+
+    def chargeLabelChange(self):
+        s = ""
+        s += "Charge MP Cost: " + str(b_settings.getChargeMp())
+        self.charge_mp_lbl.configure(text=s)
+
+    def scanLabelChange(self):
+        s = ""
+        s += "Scan MP Cost: " + str(b_settings.getScanMp())
+        self.scan_mp_lbl.configure(text=s)
 
 #This runs the app, always call it last. 
 #__name__ = "__main__" makes sure this only runs if called directly from this file

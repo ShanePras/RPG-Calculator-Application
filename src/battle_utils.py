@@ -60,6 +60,10 @@ class BattleSettings:
 
         self.set_lst.append(15) #heal all mp add; 39
 
+        self.set_lst.append(0.15) #guard mp percent; 40
+        self.set_lst.append(25) #charge mp; 41
+        self.set_lst.append(15) #scan mp; 42
+
     def getLAtkMtp(self): return self.set_lst[0]
     def getMAtkMtp(self): return self.set_lst[1]
     def getHAtkMtp(self): return self.set_lst[2]
@@ -101,6 +105,9 @@ class BattleSettings:
     def getMHealMp(self): return self.set_lst[37]
     def getHHealMp(self): return self.set_lst[38]
     def getHealAllMpAdd(self): return self.set_lst[39]
+    def getGuardMp(self): return self.set_lst[40]
+    def getChargeMp(self): return self.set_lst[41]
+    def getScanMp(self): return self.set_lst[42]
 
 class Battler:
     def __init__(self, stats: list):
@@ -557,3 +564,31 @@ def healAll(caster:"Battler", targets:list["Battler"], b_settings:"BattleSetting
 
     return [caster, new_targets, s]
 
+#SCAN
+def targetScan(scanner:"Battler", targets:list["Battler"], mp_cost:int):
+    def res_val(val:int):
+        #0-Normal, 1-Weak, 2-Resists, 3-Null, 4-Reflect, 5-Drain
+        match val:
+            case 0: return "Normal"
+            case 1: return "Weak"
+            case 2: return "Resists"
+            case 3: return "Null"
+            case 4: return "Reflect"
+            case 5: return "Drain"
+
+    s = ""
+    scanner.mp -= mp_cost
+    scanner.equalizeHpMp()
+
+    for target in targets:
+        s += target.name + "'s affinities: Slash: " + res_val(target.slash_resist) + \
+        ", Strike: " + res_val(target.strike_resist) + \
+        ", Pierce: " + res_val(target.pierce_resist) + \
+        ", Fire: " + res_val(target.fire_resist) + \
+        ", Water: " + res_val(target.water_resist) + \
+        ", Lightning: " + res_val(target.lightning_resist) + \
+        ", Earth: " + res_val(target.earth_resist) + \
+        ", Wind: " + res_val(target.wind_resist) + \
+        ", Other: " + res_val(target.other_resist) + ".\n"
+
+    return [scanner, s]
