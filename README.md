@@ -8,6 +8,6 @@ All "resists" control what kinds of attacks characters can resist or not resist.
 \
 Current Goals:
 - Finish Buff Menu
-- Finish Heal Menu
-- Add guard and charge functionality
+- Finish Element Break/Wall Menu
+- Add undo/redo functionality
 - Add a character creator window to help with imports
