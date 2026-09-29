@@ -16,7 +16,6 @@ class OptionWindow(ctk.CTkToplevel):
 
         self.title("RPG Calculator Settings")
         self.geometry("1280x720")
-        self.iconbitmap("RPG Calculator Program/SunSymbol.ico")
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -289,6 +288,30 @@ class OptionWindow(ctk.CTkToplevel):
         self.scan_mp_entry.grid(row=20, column=3, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.scan_mp_entry)
 
+        self.buff_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Buff MP Cost:")
+        self.buff_mp_label.grid(row=0, column=4, padx=10, pady=10, sticky="nsew")
+        self.buff_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getBuffMp()))
+        self.buff_mp_entry.grid(row=0, column=5, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.buff_mp_entry)
+
+        self.buff_all_mp_add_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Buff All MP Increase:")
+        self.buff_all_mp_add_label.grid(row=1, column=4, padx=10, pady=10, sticky="nsew")
+        self.buff_all_mp_add_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getBuffAllMpAdd()))
+        self.buff_all_mp_add_entry.grid(row=1, column=5, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.buff_all_mp_add_entry)
+
+        self.buff_lvl_mp_add_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Buff Level MP Increase:")
+        self.buff_lvl_mp_add_label.grid(row=2, column=4, padx=10, pady=10, sticky="nsew")
+        self.buff_lvl_mp_add_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getBuffLvlMpAdd()))
+        self.buff_lvl_mp_add_entry.grid(row=2, column=5, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.buff_lvl_mp_add_entry)
+
+        self.buff_extra_stat_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Buff Extra Stat MP Increase:")
+        self.buff_extra_stat_mp_label.grid(row=3, column=4, padx=10, pady=10, sticky="nsew")
+        self.buff_extra_stat_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getBuffExtraStatMpAdd()))
+        self.buff_extra_stat_mp_entry.grid(row=3, column=5, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.buff_extra_stat_mp_entry)
+
         def conf_changes(): 
             any_value_updated = False
             try:               
@@ -439,7 +462,6 @@ class AttackWindow(ctk.CTkToplevel):
 
         self.title("Attack Menu")
         self.geometry("1280x720")
-        self.iconbitmap("RPG Calculator Program/SunSymbol.ico")
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -900,7 +922,8 @@ class HealWindow(ctk.CTkToplevel):
 
         self.title("Heal Menu")
         self.geometry("1280x720")
-        self.iconbitmap("RPG Calculator Program/SunSymbol.ico")
+
+        self.after(100, self.focus)
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -1061,8 +1084,231 @@ class HealWindow(ctk.CTkToplevel):
         self.mp_cost_lbl = ctk.CTkLabel(master=self, text="MP Cost: 25")
         self.mp_cost_lbl.grid(row=2, column=1, padx=10, pady=10, sticky="s")
 
-        self.heal_button = ctk.CTkButton(master=self, text="Confirm Heal", command=heal_button)
+        self.heal_button = ctk.CTkButton(master=self, text="Confirm", command=heal_button)
         self.heal_button.grid(row=2, column=4, padx=10, pady=10, sticky="s")
+
+class BuffWindow(ctk.CTkToplevel):
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)
+
+        self.title("Buff Menu")
+        self.geometry("1280x720")
+
+        self.after(100, self.focus)
+
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_rowconfigure(2, weight=1)
+        self.grid_rowconfigure(3, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_columnconfigure(2, weight=1)
+        self.grid_columnconfigure(3, weight=1)
+        self.grid_columnconfigure(4, weight=1)
+        self.grid_columnconfigure(5, weight=1)
+
+        def set_mp():
+            mp_cost = b_settings.getBuffMp()
+
+            if self.target_all_var.get() != "One":
+                mp_cost += b_settings.getBuffAllMpAdd()
+
+            match self.stat_count_var.get():
+                case 2:
+                    mp_cost += b_settings.getBuffExtraStatMpAdd()
+                case 3:
+                    mp_cost += (b_settings.getBuffExtraStatMpAdd() * 2)
+
+            match self.buff_lvl_var.get():
+                case 2:
+                    mp_cost += b_settings.getBuffLvlMpAdd()
+                case 3:
+                    mp_cost += (b_settings.getBuffLvlMpAdd() * 2)
+                case -2:
+                    mp_cost += b_settings.getBuffLvlMpAdd()
+                case -3: 
+                    mp_cost += (b_settings.getBuffLvlMpAdd() * 2)
+
+            self.mp_cost.set(mp_cost)
+            s = "MP Cost: " + str(mp_cost)
+            self.mp_cost_lbl.configure(text=s)
+
+        def target_all_callback(choice:str):
+            if choice == "One":
+                self.target_lbl.grid(row=0, column=2, padx=10, pady=10, sticky="e")
+                self.target_menu.grid(row=0, column=3, padx=10, pady=10, sticky="w")
+            else:
+                self.target_lbl.grid_forget()
+                self.target_menu.grid_forget()
+            set_mp()
+
+        def buff_lvl_callback(choice:str):
+            set_mp()
+
+        def stat_count_callback(choice:str):
+            match choice:
+                case "1":
+                    self.stat_1_type_lbl.grid(row=1, column=2, padx=10, pady=10, sticky="e")
+                    self.stat_1_type_menu.grid(row=1, column=3, padx=10, pady=10, sticky="w")
+
+                    self.stat_2_type_lbl.grid_forget()
+                    self.stat_2_type_menu.grid_forget()
+                case "2":
+                    self.stat_1_type_lbl.grid(row=1, column=2, padx=10, pady=10, sticky="e")
+                    self.stat_1_type_menu.grid(row=1, column=3, padx=10, pady=10, sticky="w")
+
+                    stat_type_menu_callback(self.stat_1_type_menu.get())
+                    self.stat_2_type_lbl.grid(row=2, column=1, padx=10, pady=10, sticky="e")
+                    self.stat_2_type_menu.grid(row=2, column=2, padx=10, pady=10, sticky="w")
+                case "3":
+                    self.stat_1_type_lbl.grid_forget()
+                    self.stat_1_type_menu.grid_forget()
+
+                    self.stat_2_type_lbl.grid_forget()
+                    self.stat_2_type_menu.grid_forget()
+            set_mp()
+
+        def stat_type_menu_callback(choice:str):
+            match choice:
+                case "Attack Level":
+                    self.stat_2_type_menu.configure(values=["Defense Level","Agility Level"])
+                    if self.stat_2_type_menu.get() == "Attack Level":
+                        self.stat_2_type_menu.set("Defense Level")
+                case "Defense Level":
+                    self.stat_2_type_menu.configure(values=["Attack Level","Agility Level"])
+                    if self.stat_2_type_menu.get() == "Defense Level":
+                        self.stat_2_type_menu.set("Attack Level")
+                case "Agility Level":
+                    self.stat_2_type_menu.configure(values=["Attack Level","Defense Level"])
+                    if self.stat_2_type_menu.get() == "Agility Level":
+                        self.stat_2_type_menu.set("Attack Level")
+
+        def buff_button():
+            def stat_to_int(stat_type:str):
+                if stat_type == "Attack Level": return 0
+                elif stat_type == "Defense Level": return 1
+                elif stat_type == "Defense Level": return 2
+                else:
+                    print("Error in stat to int", stat_type)
+                    return 0
+
+            mp_cost = self.mp_cost.get()
+
+            if self.caster_menu.get() == "":
+                if self.target_all_var.get() == "One" and self.target_menu.get() == "":
+                    messagebox.showerror("Error", "Please select a caster and a target.")
+                    return
+                else:
+                    messagebox.showerror("Error", "Please select a caster.")
+                    return
+
+            caster = master.findBattlerFromAll(self.caster_menu.get())
+
+            if caster.mp < mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
+                messagebox.showerror("Error", "MP too low.")
+                return
+
+            buff_level = self.buff_lvl_var.get()
+
+            if self.target_all_var.get() == "One":
+                target = master.findBattlerFromAll(self.target_menu.get())
+                
+                match self.stat_count_var.get():
+                    case 1:
+                        buff_type_int = stat_to_int(self.stat_1_type_menu.get())
+                        
+                        info = bu.buffOneStatOne(caster, target, buff_type_int, buff_level, mp_cost)
+                    case 2:
+                        buff_type_int_1 = stat_to_int(self.stat_1_type_menu.get())
+                        buff_type_int_2 = stat_to_int(self.stat_2_type_menu.get())
+                                                
+                        info = bu.buffTwoStatOne(caster, target, buff_type_int_1, buff_type_int_2, buff_level, mp_cost)
+                    case 3:
+                        info = bu.buffAllStatOne(caster, target, buff_level, mp_cost)
+
+                master.changeBattlerInfoFromAll(self.caster_menu.get(), info[0])
+                master.changeBattlerInfoFromAll(self.target_menu.get(), info[1])
+                master.log_console.configure(text=info[2])
+            else:
+                if self.target_all_var.get() == "Team A": targets = master.getBattlersInList(True)
+                elif self.target_all_var.get() == "Team B": targets = master.getBattlersInList(False)
+
+                match self.stat_count_var.get():
+                    case 1:
+                        buff_type_int = stat_to_int(self.stat_1_type_menu.get())
+                        
+                        info = bu.buffOneStatAll(caster, targets, buff_type_int, buff_level, mp_cost)
+                    case 2:
+                        buff_type_int_1 = stat_to_int(self.stat_1_type_menu.get())
+                        buff_type_int_2 = stat_to_int(self.stat_2_type_menu.get())
+                                                
+                        info = bu.buffTwoStatAll(caster, targets, buff_type_int_1, buff_type_int_2, buff_level, mp_cost)
+                    case 3:
+                        info = bu.buffAllStatAll(caster, targets, buff_level, mp_cost)
+
+                master.changeBattlerInfoFromAll(self.caster_menu.get(), info[0])
+                if self.target_all_var.get() == "Team A": master.changeBattlerListInfo(True, info[1])
+                else: master.changeBattlerListInfo(False, info[1])       
+                master.log_console.configure(text=info[2])
+
+            self.destroy()
+                
+        self.caster_lbl = ctk.CTkLabel(master=self, text="Caster:")
+        self.caster_lbl.grid(row=0, column=0, padx=10, pady=10, sticky="e")
+
+        battler_values = master.getAllBattlerLabels()
+        self.caster_menu = ctk.CTkOptionMenu(master=self, values=battler_values)
+        self.caster_menu.set("")
+        self.caster_menu.grid(row=0, column=1, padx=10, pady=10, sticky="w")
+
+        self.target_lbl = ctk.CTkLabel(master=self, text="Target:")
+        self.target_lbl.grid(row=0, column=2, padx=10, pady=10, sticky="e")
+
+        self.target_menu = ctk.CTkOptionMenu(master=self, values=battler_values)
+        self.target_menu.set("")
+        self.target_menu.grid(row=0, column=3, padx=10, pady=10, sticky="w")
+
+        self.target_all_lbl = ctk.CTkLabel(master=self, text="Targeting:")
+        self.target_all_lbl.grid(row=0, column=4, padx=10, pady=10, sticky="e")
+
+        self.target_all_var = ctk.StringVar(value="One")
+        self.target_all_menu = ctk.CTkOptionMenu(master=self, values=["One", "Team A", "Team B"], command=target_all_callback, variable=self.target_all_var)
+        self.target_all_menu.grid(row=0, column=5, padx=10, pady=10, sticky="w")
+
+        self.stat_count_lbl = ctk.CTkLabel(master=self, text="Number of Stats to Buff:")
+        self.stat_count_lbl.grid(row=1, column=0, padx=10, pady=10, sticky="e")
+
+        self.stat_count_var = ctk.IntVar(value=1)
+        self.stat_count_menu = ctk.CTkOptionMenu(master=self, values=["1", "2", "3"], command=stat_count_callback, variable=self.stat_count_var)
+        self.stat_count_menu.grid(row=1, column=1, padx=10, pady=10, sticky="e")
+
+        self.stat_1_type_lbl = ctk.CTkLabel(master=self, text="Buffing Stat:")
+        self.stat_1_type_lbl.grid(row=1, column=2, padx=10, pady=10, sticky="e")
+
+        self.stat_1_type_menu = ctk.CTkOptionMenu(master=self, values=["Attack Level", "Defense Level", "Agility Level"], command=stat_type_menu_callback)
+        self.stat_1_type_menu.grid(row=1, column=3, padx=10, pady=10, sticky="w")
+
+        self.buff_lvl_lbl = ctk.CTkLabel(master=self, text="Change Level By:")
+        self.buff_lvl_lbl.grid(row=1, column=4, padx=10, pady=10, sticky="e")
+
+        self.buff_lvl_var = ctk.IntVar(value=1)
+        self.buff_lvl_menu = ctk.CTkOptionMenu(master=self, values=["1","2","3","-1","-2","-3"], command=buff_lvl_callback, variable=self.buff_lvl_var)
+        self.buff_lvl_menu.grid(row=1, column=5, padx=10, pady=10, sticky="w")
+
+        self.stat_2_type_lbl = ctk.CTkLabel(master=self, text="Buffing Second Stat:")
+        self.stat_2_type_menu = ctk.CTkOptionMenu(master=self, values=["Attack Level", "Defense Level", "Agility Level"])
+
+        def mp_limit(): self.mp_limit_switch.configure(text=self.mp_limit_var.get())
+        self.mp_limit_var = ctk.StringVar(value=" MP Requirement Enforced ")
+        self.mp_limit_switch = ctk.CTkSwitch(master=self, text=" MP Requirement Enforced ", command=lambda: mp_limit(), variable=self.mp_limit_var, onvalue=" MP Requirement Enforced ", offvalue="MP Requirement Unenforced")
+        self.mp_limit_switch.grid(row=2, column=3, padx=10, pady=10)
+
+        self.mp_cost = ctk.IntVar(value=b_settings.getBuffMp())
+        self.mp_cost_lbl = ctk.CTkLabel(master=self, text="MP Cost: 25")
+        self.mp_cost_lbl.grid(row=3, column=1, padx=10, pady=10, sticky="s")
+
+        self.confirm_btn = ctk.CTkButton(master=self, text="Confirm", command=buff_button)
+        self.confirm_btn.grid(row=3, column=4, padx=10, pady=10, sticky= "sew")
 
 class App(ctk.CTk):
     def __init__(self):
@@ -1073,7 +1319,6 @@ class App(ctk.CTk):
 
         #Starting settings
         self.title("Custom RPG Calculator")
-        self.iconbitmap("RPG Calculator Program/SunSymbol.ico")
         self.geometry("1920x1080")
         self.resizable(True, True)
 
@@ -1199,7 +1444,13 @@ class App(ctk.CTk):
                 messagebox.showerror("Error", "Please import fighters for the A and B dropdowns before pressing the command.")
 
         def buff_menu():
-            pass
+            if self.battlers_a_menu._values != [] and self.battlers_b_menu._values != []:
+                if self.buff_window is None or not self.buff_window.winfo_exists():
+                    self.buff_window = BuffWindow(master=self)
+                else:
+                    self.buff_window.focus()
+            else:
+                messagebox.showerror("Error", "Please import fighters for the A and B dropdowns before pressing the command.")
 
         def ele_menu():
             pass
@@ -1313,8 +1564,9 @@ class App(ctk.CTk):
         self.status_button = ctk.CTkButton(master=self, text="Inflict Status", command=lambda: status_menu())
         self.status_button.grid(row=6, column=5, padx=20, pady=20, sticky="nsew")
 
-        self.log_console = ctk.CTkLabel(master=self, text="", corner_radius=10, border_width=2, border_color="#e6f7ff", fg_color="#3a4b5c")
+        self.log_console = ctk.CTkLabel(master=self, text="", corner_radius=10, border_width=2, border_color="#e6f7ff", fg_color="#3a4b5c", font=("Roboto", 14))
         self.log_console.grid(row=7, column=2, columnspan=5, padx=20, pady=20, sticky="nsew")
+        self.log_console.grid_propagate(False)
 
     def findBattler(self, tag:str, is_a:bool):
         if is_a:
@@ -1355,6 +1607,30 @@ class App(ctk.CTk):
             for cont in self.b_container:
                 battler_list.append(cont.battler.label)
         return battler_list
+
+    def getAllBattlerLabels(self):
+        battler_list = []
+        for cont in self.a_container:
+            battler_list.append(cont.battler.label)
+        for cont in self.b_container:
+            battler_list.append(cont.battler.label)
+        return battler_list
+
+    def findBattlerFromAll(self, tag:str):
+        for cont in self.a_container:
+            if cont.battler.label == tag:
+                return cont.battler
+        for cont in self.b_container:
+            if cont.battler.label == tag:
+                return cont.battler
+
+    def changeBattlerInfoFromAll(self, tag:str, new_battler:"bu.Battler"):
+        for cont in self.a_container:
+            if cont.battler.label == tag:
+                cont.assignBattler(new_battler)
+        for cont in self.b_container:
+            if cont.battler.label == tag:
+                cont.assignBattler(new_battler)
 
     def changeBattlerListInfo(self, is_a:bool, new_battlers:list["bu.Battler"]):
         if is_a:

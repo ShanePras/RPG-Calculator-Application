@@ -64,6 +64,11 @@ class BattleSettings:
         self.set_lst.append(25) #charge mp; 41
         self.set_lst.append(15) #scan mp; 42
 
+        self.set_lst.append(25) #buff mp; 43
+        self.set_lst.append(20) #buff all mp add; 44
+        self.set_lst.append(10) #buff lvl mp add; 45
+        self.set_lst.append(12) #buff extra stat mp add; 46
+
     def getLAtkMtp(self): return self.set_lst[0]
     def getMAtkMtp(self): return self.set_lst[1]
     def getHAtkMtp(self): return self.set_lst[2]
@@ -108,6 +113,10 @@ class BattleSettings:
     def getGuardMp(self): return self.set_lst[40]
     def getChargeMp(self): return self.set_lst[41]
     def getScanMp(self): return self.set_lst[42]
+    def getBuffMp(self): return self.set_lst[43]
+    def getBuffAllMpAdd(self): return self.set_lst[44]
+    def getBuffLvlMpAdd(self): return self.set_lst[45]
+    def getBuffExtraStatMpAdd(self): return self.set_lst[46]
 
 class Battler:
     def __init__(self, stats: list):
@@ -564,6 +573,106 @@ def healAll(caster:"Battler", targets:list["Battler"], b_settings:"BattleSetting
 
     return [caster, new_targets, s]
 
+#BUFF
+def buffOneStatOne(caster:"Battler", target:"Battler", buff_type:int, level:int, mp_cost:int):
+    caster.mp -= mp_cost
+    caster.equalizeHpMp()
+
+    def buffToString(buff_int:int):
+        match buff_int:
+            case 0: return "Attack"
+            case 1: return "Defense"
+            case 2: return "Agility"
+
+    def buff(stat_lvl:int):
+        s = ""
+        stat_lvl += level
+        if stat_lvl > 3: stat_lvl = 3
+        elif stat_lvl < -3: stat_lvl = -3
+        s += caster.name + " changed " + target.name + "'s " + buffToString(buff_type) + " to level " + str(stat_lvl) + "."
+        return [stat_lvl, s]
+
+    match buff_type:
+        case 0:
+            info = buff(target.attack_level)
+            target.attack_level = info[0]
+        case 1:
+            info = buff(target.defense_level)
+            target.defense_level = info[0]
+        case 2:
+            info = buff(target.agility_level)
+            target.agility_level = info[0]
+
+    return [caster, target, info[1]]
+
+def buffTwoStatOne(caster:"Battler", target:"Battler", buff_type_1:int, buff_type_2:int, level:int, mp_cost:int):
+    caster.mp -= mp_cost
+    caster.equalizeHpMp()
+    s = ""
+
+    info = buffOneStatOne(caster, target, buff_type_1, level, 0)
+    s += info[2] + "\n"
+    info = buffOneStatOne(info[0], info[1], buff_type_2, level, 0)
+    s += info[2]
+
+    return [info[0], info[1], s]
+
+def buffAllStatOne(caster:"Battler", target:"Battler", level:int, mp_cost:int):
+    caster.mp -= mp_cost
+    caster.equalizeHpMp()
+    s = ""
+
+    info = buffOneStatOne(caster, target, 0, level, 0)
+    s += info[2] + "\n"
+    info = buffOneStatOne(info[0], info[1], 1, level, 0)
+    s += info[2] + "\n"
+    info = buffOneStatOne(info[0], info[1], 2, level, 0)
+    s += info[2]
+
+    return [info[0], info[1], s]
+
+def buffOneStatAll(caster:"Battler", targets:list["Battler"], buff_type:int, level:int, mp_cost:int):
+    caster.mp -= mp_cost
+    caster.equalizeHpMp()
+    s = ""
+    new_targets = []
+
+    for target in targets:
+        info = buffOneStatOne(caster, target, buff_type, level, 0)
+        caster = info[0]
+        new_targets.append(info[1])
+        s += info[2] + "\n"
+
+    return [caster, new_targets, s]
+
+def buffTwoStatAll(caster:"Battler", targets:list["Battler"], buff_type_1:int, buff_type_2:int, level:int, mp_cost:int):
+    caster.mp -= mp_cost
+    caster.equalizeHpMp()
+    s = ""
+    new_targets = []
+
+    for target in targets:
+        info = buffTwoStatOne(caster, target, buff_type_1, buff_type_2, level, 0)
+        caster = info[0]
+        new_targets.append(info[1])
+        s += info[2] + "\n"
+
+    return [caster, new_targets, s]
+
+def buffAllStatAll(caster:"Battler", targets:list["Battler"], level:int, mp_cost:int):
+    caster.mp -= mp_cost
+    caster.equalizeHpMp()
+    s = ""
+    new_targets = []
+
+    for target in targets:
+        info = buffAllStatOne(caster, target, level, 0)
+        caster = info[0]
+        new_targets.append(info[1])
+        s += info[2] + "\n"
+
+    return [caster, new_targets, s]
+
 #SCAN
 def targetScan(scanner:"Battler", targets:list["Battler"], mp_cost:int):
     def res_val(val:int):
@@ -581,7 +690,12 @@ def targetScan(scanner:"Battler", targets:list["Battler"], mp_cost:int):
     scanner.equalizeHpMp()
 
     for target in targets:
-        s += target.name + "'s affinities: Slash: " + res_val(target.slash_resist) + \
+        s += target.name + "'s stats: Strength: " + str(target.strength) + \
+        ", Magic: " + str(target.magic) + \
+        ", Defense: " + str(target.defense) + \
+        ", Agility: " + str(target.agility) + \
+        ", Luck: " + str(target.luck) + \
+        ". " + target.name + "'s affinities: Slash: " + res_val(target.slash_resist) + \
         ", Strike: " + res_val(target.strike_resist) + \
         ", Pierce: " + res_val(target.pierce_resist) + \
         ", Fire: " + res_val(target.fire_resist) + \
