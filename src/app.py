@@ -4,6 +4,14 @@ from tkinter import filedialog
 from tkinter import messagebox
 import csv
 import math
+import sys
+import os
+
+def resource_path(relative_path):
+    base_path = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
+
+ico_path = resource_path("SunSymbol.ico")
 
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("dark-blue")
@@ -16,6 +24,7 @@ class OptionWindow(ctk.CTkToplevel):
 
         self.title("RPG Calculator Settings")
         self.geometry("1280x720")
+        self.iconbitmap(ico_path)
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -456,12 +465,128 @@ class BattlerContainer(ctk.CTkFrame):
         self.status_label = ctk.CTkLabel(master=self, text=status_string)
         self.status_label.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
+class SwapFighterWindow(ctk.CTkToplevel):
+    class BattlerInfoContainer(ctk.CTkFrame):
+        def __init__(self, master, battler:"bu.Battler", **kwargs):
+            super().__init__(master, **kwargs)
+
+            self.grid_rowconfigure(0, weight=1)
+            self.grid_columnconfigure(0, weight=3)
+            self.grid_columnconfigure(1, weight=1)
+            self.grid_columnconfigure(2, weight=1)
+            self.grid_columnconfigure(3, weight=1)
+            self.grid_columnconfigure(4, weight=1)
+            self.grid_columnconfigure(5, weight=1)
+            self.grid_columnconfigure(6, weight=1)
+
+            self.name_lbl = ctk.CTkLabel(master=self, text=battler.name)
+            self.name_lbl.grid(row=0, column=0, padx=10, pady=10)
+
+            hp_string = "HP: " + str(battler.hp) + "/" + str(battler.max_hp)
+            self.hp_lbl = ctk.CTkLabel(master=self, text=hp_string)
+            self.hp_lbl.grid(row=0, column=1, padx=10, pady=10)
+
+            mp_string = "MP: " + str(battler.mp) + "/" + str(battler.max_mp)
+            self.mp_lbl = ctk.CTkLabel(master=self, text=mp_string)
+            self.mp_lbl.grid(row=0, column=2, padx=10, pady=10)
+
+            atk_string = "ATK LVL: " + str(battler.attack_level)
+            self.atk_lbl = ctk.CTkLabel(master=self, text=atk_string)
+            self.atk_lbl.grid(row=0, column=3, padx=10, pady=10)
+
+            def_string = "DEF LVL: " + str(battler.defense_level)
+            self.def_lbl = ctk.CTkLabel(master=self, text=def_string)
+            self.def_lbl.grid(row=0, column=4, padx=10, pady=10)
+
+            agi_string = "AGI LVL: " + str(battler.agility_level)
+            self.agi_lbl = ctk.CTkLabel(master=self, text=agi_string)
+            self.agi_lbl.grid(row=0, column=5, padx=10, pady=10)
+
+            status_string = "Status: " + str(battler.status)
+            self.status_lbl = ctk.CTkLabel(master=self, text=status_string)
+            self.status_lbl.grid(row=0, column=6, padx=10, pady=10)
+
+    def __init__(self, master, is_a:bool, **kwargs):
+        super().__init__(master, **kwargs)
+
+        self.title("RPG Calculator Settings")
+        self.geometry("1280x720")
+        self.iconbitmap(ico_path)
+
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=6)
+        self.grid_rowconfigure(2, weight=1)
+        self.grid_rowconfigure(3, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+
+        self.after(100, self.focus)
+
+        def swap_fighters():
+            if self.active_menu.get() == "" or self.inactive_menu.get() == "":
+                messagebox.showerror("Error", "Error, please select two fighters to swap.")
+                return
+
+            active_tag = self.active_menu.get()
+            inactive_tag = self.inactive_menu.get()
+ 
+            master.swapBattler(active_tag, inactive_tag, is_a)
+            self.destroy()
+
+        self.active_lbl = ctk.CTkLabel(master=self, text="Active Fighters")
+        self.active_lbl.grid(row=0, column=0, padx=10, pady=10)
+
+        self.inactive_lbl = ctk.CTkLabel(master=self, text="Inactive Fighters")
+        self.inactive_lbl.grid(row=0, column=1, padx=10, pady=10)
+
+        self.active_frame = ctk.CTkScrollableFrame(master=self, corner_radius=5, border_width=2, border_color="#e6f7ff", fg_color="#3a4b5c")
+        self.active_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+
+        self.inactive_frame = ctk.CTkScrollableFrame(master=self, corner_radius=5, border_width=2, border_color="#e6f7ff", fg_color="#3a4b5c")
+        self.inactive_frame.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.active_menu = ctk.CTkOptionMenu(master=self, values=[])
+        self.active_menu.grid(row=2, column=0, padx=10, pady=10)
+
+        self.inactive_menu = ctk.CTkOptionMenu(master=self, values=[])
+        self.inactive_menu.grid(row=2, column=1, padx=10, pady=10)
+
+        if is_a:
+            active_battlers = master.getBattlersInList(True)
+            inactive_battlers = master.a_inactive_battlers
+
+            active_values = master.getBattlerLabelsInList(True)
+            inactive_values = master.getBattlerLabelsInInactive(True)
+        else:
+            active_battlers = master.getBattlersInList(False)
+            inactive_battlers = master.b_inactive_battlers
+
+            active_values = master.getBattlerLabelsInList(False)
+            inactive_values = master.getBattlerLabelsInInactive(False)
+
+        self.active_menu.configure(values=active_values)
+        self.inactive_menu.configure(values=inactive_values)
+        self.active_menu.set("")
+        self.inactive_menu.set("")
+
+        for battler in active_battlers:
+            container = self.BattlerInfoContainer(self.active_frame, battler)
+            container.pack(pady=10, padx=10, fill="both", expand=True)
+
+        for battler in inactive_battlers:
+            container = self.BattlerInfoContainer(self.inactive_frame, battler)
+            container.pack(pady=10, padx=10, fill="both", expand=True)
+
+        self.swap_btn = ctk.CTkButton(master=self, text="Confirm", command=swap_fighters)
+        self.swap_btn.grid(row=3, column=0, columnspan=2, padx=10, pady=10, sticky="s")
+
 class AttackWindow(ctk.CTkToplevel):
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
 
         self.title("Attack Menu")
         self.geometry("1280x720")
+        self.iconbitmap(ico_path)
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -922,6 +1047,7 @@ class HealWindow(ctk.CTkToplevel):
 
         self.title("Heal Menu")
         self.geometry("1280x720")
+        self.iconbitmap(ico_path)
 
         self.after(100, self.focus)
 
@@ -1093,6 +1219,7 @@ class BuffWindow(ctk.CTkToplevel):
 
         self.title("Buff Menu")
         self.geometry("1280x720")
+        self.iconbitmap(ico_path)
 
         self.after(100, self.focus)
 
@@ -1187,7 +1314,7 @@ class BuffWindow(ctk.CTkToplevel):
             def stat_to_int(stat_type:str):
                 if stat_type == "Attack Level": return 0
                 elif stat_type == "Defense Level": return 1
-                elif stat_type == "Defense Level": return 2
+                elif stat_type == "Agility Level": return 2
                 else:
                     print("Error in stat to int", stat_type)
                     return 0
@@ -1317,10 +1444,14 @@ class App(ctk.CTk):
         self.a_container = []
         self.b_container = []
 
+        self.a_inactive_battlers = []
+        self.b_inactive_battlers = []
+
         #Starting settings
         self.title("Custom RPG Calculator")
         self.geometry("1920x1080")
         self.resizable(True, True)
+        self.iconbitmap(ico_path)
 
         #Widget stretch config
         self.columnconfigure(0, weight=15)
@@ -1343,6 +1474,7 @@ class App(ctk.CTk):
         self.attack_window = None
         self.heal_window = None
         self.buff_window = None
+        self.swap_window = None
 
         #Need to run the zoom after canvas finishes rendering
         self.after(100, lambda: app.state("zoomed"))
@@ -1350,7 +1482,7 @@ class App(ctk.CTk):
         def a_b_switch():
             self.team_sw.configure(text=self.is_b.get())
 
-        def import_file(frame, is_a=True):
+        def import_file(frame, is_a:bool):
             file_path = filedialog.askopenfilename(
                 title="Import CSV",
                 filetypes=[("CSV files", "*.csv")]
@@ -1415,9 +1547,70 @@ class App(ctk.CTk):
                         self.attack_window.destroy()
                     if self.heal_window is not None:
                         self.heal_window.destroy()
-
+                    if self.buff_window is not None:
+                        self.buff_window.destroy()
             else:
                 messagebox.showerror("Error", "No file selected.")
+
+        def import_inactive_file(is_a:bool):
+            file_path = filedialog.askopenfilename(
+            title="Import CSV",
+            filetypes=[("CSV files", "*.csv")]
+            )
+
+            if file_path:
+                try:
+                    data_list = []
+                    with open(file_path, "r") as f:
+                        data = csv.reader(f)
+                        for row in data:
+                            new_row=[]
+                            for i in range(0,19):
+                                if i<2:
+                                    new_row.append(row[i])
+                                else:
+                                    new_row.append(int(row[i]))
+                            data_list.append(new_row)
+                        if(is_a):
+                            self.a_inactive_battlers = []
+                            for row in data_list:
+                                battler = bu.Battler(row)
+                                self.a_inactive_battlers.append(battler)
+                            messagebox.showinfo("Imported", "Inactive Battlers A were Imported.")
+                        else:
+                            self.b_inactive_battlers = []
+                            for row in data_list:
+                                battler = bu.Battler(row)
+                                self.b_inactive_battlers.append(battler)
+                            messagebox.showinfo("Imported", "Inactive Battlers B were Imported.")
+                except SyntaxError:
+                    messagebox.showerror("Error", "Error: CSV File is incorrectly formated.")
+                except ValueError:
+                    messagebox.showerror("Error", "Error: Bad type in CSV file. Please reformat.")
+                except IndexError:
+                    messagebox.showerror("Error", "Error: CSV file is missing data.")
+                finally:
+                    f.close()
+            else:
+                messagebox.showerror("Error", "No file selected.")
+
+        def swap_battlers(is_a:bool):
+            if is_a:
+                if self.battlers_a_menu._values != [] and self.a_inactive_battlers != []:
+                    if self.swap_window is None or not self.swap_window.winfo_exists():
+                        self.swap_window = SwapFighterWindow(master=self, is_a=True)
+                    else:
+                        self.swap_window.focus()
+                else:
+                    messagebox.showerror("Error", "Please import A fighters and A backup fighters first.")
+            else:
+                if self.battlers_b_menu._values != [] and self.b_inactive_battlers != []:
+                    if self.swap_window is None or not self.swap_window.winfo_exists():
+                        self.swap_window = SwapFighterWindow(master=self, is_a=False)
+                    else:
+                        self.swap_window.focus()
+                else:
+                    messagebox.showerror("Error", "Please import B fighters and B backup fighters first.")
 
         def open_settings():
             if self.option_window is None or not self.option_window.winfo_exists():
@@ -1520,10 +1713,26 @@ class App(ctk.CTk):
         self.frame_b.grid(row=3, column=3, columnspan=3, padx=20, pady=20, sticky="nsew") 
 
         self.import_but_a = ctk.CTkButton(self, text="Import File for Team A", command=lambda: import_file(self.frame_a, True)) #command must be lambda wrapped to prevent it from executing on start
-        self.import_but_a.grid(row=2, column=1, padx=20, pady=20, sticky="n")
+        self.import_but_a.grid(row=2, column=1, padx=20, pady=20, sticky="new")
 
         self.import_but_b = ctk.CTkButton(self, text="Import File for Team B", command=lambda: import_file(self.frame_b, False)) 
-        self.import_but_b.grid(row=2, column=4, padx=20, pady=20, sticky="n")
+        self.import_but_b.grid(row=2, column=4, padx=20, pady=20, sticky="new")
+
+        self.import_inactive_but_a = ctk.CTkButton(self, text="Import Team A's Inactive", command=lambda: import_inactive_file(True)) 
+        self.import_inactive_but_a.grid(row=2, column=0, padx=20, pady=20, sticky="new")
+        self.import_inactive_but_a.grid_propagate(False)
+
+        self.import_inactive_but_b = ctk.CTkButton(self, text="Import Team B's Inactive", command=lambda: import_inactive_file(False)) 
+        self.import_inactive_but_b.grid(row=2, column=3, padx=20, pady=20, sticky="new")
+        self.import_inactive_but_b.grid_propagate(False)
+
+        self.swap_battlers_but_a = ctk.CTkButton(self, text="Swap A Battlers", command=lambda: swap_battlers(True))
+        self.swap_battlers_but_a.grid(row=2, column=2, padx=20, pady=20, sticky="new")
+        self.swap_battlers_but_a.grid_propagate(False)
+
+        self.swap_battlers_but_b = ctk.CTkButton(self, text="Swap B Battlers", command=lambda: swap_battlers(False))
+        self.swap_battlers_but_b.grid(row=2, column=5, padx=20, pady=20, sticky="new")
+        self.swap_battlers_but_b.grid_propagate(False)
 
         self.sw_label = ctk.CTkLabel(master=self, text="Selected Attacking Team")
         self.sw_label.grid(row=4, column=2, padx=20, pady=20, sticky="e")
@@ -1578,6 +1787,16 @@ class App(ctk.CTk):
                 if cont.battler.label == tag:
                     return cont.battler
 
+    def findBattlerInactive(self, tag:str, is_a:bool):
+        if is_a:
+            for battler in self.a_inactive_battlers:
+                if battler.label == tag:
+                    return battler
+        else:
+            for battler in self.b_inactive_battlers:
+                if battler.label == tag:
+                    return battler
+
     def changeBattlerInfo(self, tag:str, is_a:bool, new_battler:"bu.Battler"):
         if is_a:
             for cont in self.a_container:
@@ -1587,6 +1806,16 @@ class App(ctk.CTk):
             for cont in self.b_container:
                 if cont.battler.label == tag:
                     cont.assignBattler(new_battler)
+
+    def changeInactiveBattlerInfo(self, tag:str, is_a:bool, new_battler:"bu.Battler"):
+        if is_a:
+            for i in range(len(self.a_inactive_battlers)):
+                if self.a_inactive_battlers[i].label == tag:
+                    self.a_inactive_battlers[i] = new_battler
+        else:
+            for i in range(len(self.b_inactive_battlers)):
+                if self.b_inactive_battlers[i].label == tag:
+                    self.b_inactive_battlers[i] = new_battler
 
     def getBattlersInList(self, is_a:bool):
         battler_list = []
@@ -1607,6 +1836,16 @@ class App(ctk.CTk):
             for cont in self.b_container:
                 battler_list.append(cont.battler.label)
         return battler_list
+
+    def getBattlerLabelsInInactive(self, is_a:bool):
+        label_list = []
+        if is_a:
+            for battler in self.a_inactive_battlers:
+                label_list.append(battler.label)
+        else:
+            for battler in self.b_inactive_battlers:
+                label_list.append(battler.label)
+        return label_list
 
     def getAllBattlerLabels(self):
         battler_list = []
@@ -1639,6 +1878,25 @@ class App(ctk.CTk):
         else:
             for i in range(len(new_battlers)):
                 self.b_container[i].assignBattler(new_battlers[i])
+
+    def swapBattler(self, active_tag:str, inactive_tag:str, is_a:bool):
+        active = self.findBattler(active_tag, is_a)
+        inactive = self.findBattlerInactive(inactive_tag, is_a)
+
+        if type(inactive) == bu.Battler:
+            self.changeBattlerInfo(active_tag, is_a, inactive)
+
+        if type(active) == bu.Battler:
+            self.changeInactiveBattlerInfo(inactive_tag, is_a, active)
+
+        new_values = self.getBattlerLabelsInList(is_a)
+
+        if is_a: 
+            self.battlers_a_menu.configure(values=new_values)
+            self.battlers_a_menu.set("")
+        else: 
+            self.battlers_b_menu.configure(values=new_values)
+            self.battlers_b_menu.set("")
 
     def guardLabelChange(self):
         s = ""
