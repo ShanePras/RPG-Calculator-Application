@@ -7,7 +7,8 @@ Physical attack, range attack, and defense, are self explanatory. Agility contro
 All "resists" control what kinds of attacks characters can resist or not resist. 0-Normal, 1-Weak, 2-Resists, 3-Null, 4-Reflect, 5-Drain\
 \
 Current Goals:
-- Finish Buff Menu
 - Finish Element Break/Wall Menu
 - Add undo/redo functionality
 - Add a character creator window to help with imports
+- Add status effects
+- Add save/load functionality
