@@ -6,6 +6,7 @@ import csv
 import math
 import sys
 import os
+import copy
 
 def resource_path(relative_path):
     base_path = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
@@ -321,6 +322,12 @@ class OptionWindow(ctk.CTkToplevel):
         self.buff_extra_stat_mp_entry.grid(row=3, column=5, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.buff_extra_stat_mp_entry)
 
+        self.max_undo_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Max Amount of Undos:")
+        self.max_undo_label.grid(row=3, column=6, padx=10, pady=10, sticky="nsew")
+        self.max_undo_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getMaxUndos()))
+        self.max_undo_entry.grid(row=3, column=7, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.max_undo_entry)
+
         def conf_changes(): 
             any_value_updated = False
             try:               
@@ -339,8 +346,9 @@ class OptionWindow(ctk.CTkToplevel):
                 self.destroy()
 
 class BattlerContainer(ctk.CTkFrame):
-    def __init__(self, master, **kwargs):
+    def __init__(self, master, app, **kwargs):
         super().__init__(master, **kwargs)
+        self.app = app
 
     def assignBattler(self, _battler:bu.Battler):
         #This method should be called immediately after init. It just has a seperate method because constructor parameters cant take both battler and master
@@ -388,6 +396,7 @@ class BattlerContainer(ctk.CTkFrame):
             else:
                 self.formation_switch.configure(text="Position: Back")
                 self.battler.formation = False
+            app.undo_redo_stack.addToUndoList()
         if self.battler.formation == True: 
             self.formation_var = ctk.BooleanVar(value=True)
             self.formation_switch = ctk.CTkSwitch(master=self, text="Position: Front", command=lambda: form_switch(), variable=self.formation_var, onvalue=True, offvalue=False)
@@ -398,7 +407,7 @@ class BattlerContainer(ctk.CTkFrame):
 
         def guard_switch():
             if self.guard_var.get():
-                mp_add = math.floor(self.battler.mp * b_settings.getGuardMp())
+                mp_add = math.floor(self.battler.max_mp * b_settings.getGuardMp())
                 self.battler.mp += mp_add
                 if self.battler.mp > self.battler.max_mp:
                     self.battler.mp = self.battler.max_mp
@@ -410,7 +419,7 @@ class BattlerContainer(ctk.CTkFrame):
             else:
                 ask = messagebox.askyesno("Warning", "Do you want to return MP?")
                 if ask:
-                    mp_subtract = math.floor(self.battler.mp * b_settings.getGuardMp())
+                    mp_subtract = math.floor(self.battler.max_mp * b_settings.getGuardMp())
                     self.battler.mp -= mp_subtract
                     if self.battler.mp < 0:
                         self.battler.mp = 0
@@ -419,6 +428,7 @@ class BattlerContainer(ctk.CTkFrame):
 
                 self.guard_switch.configure(text="Not Guarding")
                 self.battler.guard = False
+            app.undo_redo_stack.addToUndoList()
         if self.battler.guard == True: 
             self.guard_var = ctk.BooleanVar(value=True)
             self.guard_switch = ctk.CTkSwitch(master=self, text="  Is Guarding  ", command=lambda: guard_switch(), variable=self.guard_var, onvalue=True, offvalue=False)
@@ -442,6 +452,7 @@ class BattlerContainer(ctk.CTkFrame):
                 if ask: charge()
             else:
                 charge()
+            app.undo_redo_stack.addToUndoList()
 
         def uncharge_callback():
             ask = messagebox.askyesno("Warning", "Do you want to return MP?")
@@ -454,6 +465,8 @@ class BattlerContainer(ctk.CTkFrame):
 
             self.battler.charge = False
             self.charge_btn.configure(text="Charge", command=charge_callback)
+
+            app.undo_redo_stack.addToUndoList()
 
         if self.battler.charge:
             self.charge_btn = ctk.CTkButton(master=self, text="Charged", command=uncharge_callback)
@@ -531,6 +544,7 @@ class SwapFighterWindow(ctk.CTkToplevel):
             inactive_tag = self.inactive_menu.get()
  
             master.swapBattler(active_tag, inactive_tag, is_a)
+            master.undo_redo_stack.addToUndoList()
             self.destroy()
 
         self.active_lbl = ctk.CTkLabel(master=self, text="Active Fighters")
@@ -865,8 +879,6 @@ class AttackWindow(ctk.CTkToplevel):
                     else:
                         master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
                         master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[1])
-    
-                    self.destroy()
                 case "Power Attack":
                     if master.is_b.get() == "Team A":
                         attacker = master.findBattler(master.battlers_a_menu.get(), True)
@@ -887,7 +899,6 @@ class AttackWindow(ctk.CTkToplevel):
                         else:
                             master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
                             master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[1])
-                        self.destroy()
                 case "Attack All":
                     if master.is_b.get() == "Team A":
                         attacker = master.findBattler(master.battlers_a_menu.get(), True)
@@ -908,7 +919,6 @@ class AttackWindow(ctk.CTkToplevel):
                         else:
                             master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
                             master.changeBattlerListInfo(True, battle_info[1])
-                        self.destroy()
                 case "Multi Attack":
                     if master.is_b.get() == "Team A":
                         attacker = master.findBattler(master.battlers_a_menu.get(), True)
@@ -929,7 +939,6 @@ class AttackWindow(ctk.CTkToplevel):
                         else:
                             master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
                             master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[1])
-                        self.destroy()
                 case "Drain Attack":
                     if master.is_b.get() == "Team A":
                         attacker = master.findBattler(master.battlers_a_menu.get(), True)
@@ -950,7 +959,6 @@ class AttackWindow(ctk.CTkToplevel):
                         else:
                             master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
                             master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[1])
-                        self.destroy()
                 case "Splash Attack":
                     if master.is_b.get() == "Team A":
                         attacker = master.findBattler(master.battlers_a_menu.get(), True)
@@ -973,7 +981,6 @@ class AttackWindow(ctk.CTkToplevel):
                         else:
                             master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
                             master.changeBattlerListInfo(True, battle_info[1])
-                        self.destroy()
                 case "Row Attack":
                     if master.is_b.get() == "Team A":
                         attacker = master.findBattler(master.battlers_a_menu.get(), True)
@@ -994,7 +1001,9 @@ class AttackWindow(ctk.CTkToplevel):
                         else:
                             master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
                             master.changeBattlerListInfo(True, battle_info[1])
-                        self.destroy()
+                        
+            self.destroy()
+            master.undo_redo_stack.addToUndoList()
 
         self.type_lbl = ctk.CTkLabel(master=self, text="Attack Type:")
         self.type_lbl.grid(row=0, column=0, padx=10, pady=10, sticky="e")
@@ -1125,7 +1134,9 @@ class HealWindow(ctk.CTkToplevel):
                 if self.a_target_menu.get() != "" or self.a_caster_menu.get() != "":
                     caster = master.findBattler(self.a_caster_menu.get(), True)
 
-                    if caster.mp < self.mp_cost.get() and self.mp_limit_var.get() == "MP Requirement Unenforced":
+                    if caster.mp < self.mp_cost.get() and self.mp_limit_var.get() == " MP Requirement Enforced ":
+                        messagebox.showinfo("Error", "Error. MP too low.")
+                    else:
                         if self.heal_all_var.get() == "Heal One":
                             target = master.findBattler(self.a_target_menu.get(), True)
                             battle_info = bu.healOne(caster, target, b_settings, severity_val(), self.mp_cost.get())
@@ -1139,16 +1150,17 @@ class HealWindow(ctk.CTkToplevel):
                         
                         master.changeBattlerInfo(self.a_caster_menu.get(), True, battle_info[0])
                         master.log_console.configure(text=battle_info[2])
+                        master.undo_redo_stack.addToUndoList()
                         self.destroy()
-                    else:
-                        messagebox.showinfo("Error", "Error. MP too low.")
                 else:
                     messagebox.showinfo("Error", "Error. Please input a caster and target from Team A.")
             else:
                 if self.b_target_menu.get() != "" or self.b_caster_menu.get() != "":
                     caster = master.findBattler(self.b_caster_menu.get(), False)
                     
-                    if caster.mp < self.mp_cost.get() and self.mp_limit_var.get() == "MP Requirement Unenforced":
+                    if caster.mp < self.mp_cost.get() and self.mp_limit_var.get() == " MP Requirement Enforced ":
+                        messagebox.showinfo("Error", "Error. MP too low.")
+                    else:
                         if self.heal_all_var.get() == "Heal One":
                             target = master.findBattler(self.b_target_menu.get(), False)
                             battle_info = bu.healOne(caster, target, b_settings, severity_val(), self.mp_cost.get())
@@ -1162,9 +1174,8 @@ class HealWindow(ctk.CTkToplevel):
                         
                         master.changeBattlerInfo(self.b_caster_menu.get(), False, battle_info[0])
                         master.log_console.configure(text=battle_info[2])
+                        master.undo_redo_stack.addToUndoList()
                         self.destroy()
-                    else:
-                        messagebox.showinfo("Error", "Error. MP too low.")
                 else:
                     messagebox.showinfo("Error", "Error. Please input a caster and target from Team B.")
 
@@ -1378,6 +1389,7 @@ class BuffWindow(ctk.CTkToplevel):
                 else: master.changeBattlerListInfo(False, info[1])       
                 master.log_console.configure(text=info[2])
 
+            master.undo_redo_stack.addToUndoList()
             self.destroy()
                 
         self.caster_lbl = ctk.CTkLabel(master=self, text="Caster:")
@@ -1438,6 +1450,66 @@ class BuffWindow(ctk.CTkToplevel):
         self.confirm_btn.grid(row=3, column=4, padx=10, pady=10, sticky= "sew")
 
 class App(ctk.CTk):
+    class UndoRedoStack():
+        def __init__(self, App):
+            self.undoBattleList = [] #A_battlers, B_battlers, A_inactive_battlers, B_inactive_battlers
+            self.redoBattleList = []
+            self.app = App
+
+        def printDebug(self, b_list):
+            def printBattler(battler:"bu.Battler"):
+                s = ""
+                s += battler.label + ", HP: " + str(battler.hp) + ", MP: " + str(battler.mp) + "; "
+                return s
+
+
+
+            s = "Undo Size: " + str(len(self.undoBattleList)) + ", Redo Size : " + str(len(self.redoBattleList)) + "\n"
+            for i in range(len(self.redoBattleList)):
+                s += "Stack Element " + str(i) + ", A Active: "
+                for b in b_list[0]:
+                    s += printBattler(b)
+                s += " | "
+                s += "B Active: "
+                for b in b_list[1]:
+                    s += printBattler(b)
+                s += " || "
+            #s += "\nA Inactive: "
+            #for b in b_list[2]:
+                #s += printBattler(b)
+            #s += "\nB Inactive: "
+            #for b in b_list[3]:
+                #s += printBattler(b)
+            s += "\n"
+            print(s)
+
+        def addToUndoList(self):
+            a_battlers = self.app.getBattlersInList(True)
+            b_battlers = self.app.getBattlersInList(False)
+
+            b_list = [a_battlers, b_battlers, self.app.a_inactive_battlers, self.app.b_inactive_battlers]
+            b_list2 = copy.deepcopy(b_list)
+            self.undoBattleList.append(b_list2)
+
+            self.redoBattleList = []
+
+            if len(self.undoBattleList) >= b_settings.getMaxUndos():
+                self.undoBattleList.pop(0)
+
+        def undoButton(self):
+            if len(self.undoBattleList) > 0:
+                redo_list = self.undoBattleList.pop()
+                b_list = self.undoBattleList[-1]
+                self.redoBattleList.append(redo_list)
+                App.undoRedoChangeBattlers(self.app, b_list)
+
+        def redoButton(self):
+            if len(self.redoBattleList) > 0:
+                undo_list = self.redoBattleList.pop()
+                #b_list = self.redoBattleList[-1]
+                self.undoBattleList.append(undo_list)
+                App.undoRedoChangeBattlers(self.app, undo_list)
+
     def __init__(self):
         super().__init__()
 
@@ -1446,6 +1518,8 @@ class App(ctk.CTk):
 
         self.a_inactive_battlers = []
         self.b_inactive_battlers = []
+
+        self.undo_redo_stack = App.UndoRedoStack(self)
 
         #Starting settings
         self.title("Custom RPG Calculator")
@@ -1511,7 +1585,7 @@ class App(ctk.CTk):
                                 battler = bu.Battler(row)
 
                                 #create list of buttons in a or b scrollframe
-                                cnt = BattlerContainer(master=frame)
+                                cnt = BattlerContainer(master=frame, app=self)
                                 cnt.assignBattler(battler)
 
                                 #add buttons to a list so they can be sorted through
@@ -1527,14 +1601,14 @@ class App(ctk.CTk):
                             for row in data_list:
                                 battler = bu.Battler(row)
 
-                                cnt = BattlerContainer(master=frame)
+                                cnt = BattlerContainer(master=frame, app=self)
                                 cnt.assignBattler(battler)
 
                                 self.b_container.append(cnt)
 
                                 label_list.append(battler.label)
                             self.battlers_b_menu.configure(values=label_list)
-
+                        self.undo_redo_stack.addToUndoList()
                 except SyntaxError:
                     messagebox.showerror("Error", "Error: CSV File is incorrectly formated.")
                 except ValueError:
@@ -1583,6 +1657,7 @@ class App(ctk.CTk):
                                 battler = bu.Battler(row)
                                 self.b_inactive_battlers.append(battler)
                             messagebox.showinfo("Imported", "Inactive Battlers B were Imported.")
+                        self.undo_redo_stack.addToUndoList()
                 except SyntaxError:
                     messagebox.showerror("Error", "Error: CSV File is incorrectly formated.")
                 except ValueError:
@@ -1611,6 +1686,12 @@ class App(ctk.CTk):
                         self.swap_window.focus()
                 else:
                     messagebox.showerror("Error", "Please import B fighters and B backup fighters first.")
+
+        def undo_redo_callback(undo:bool):
+            if undo:
+                self.undo_redo_stack.undoButton()
+            else:
+                self.undo_redo_stack.redoButton()
 
         def open_settings():
             if self.option_window is None or not self.option_window.winfo_exists():
@@ -1659,6 +1740,7 @@ class App(ctk.CTk):
                             info = bu.targetScan(scanner, targets, b_settings.getScanMp())
                             self.changeBattlerInfo(self.battlers_a_menu.get(), True, info[0])
                             self.log_console.configure(text=info[1])
+                            self.undo_redo_stack.addToUndoList()
                         else:
                             messagebox.showinfo("Info", "Scan action canceled.")
                     elif isinstance(scanner, bu.Battler):
@@ -1666,6 +1748,7 @@ class App(ctk.CTk):
                         info = bu.targetScan(scanner, targets, b_settings.getScanMp())
                         self.changeBattlerInfo(self.battlers_a_menu.get(), True, info[0])
                         self.log_console.configure(text=info[1])
+                        self.undo_redo_stack.addToUndoList()
                 else:
                     messagebox.showerror("Error", "Please select a fighter in the A dropdown, and make sure fighters are imported in Team B.")  
             else:
@@ -1678,6 +1761,7 @@ class App(ctk.CTk):
                             info = bu.targetScan(scanner, targets, b_settings.getScanMp())
                             self.changeBattlerInfo(self.battlers_a_menu.get(), False, info[0])
                             self.log_console.configure(text=info[1])
+                            self.undo_redo_stack.addToUndoList()
                         else:
                             messagebox.showinfo("Info", "Scan action canceled.")
                     elif isinstance(scanner, bu.Battler):
@@ -1685,6 +1769,7 @@ class App(ctk.CTk):
                         info = bu.targetScan(scanner, targets, b_settings.getScanMp())
                         self.changeBattlerInfo(self.battlers_a_menu.get(), False, info[0])
                         self.log_console.configure(text=info[1])
+                        self.undo_redo_stack.addToUndoList()
                 else:
                     messagebox.showerror("Error", "Please select a fighter in the B dropdown, and make sure fighters are imported in Team A.")
 
@@ -1693,6 +1778,12 @@ class App(ctk.CTk):
         
         self.option_button = ctk.CTkButton(master=self, corner_radius=5, text="Settings", command=lambda: open_settings())
         self.option_button.grid(row=0, column=6, padx=20, pady=20)
+
+        self.undo_button = ctk.CTkButton(master=self, corner_radius=5, text="Undo", command=lambda: undo_redo_callback(True))
+        self.undo_button.grid(row=1, column=0, padx=20, pady=20, sticky="e")
+
+        self.redo_button = ctk.CTkButton(master=self, corner_radius=5, text="Redo", command=lambda: undo_redo_callback(False))
+        self.redo_button.grid(row=1, column=1, padx=20, pady=20, sticky="w")
 
         self.guard_mp_lbl = ctk.CTkLabel(master=self, text="")
         self.guard_mp_lbl.grid(row=1, column=2, padx=20, pady=20)
@@ -1773,7 +1864,7 @@ class App(ctk.CTk):
         self.status_button = ctk.CTkButton(master=self, text="Inflict Status", command=lambda: status_menu())
         self.status_button.grid(row=6, column=5, padx=20, pady=20, sticky="nsew")
 
-        self.log_console = ctk.CTkLabel(master=self, text="", corner_radius=10, border_width=2, border_color="#e6f7ff", fg_color="#3a4b5c", font=("Roboto", 14))
+        self.log_console = ctk.CTkLabel(master=self, text="", corner_radius=10, border_width=2, border_color="#e6f7ff", fg_color="#3a4b5c", font=("Roboto", 18))
         self.log_console.grid(row=7, column=2, columnspan=5, padx=20, pady=20, sticky="nsew")
         self.log_console.grid_propagate(False)
 
@@ -1879,6 +1970,12 @@ class App(ctk.CTk):
             for i in range(len(new_battlers)):
                 self.b_container[i].assignBattler(new_battlers[i])
 
+    def changeBattlersInactive(self, is_a:bool, new_battlers:list["bu.Battler"]):
+        if is_a:
+            self.a_inactive_battlers = new_battlers
+        else:
+            self.b_inactive_battlers = new_battlers
+
     def swapBattler(self, active_tag:str, inactive_tag:str, is_a:bool):
         active = self.findBattler(active_tag, is_a)
         inactive = self.findBattlerInactive(inactive_tag, is_a)
@@ -1897,6 +1994,12 @@ class App(ctk.CTk):
         else: 
             self.battlers_b_menu.configure(values=new_values)
             self.battlers_b_menu.set("")
+
+    def undoRedoChangeBattlers(self, new_battlers_all):
+        self.changeBattlerListInfo(True, new_battlers_all[0])
+        self.changeBattlerListInfo(False, new_battlers_all[1])
+        self.changeBattlersInactive(True, new_battlers_all[2])
+        self.changeBattlersInactive(False, new_battlers_all[3])
 
     def guardLabelChange(self):
         s = ""

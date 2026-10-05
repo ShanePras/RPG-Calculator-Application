@@ -69,6 +69,8 @@ class BattleSettings:
         self.set_lst.append(10) #buff lvl mp add; 45
         self.set_lst.append(12) #buff extra stat mp add; 46
 
+        self.set_lst.append(9) #max undos; 47
+
     def getLAtkMtp(self): return self.set_lst[0]
     def getMAtkMtp(self): return self.set_lst[1]
     def getHAtkMtp(self): return self.set_lst[2]
@@ -117,6 +119,8 @@ class BattleSettings:
     def getBuffAllMpAdd(self): return self.set_lst[44]
     def getBuffLvlMpAdd(self): return self.set_lst[45]
     def getBuffExtraStatMpAdd(self): return self.set_lst[46]
+
+    def getMaxUndos(self): return self.set_lst[47]
 
 class Battler:
     def __init__(self, stats: list):
