@@ -1,12 +1,16 @@
 import customtkinter as ctk
 import battle_utils as bu
 from tkinter import filedialog
+from tkinter import simpledialog
 from tkinter import messagebox
 import csv
 import math
 import sys
 import os
 import copy
+from pathlib import Path
+
+import traceback
 
 def resource_path(relative_path):
     base_path = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
@@ -1462,8 +1466,6 @@ class App(ctk.CTk):
                 s += battler.label + ", HP: " + str(battler.hp) + ", MP: " + str(battler.mp) + "; "
                 return s
 
-
-
             s = "Undo Size: " + str(len(self.undoBattleList)) + ", Redo Size : " + str(len(self.redoBattleList)) + "\n"
             for i in range(len(self.redoBattleList)):
                 s += "Stack Element " + str(i) + ", A Active: "
@@ -1693,6 +1695,173 @@ class App(ctk.CTk):
             else:
                 self.undo_redo_stack.redoButton()
 
+        def save_callback():
+            def battler_to_list(group_number:int, battler:"bu.Battler"):
+                bat_list = []
+                bat_list.append(group_number)
+                bat_list.append(battler.name)
+                bat_list.append(battler.label)
+                bat_list.append(battler.hp)
+                bat_list.append(battler.max_hp)
+                bat_list.append(battler.mp)
+                bat_list.append(battler.max_mp)
+                bat_list.append(battler.strength)
+                bat_list.append(battler.magic)
+                bat_list.append(battler.defense)
+                bat_list.append(battler.agility)
+                bat_list.append(battler.luck)
+                bat_list.append(battler.slash_resist)
+                bat_list.append(battler.strike_resist)
+                bat_list.append(battler.pierce_resist)
+                bat_list.append(battler.fire_resist)
+                bat_list.append(battler.water_resist)
+                bat_list.append(battler.lightning_resist)
+                bat_list.append(battler.earth_resist)
+                bat_list.append(battler.wind_resist)
+                bat_list.append(battler.other_resist)
+                bat_list.append(battler.attack_level)
+                bat_list.append(battler.defense_level)
+                bat_list.append(battler.agility_level)
+                bat_list.append(battler.formation)
+                bat_list.append(battler.guard)
+                bat_list.append(battler.charge)
+                bat_list.append(battler.status)
+                return bat_list
+
+            dir_path = filedialog.askdirectory(title="Select Folder to Save To")
+
+            if dir_path:
+                file_name = simpledialog.askstring("Input", "Type Name of Save (Without Extensions)")
+                if file_name:
+                    file_name += ".csv"
+                else:
+                    messagebox.showerror('Error', "No save name given.")
+                    return
+
+                a_active_battlers = self.getBattlersInList(True)
+                b_active_battlers = self.getBattlersInList(False)
+                a_inactive_battlers = self.a_inactive_battlers
+                b_inactive_battlers = self.b_inactive_battlers
+    
+                data = []
+    
+                for bat in a_active_battlers:
+                    data.append(battler_to_list(0, bat))
+                for bat in b_active_battlers:
+                    data.append(battler_to_list(1, bat))
+                for bat in a_inactive_battlers:
+                    data.append(battler_to_list(2, bat))
+                for bat in b_inactive_battlers:
+                    data.append(battler_to_list(3, bat))
+
+                file_path = Path(dir_path) / file_name
+
+                with open(file_path, mode="w", newline="", encoding="utf=8") as f:
+                    writer = csv.writer(f)
+                    writer.writerows(data)
+                    messagebox.showinfo("Success", "File successfully saved.")
+                    f.close()
+            else:
+                messagebox.showerror("Error", "No file selected.")
+
+        def load_callback():
+            file_path = filedialog.askopenfilename(
+                title="Import CSV",
+                filetypes=[("CSV files", "*.csv")]
+            )
+
+            if file_path:
+                try:
+                    a_active_battlers = []
+                    b_active_battlers = []
+                    a_inactive_battlers = []
+                    b_inactive_battlers = []
+
+                    with open(file_path, "r") as f:
+                        data = csv.reader(f)
+
+                        for row in data:
+                            new_row = []
+                            direction = int(row[0])
+                            for i in range(1,28):
+                                if i<3:
+                                    new_row.append(row[i]) #Name and tag
+                                elif i<24:
+                                    new_row.append(int(row[i])) #Number stats
+                                elif i<27:
+                                    if row[i] == "True": #Booleans
+                                        new_row.append(True)
+                                    else:
+                                        new_row.append(False)
+                                else:
+                                    new_row.append(row[i]) #Status
+
+                            match direction:
+                                case 0:
+                                    a_active_battlers.append(new_row)
+                                case 1:
+                                    b_active_battlers.append(new_row)
+                                case 2:
+                                    a_inactive_battlers.append(new_row)
+                                case 3:
+                                    b_inactive_battlers.append(new_row)
+                                case _:
+                                    print('Load Function: Went nowhere')
+
+                        self.a_inactive_battlers = a_inactive_battlers
+                        self.b_inactive_battlers = b_inactive_battlers
+
+                        a_label_list = []
+                        b_label_list = []
+
+                        self.battlers_a_menu.set("")
+                        for container in self.a_container:
+                            container.destroy() 
+                        for row in a_active_battlers:
+                            battler = bu.Battler(["", "", 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
+                            battler.setAllStats(row)
+
+                            cnt = BattlerContainer(master=self.frame_a, app=self)
+                            cnt.assignBattler(battler)
+
+                            self.a_container.append(cnt)
+
+                            a_label_list.append(battler.label)
+                        self.battlers_a_menu.configure(values=a_label_list)
+
+                        self.battlers_b_menu.set("")
+                        for container in self.b_container:
+                            container.destroy() 
+                        for row in b_active_battlers:
+                            battler = bu.Battler(["", "", 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
+                            battler.setAllStats(row)
+
+                            cnt = BattlerContainer(master=self.frame_b, app=self)
+                            cnt.assignBattler(battler)
+
+                            self.b_container.append(cnt)
+                            
+                            b_label_list.append(battler.label)
+                        self.battlers_b_menu.configure(values=b_label_list)
+                        messagebox.showinfo("Success", "Save successfully loaded.")
+                except SyntaxError:
+                    messagebox.showerror("Error", "Error: CSV File is incorrectly formated.")
+                except ValueError:
+                    messagebox.showerror("Error", "Error: Bad type in CSV file. Please reformat.")
+                except IndexError:
+                    traceback.print_exc()
+                    messagebox.showerror("Error", "Error: CSV file is missing data.")
+                finally:
+                    f.close()
+                    if self.attack_window is not None:
+                        self.attack_window.destroy()
+                    if self.heal_window is not None:
+                        self.heal_window.destroy()
+                    if self.buff_window is not None:
+                        self.buff_window.destroy()
+            else:
+                messagebox.showerror("Error", "No file selected.")
+
         def open_settings():
             if self.option_window is None or not self.option_window.winfo_exists():
                 self.option_window = OptionWindow(master=self)
@@ -1780,10 +1949,16 @@ class App(ctk.CTk):
         self.option_button.grid(row=0, column=6, padx=20, pady=20)
 
         self.undo_button = ctk.CTkButton(master=self, corner_radius=5, text="Undo", command=lambda: undo_redo_callback(True))
-        self.undo_button.grid(row=1, column=0, padx=20, pady=20, sticky="e")
+        self.undo_button.grid(row=0, column=0, padx=20, pady=20, sticky="e")
 
         self.redo_button = ctk.CTkButton(master=self, corner_radius=5, text="Redo", command=lambda: undo_redo_callback(False))
-        self.redo_button.grid(row=1, column=1, padx=20, pady=20, sticky="w")
+        self.redo_button.grid(row=0, column=1, padx=20, pady=20, sticky="w")
+
+        self.save_button = ctk.CTkButton(master=self, corner_radius=5, text="Save", command=lambda: save_callback())
+        self.save_button.grid(row=0, column=4, padx=20, pady=20, sticky="ew")
+
+        self.load_button = ctk.CTkButton(master=self, corner_radius=5, text="Load", command=lambda: load_callback())
+        self.load_button.grid(row=0, column=5, padx=20, pady=20, sticky="ew")
 
         self.guard_mp_lbl = ctk.CTkLabel(master=self, text="")
         self.guard_mp_lbl.grid(row=1, column=2, padx=20, pady=20)

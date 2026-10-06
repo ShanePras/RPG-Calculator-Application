@@ -123,7 +123,7 @@ class BattleSettings:
     def getMaxUndos(self): return self.set_lst[47]
 
 class Battler:
-    def __init__(self, stats: list):
+    def __init__(self, stats:list):
         self.name = stats[0]
         self.label = stats[1]
         self.hp = stats[2]
@@ -153,6 +153,35 @@ class Battler:
         self.guard = False 
         self.charge = False
         self.status = "None" #string
+
+    def setAllStats(self, stats:list):
+        self.name = stats[0]
+        self.label = stats[1]
+        self.hp = stats[2]
+        self.max_hp = stats[3]
+        self.mp = stats[4]
+        self.max_mp = stats[5]
+        self.strength = stats[6]
+        self.magic = stats[7]
+        self.defense = stats[8]
+        self.agility = stats[9]
+        self.luck = stats[10]
+        self.slash_resist = stats[11]
+        self.strike_resist = stats[12]
+        self.pierce_resist = stats[13]
+        self.fire_resist = stats[14]
+        self.water_resist = stats[15]
+        self.lightning_resist = stats[16]
+        self.earth_resist = stats[17]
+        self.wind_resist = stats[18]
+        self.other_resist = stats[19]
+        self.attack_level = stats[20]
+        self.defense_level = stats[21]
+        self.agility_level = stats[22]
+        self.formation = stats[23]
+        self.guard = stats[24]
+        self.charge = stats[25]
+        self.status = stats[26]
 
     def equalizeHpMp(self):
         if self.hp > self.max_hp: self.hp = self.max_hp
