@@ -394,12 +394,17 @@ class BattlerContainer(ctk.CTkFrame):
         self.agi_lvl_label.grid(row=0, column=5, padx=10, pady=10, sticky="nsew")
 
         def form_switch():
+            s = ""
             if self.formation_var.get():
                 self.formation_switch.configure(text="Position: Front")
                 self.battler.formation = True
+                s += self.battler.name + " moved to the front."
             else:
                 self.formation_switch.configure(text="Position: Back")
                 self.battler.formation = False
+                s += self.battler.name + " moved to the back."
+
+            self.app.log_console.configure(text=s)
             app.undo_redo_stack.addToUndoList()
         if self.battler.formation == True: 
             self.formation_var = ctk.BooleanVar(value=True)
@@ -410,6 +415,7 @@ class BattlerContainer(ctk.CTkFrame):
         self.formation_switch.grid(row=1, column=1, padx=10, pady=10, sticky="ns")
 
         def guard_switch():
+            s = ""
             if self.guard_var.get():
                 mp_add = math.floor(self.battler.max_mp * b_settings.getGuardMp())
                 self.battler.mp += mp_add
@@ -420,6 +426,8 @@ class BattlerContainer(ctk.CTkFrame):
 
                 self.guard_switch.configure(text="  Is Guarding  ")
                 self.battler.guard = True
+
+                s += self.battler.name + " is guarding."
             else:
                 ask = messagebox.askyesno("Warning", "Do you want to return MP?")
                 if ask:
@@ -432,7 +440,10 @@ class BattlerContainer(ctk.CTkFrame):
 
                 self.guard_switch.configure(text="Not Guarding")
                 self.battler.guard = False
-            app.undo_redo_stack.addToUndoList()
+
+                s += self.battler.name + " is no longer guarding."
+            self.app.log_console.configure(text=s)
+            self.app.undo_redo_stack.addToUndoList()
         if self.battler.guard == True: 
             self.guard_var = ctk.BooleanVar(value=True)
             self.guard_switch = ctk.CTkSwitch(master=self, text="  Is Guarding  ", command=lambda: guard_switch(), variable=self.guard_var, onvalue=True, offvalue=False)
@@ -450,6 +461,10 @@ class BattlerContainer(ctk.CTkFrame):
 
                 self.battler.charge = True
                 self.charge_btn.configure(text="Charged", command=uncharge_callback)
+
+                s = ""
+                s += self.battler.name + " is charged."
+                self.app.log_console.configure(text=s)
 
             if self.battler.mp < b_settings.getChargeMp():
                 ask = messagebox.askyesno("Warning", "Warning, MP too low. Do you want to ignore MP cost?")
@@ -471,6 +486,10 @@ class BattlerContainer(ctk.CTkFrame):
             self.charge_btn.configure(text="Charge", command=charge_callback)
 
             app.undo_redo_stack.addToUndoList()
+
+            s = ""
+            s += self.battler.name + " is no longer charged."
+            self.app.log_console.configure(text=s)
 
         if self.battler.charge:
             self.charge_btn = ctk.CTkButton(master=self, text="Charged", command=uncharge_callback)
@@ -546,9 +565,15 @@ class SwapFighterWindow(ctk.CTkToplevel):
 
             active_tag = self.active_menu.get()
             inactive_tag = self.inactive_menu.get()
+
+            active_name = master.findName(active_tag)
+            inactive_name = master.findNameInactive(inactive_tag)
+            s = ""
+            s += active_name + " swapped out with " + inactive_name + "."
  
             master.swapBattler(active_tag, inactive_tag, is_a)
             master.undo_redo_stack.addToUndoList()
+            master.log_console.configure(text=s)
             self.destroy()
 
         self.active_lbl = ctk.CTkLabel(master=self, text="Active Fighters")
@@ -1488,8 +1513,9 @@ class App(ctk.CTk):
         def addToUndoList(self):
             a_battlers = self.app.getBattlersInList(True)
             b_battlers = self.app.getBattlersInList(False)
+            console_log = self.app.log_console.cget("text")
 
-            b_list = [a_battlers, b_battlers, self.app.a_inactive_battlers, self.app.b_inactive_battlers]
+            b_list = [a_battlers, b_battlers, self.app.a_inactive_battlers, self.app.b_inactive_battlers, console_log]
             b_list2 = copy.deepcopy(b_list)
             self.undoBattleList.append(b_list2)
 
@@ -1808,8 +1834,8 @@ class App(ctk.CTk):
                                 case _:
                                     print('Load Function: Went nowhere')
 
-                        self.a_inactive_battlers = a_inactive_battlers
-                        self.b_inactive_battlers = b_inactive_battlers
+                        self.a_inactive_battlers = []
+                        self.b_inactive_battlers = []
 
                         a_label_list = []
                         b_label_list = []
@@ -1843,6 +1869,17 @@ class App(ctk.CTk):
                             
                             b_label_list.append(battler.label)
                         self.battlers_b_menu.configure(values=b_label_list)
+
+                        for battler in a_inactive_battlers:
+                            new_battler = bu.Battler(["", "", 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
+                            new_battler.setAllStats(battler)
+                            self.a_inactive_battlers.append(new_battler)
+
+                        for battler in b_inactive_battlers:
+                            new_battler = bu.Battler(["", "", 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
+                            new_battler.setAllStats(battler)
+                            self.b_inactive_battlers.append(new_battler)
+
                         messagebox.showinfo("Success", "Save successfully loaded.")
                 except SyntaxError:
                     messagebox.showerror("Error", "Error: CSV File is incorrectly formated.")
@@ -2063,6 +2100,22 @@ class App(ctk.CTk):
                 if battler.label == tag:
                     return battler
 
+    def findName(self, tag:str):
+        for cont in self.a_container:
+            if cont.battler.label == tag:
+                return cont.battler.name
+        for cont in self.b_container:
+            if cont.battler.label == tag:
+                return cont.battler.name
+
+    def findNameInactive(self, tag:str):
+        for battler in self.a_inactive_battlers:
+            if battler.label == tag:
+                return battler.name
+        for battler in self.b_inactive_battlers:
+            if battler.label == tag:
+                return battler.name
+
     def changeBattlerInfo(self, tag:str, is_a:bool, new_battler:"bu.Battler"):
         if is_a:
             for cont in self.a_container:
@@ -2175,6 +2228,7 @@ class App(ctk.CTk):
         self.changeBattlerListInfo(False, new_battlers_all[1])
         self.changeBattlersInactive(True, new_battlers_all[2])
         self.changeBattlersInactive(False, new_battlers_all[3])
+        self.log_console.configure(text=new_battlers_all[4])
 
     def guardLabelChange(self):
         s = ""
