@@ -8,7 +8,5 @@ All "resists" control what kinds of attacks characters can resist or not resist.
 \
 Current Goals:
 - Finish Element Break/Wall Menu
-- Fix any new Undo/Redo bugs
+- Finish Status Effects Menu
 - Add a character creator window to help with imports
-- Add status effects
-- Switch Scan Button to be in a Misc Actions Menu
