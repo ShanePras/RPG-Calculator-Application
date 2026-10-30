@@ -37,47 +37,53 @@ class BattleSettings:
         self.set_lst.append(5.0) #medium heal multiplier; 20
         self.set_lst.append(6.5) #heavy heal multiplier; 21
 
-        self.set_lst.append(10) #light atk 1 mp; 22
-        self.set_lst.append(24) #med atk 1 mp; 23
-        self.set_lst.append(40) #heavy atk 1 mp; 24
-        self.set_lst.append(65) #severe atk 1 mp; 25
-        self.set_lst.append(100) #colossal atk 1 mp; 26
+        self.set_lst.append(0.1) #burn damage multiplier; 22
+        self.set_lst.append(2) #frostbite crit multiplier; 23
+        self.set_lst.append(0.7) #shock damage multiplier; 24
+        self.set_lst.append(1.1) #heavy defense multiplier; 25
+        self.set_lst.append(0.5) #daze dodge multiplier; 26
+        self.set_lst.append(1.2) #rage atk multiplier; 27
+        self.set_lst.append(0.4) #rage def multiplier; 28
+        self.set_lst.append(0.6) #fear agi multiplier; 29
 
-        self.set_lst.append(15) #attack all mp cost add; 27
-        self.set_lst.append(3) #multiattack mp cost add; 28
-        self.set_lst.append(18) #drain/splash attack mp cost add; 29
-        self.set_lst.append(12) #row attack mp cost add; 30
+        self.set_lst.append(10) #light atk 1 mp; 30
+        self.set_lst.append(24) #med atk 1 mp; 31
+        self.set_lst.append(40) #heavy atk 1 mp; 32
+        self.set_lst.append(65) #severe atk 1 mp; 33
+        self.set_lst.append(100) #colossal atk 1 mp; 34
 
-        self.set_lst.append(0.05) #normal mp gain; 31
-        self.set_lst.append(0.07) #res mp gain; 32
-        self.set_lst.append(0.03) #weak mp gain; 33
-        self.set_lst.append(0.1) #null mp gain; 34
-        self.set_lst.append(0.15) #dodge mp gain; 35
+        self.set_lst.append(15) #attack all mp cost add; 35
+        self.set_lst.append(3) #multiattack mp cost add; 36
+        self.set_lst.append(18) #drain/splash attack mp cost add; 37
+        self.set_lst.append(12) #row attack mp cost add; 38
 
-        self.set_lst.append(25) #light heal mp; 36
-        self.set_lst.append(40) #medium heal mp; 37
-        self.set_lst.append(65) #heavy heal mp; 38
+        self.set_lst.append(0.05) #normal mp gain; 39
+        self.set_lst.append(0.07) #res mp gain; 40
+        self.set_lst.append(0.03) #weak mp gain; 41
+        self.set_lst.append(0.1) #null mp gain; 42
+        self.set_lst.append(0.15) #dodge mp gain; 43
 
-        self.set_lst.append(15) #heal all mp add; 39
+        self.set_lst.append(25) #light heal mp; 44
+        self.set_lst.append(40) #medium heal mp; 45
+        self.set_lst.append(65) #heavy heal mp; 46
 
-        self.set_lst.append(0.15) #guard mp percent; 40
-        self.set_lst.append(25) #charge mp; 41
-        self.set_lst.append(15) #scan mp; 42
+        self.set_lst.append(15) #heal all mp add; 47
 
-        self.set_lst.append(25) #buff mp; 43
-        self.set_lst.append(20) #buff all mp add; 44
-        self.set_lst.append(10) #buff lvl mp add; 45
-        self.set_lst.append(12) #buff extra stat mp add; 46
+        self.set_lst.append(0.15) #guard mp percent; 48
+        self.set_lst.append(25) #charge mp; 49
+        self.set_lst.append(15) #scan mp; 50
 
-        self.set_lst.append(9) #max undos; 47
+        self.set_lst.append(25) #buff mp; 51
+        self.set_lst.append(20) #buff all mp add; 52
+        self.set_lst.append(10) #buff lvl mp add; 53
+        self.set_lst.append(12) #buff extra stat mp add; 54
 
-        self.set_lst.append(0.1) #burn damage multiplier; 48
-        self.set_lst.append(2) #frostbite crit multiplier; 49
-        self.set_lst.append(0.7) #shock damage multiplier; 50
-        self.set_lst.append(1.1) #heavy defense multiplier; 51
-        self.set_lst.append(0.5) #daze dodge multiplier; 52
-        self.set_lst.append(1.2) #rage atk multiplier; 53
-        self.set_lst.append(0.4) #rage def multiplier; 54
+        self.set_lst.append(8) #ailment one mp; 55
+        self.set_lst.append(16) #ailment all mp; 56
+        self.set_lst.append(5) #ailment mp add one; 57
+        self.set_lst.append(10) #ailment mp add all; 58
+
+        self.set_lst.append(9) #max undos; 59
 
     def getLAtkMtp(self): return self.set_lst[0]
     def getMAtkMtp(self): return self.set_lst[1]
@@ -101,42 +107,46 @@ class BattleSettings:
     def getLHealMtp(self): return self.set_lst[19]
     def getMHealMtp(self): return self.set_lst[20]
     def getHHealMtp(self): return self.set_lst[21]
+    def getBurnDmgMtp(self): return self.set_lst[22]
+    def getFrostbiteCritMtp(self): return self.set_lst[23]
+    def getShockDmgMtp(self): return self.set_lst[24]
+    def getHeavyDefMtp(self): return self.set_lst[25]
+    def getDazeDdgMtp(self): return self.set_lst[26]
+    def getRageAtkMtp(self): return self.set_lst[27]
+    def getRageDefMtp(self): return self.set_lst[28]
+    def getFearAgiMtp(self): return self.set_lst[29]
 
-    def getLAtkMp(self): return self.set_lst[22]
-    def getMAtkMp(self): return self.set_lst[23]
-    def getHAtkMp(self): return self.set_lst[24]
-    def getSAtkMp(self): return self.set_lst[25]
-    def getCAtkMp(self): return self.set_lst[26]
-    def getAtkAllMpAdd(self): return self.set_lst[27]
-    def getMultiattackMpAdd(self): return self.set_lst[28]
-    def getDrnSplAtkMpAdd(self): return self.set_lst[29]
-    def getRowAtkMpAdd(self): return self.set_lst[30]
-    def getNorMPGain(self): return self.set_lst[31]
-    def getResMPGain(self): return self.set_lst[32]
-    def getWeakMPGain(self): return self.set_lst[33]
-    def getNullMPGain(self): return self.set_lst[34]
-    def getDodgeMPGain(self): return self.set_lst[35]
-    def getLHealMp(self): return self.set_lst[36]
-    def getMHealMp(self): return self.set_lst[37]
-    def getHHealMp(self): return self.set_lst[38]
-    def getHealAllMpAdd(self): return self.set_lst[39]
-    def getGuardMp(self): return self.set_lst[40]
-    def getChargeMp(self): return self.set_lst[41]
-    def getScanMp(self): return self.set_lst[42]
-    def getBuffMp(self): return self.set_lst[43]
-    def getBuffAllMpAdd(self): return self.set_lst[44]
-    def getBuffLvlMpAdd(self): return self.set_lst[45]
-    def getBuffExtraStatMpAdd(self): return self.set_lst[46]
+    def getLAtkMp(self): return self.set_lst[30]
+    def getMAtkMp(self): return self.set_lst[31]
+    def getHAtkMp(self): return self.set_lst[32]
+    def getSAtkMp(self): return self.set_lst[33]
+    def getCAtkMp(self): return self.set_lst[34]
+    def getAtkAllMpAdd(self): return self.set_lst[35]
+    def getMultiattackMpAdd(self): return self.set_lst[36]
+    def getDrnSplAtkMpAdd(self): return self.set_lst[37]
+    def getRowAtkMpAdd(self): return self.set_lst[38]
+    def getNorMPGain(self): return self.set_lst[39]
+    def getResMPGain(self): return self.set_lst[40]
+    def getWeakMPGain(self): return self.set_lst[41]
+    def getNullMPGain(self): return self.set_lst[42]
+    def getDodgeMPGain(self): return self.set_lst[43]
+    def getLHealMp(self): return self.set_lst[44]
+    def getMHealMp(self): return self.set_lst[45]
+    def getHHealMp(self): return self.set_lst[46]
+    def getHealAllMpAdd(self): return self.set_lst[47]
+    def getGuardMp(self): return self.set_lst[48]
+    def getChargeMp(self): return self.set_lst[49]
+    def getScanMp(self): return self.set_lst[50]
+    def getBuffMp(self): return self.set_lst[51]
+    def getBuffAllMpAdd(self): return self.set_lst[52]
+    def getBuffLvlMpAdd(self): return self.set_lst[53]
+    def getBuffExtraStatMpAdd(self): return self.set_lst[54]
+    def getAilmentOneMp(self): return self.set_lst[55]
+    def getAilmentAllMp(self): return self.set_lst[56]
+    def getAilmentMpAddOne(self): return self.set_lst[57]
+    def getAilmentMpAddAll(self): return self.set_lst[58]
 
-    def getMaxUndos(self): return self.set_lst[47]
-
-    def getBurnDmgMtp(self): return self.set_lst[48]
-    def getFrostbiteCritMtp(self): return self.set_lst[49]
-    def getShockDmgMtp(self): return self.set_lst[50]
-    def getHeavyDefMtp(self): return self.set_lst[51]
-    def getDazeDdgMtp(self): return self.set_lst[52]
-    def getRageAtkMtp(self): return self.set_lst[53]
-    def getRageDefMtp(self): return self.set_lst[54]
+    def getMaxUndos(self): return self.set_lst[59]
 
 class Battler:
     def __init__(self, stats:list):
@@ -302,6 +312,8 @@ def attackInfo(attacker:"Battler", defender:"Battler", b_settings:"BattleSetting
             raw_probability = 0.0
         elif defender.status == "Daze":
             raw_probability *= b_settings.getDazeDdgMtp()
+        elif defender.status == "Fear":
+            raw_probability *= b_settings.getFearAgiMtp()
 
         if(dodge_num<raw_probability): return True
         else: return False
@@ -313,7 +325,7 @@ def attackInfo(attacker:"Battler", defender:"Battler", b_settings:"BattleSetting
         if defender.status == "Frostbite":
             crit_probability *= b_settings.getFrostbiteCritMtp()
 
-        if(crit_num<crit_probability): return True
+        if crit_num<crit_probability and pm_phys == True: return True
         else: return False
 
     def elemRes():
@@ -352,6 +364,17 @@ def severityToString(severity:int):
         case _: return " "
 
 #ATTACK INTERACTIONS
+def burnDmg(defender:"Battler", b_settings:"BattleSettings"):
+    s = ""
+    if defender.status == "Burn":
+        burn_dmg = math.floor(defender.max_hp * b_settings.getBurnDmgMtp())
+        defender.hp -= burn_dmg
+        defender.equalizeHpMp()
+        s += "\n" + defender.name + " took " + str(burn_dmg) + " extra burn damage."
+        return [defender, s]
+    else:
+        return [defender, s]
+
 def drainResAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", element:int, dmg:int):
     s = ""
     defender.hp += dmg
@@ -359,6 +382,11 @@ def drainResAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSet
     attacker.equalizeHpMp()
     defender.equalizeHpMp()
     s += defender.name + " absorbs " + str(dmg) + " " + elementToString(element) + " damage from " + attacker.name + ". "
+
+    burn_info = burnDmg(defender, b_settings)
+    defender = burn_info[0]
+    s += burn_info[1]
+
     return [attacker, defender, s]
 
 def reflectResAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", element:int, dmg:int):
@@ -368,6 +396,11 @@ def reflectResAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleS
     attacker.equalizeHpMp()
     defender.equalizeHpMp()
     s += defender.name + " reflects " + str(dmg) + " " + elementToString(element) + " damage to " + attacker.name + ". "
+
+    burn_info = burnDmg(defender, b_settings)
+    defender = burn_info[0]
+    s += burn_info[1]
+
     return [attacker, defender, s]
 
 def nullResAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", element:int):
@@ -376,6 +409,11 @@ def nullResAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSett
     attacker.equalizeHpMp()
     defender.equalizeHpMp()
     s += defender.name + " blocks all " + elementToString(element) + " damage from " + attacker.name + ". "
+
+    burn_info = burnDmg(defender, b_settings)
+    defender = burn_info[0]
+    s += burn_info[1]
+
     return [attacker, defender, s]
 
 def dodgeAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings"):
@@ -394,6 +432,11 @@ def weakResAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSett
     attacker.equalizeHpMp()
     defender.equalizeHpMp()
     s += defender.name + " takes " + str(dmg) + " weakness hitting " + severityToString(severity) + elementToString(element) + " damage from " + attacker.name + ". "
+
+    burn_info = burnDmg(defender, b_settings)
+    defender = burn_info[0]
+    s += burn_info[1]
+
     return [attacker, defender, s]
 
 def critAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", element:int, dmg:int, severity:int, atk_mp_gain:bool):
@@ -405,6 +448,11 @@ def critAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSetting
     attacker.equalizeHpMp()
     defender.equalizeHpMp()
     s += defender.name + " takes " + str(dmg) + " critical hitting " + severityToString(severity) + elementToString(element) + " damage from " + attacker.name + ". "
+
+    burn_info = burnDmg(defender, b_settings)
+    defender = burn_info[0]
+    s += burn_info[1]
+
     return [attacker, defender, s]
 
 def resResAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", element:int, dmg:int, severity:int, atk_mp_gain:bool):
@@ -415,6 +463,11 @@ def resResAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSetti
     attacker.equalizeHpMp()
     defender.equalizeHpMp()
     s += defender.name + " takes " + str(dmg) + " resistance-mitigated " + severityToString(severity) + elementToString(element) + " damage from " + attacker.name + ". "
+
+    burn_info = burnDmg(defender, b_settings)
+    defender = burn_info[0]
+    s += burn_info[1]
+
     return [attacker, defender, s]
 
 def norResAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", element:int, dmg:int, severity:int, atk_mp_gain:bool):
@@ -425,6 +478,11 @@ def norResAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSetti
     attacker.equalizeHpMp()
     defender.equalizeHpMp()
     s += defender.name + " takes " + str(dmg) + " " + severityToString(severity) + elementToString(element) + " damage from " + attacker.name + ". "
+
+    burn_info = burnDmg(defender, b_settings)
+    defender = burn_info[0]
+    s += burn_info[1]
+
     return [attacker, defender, s]
 
 #ATTACKS

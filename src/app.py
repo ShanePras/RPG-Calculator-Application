@@ -176,6 +176,54 @@ class OptionWindow(ctk.CTkToplevel):
         self.heal_h_entry.grid(row=21, column=1, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.heal_h_entry)
 
+        self.burn_dmg_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Burn Damage Multiplier:")
+        self.burn_dmg_label.grid(row=22, column=0, padx=10, pady=10, sticky="nsew")
+        self.burn_dmg_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getBurnDmgMtp()))
+        self.burn_dmg_entry.grid(row=22, column=1, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.burn_dmg_entry)
+
+        self.frost_crt_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Frostbite Crit Multiplier:")
+        self.frost_crt_label.grid(row=23, column=0, padx=10, pady=10, sticky="nsew")
+        self.frost_crt_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getFrostbiteCritMtp()))
+        self.frost_crt_entry.grid(row=23, column=1, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.frost_crt_entry)
+
+        self.shock_dmg_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Shock Damage Multiplier:")
+        self.shock_dmg_label.grid(row=24, column=0, padx=10, pady=10, sticky="nsew")
+        self.shock_dmg_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getShockDmgMtp()))
+        self.shock_dmg_entry.grid(row=24, column=1, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.shock_dmg_entry)
+
+        self.heavy_def_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Heavy Defense Multiplier:")
+        self.heavy_def_label.grid(row=24, column=0, padx=10, pady=10, sticky="nsew")
+        self.heavy_def_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getHeavyDefMtp()))
+        self.heavy_def_entry.grid(row=24, column=1, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.heavy_def_entry)
+
+        self.daze_ddg_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Daze Dodge Multiplier:")
+        self.daze_ddg_label.grid(row=25, column=0, padx=10, pady=10, sticky="nsew")
+        self.daze_ddg_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getDazeDdgMtp()))
+        self.daze_ddg_entry.grid(row=25, column=1, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.daze_ddg_entry)
+
+        self.rage_atk_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Rage Attack Multiplier:")
+        self.rage_atk_label.grid(row=26, column=0, padx=10, pady=10, sticky="nsew")
+        self.rage_atk_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getRageAtkMtp()))
+        self.rage_atk_entry.grid(row=26, column=1, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.rage_atk_entry)
+
+        self.rage_def_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Rage Defense Multiplier:")
+        self.rage_def_label.grid(row=27, column=0, padx=10, pady=10, sticky="nsew")
+        self.rage_def_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getRageDefMtp()))
+        self.rage_def_entry.grid(row=27, column=1, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.rage_def_entry)
+
+        self.fear_agi_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Fear Agility Multiplier:")
+        self.fear_agi_label.grid(row=28, column=0, padx=10, pady=10, sticky="nsew")
+        self.fear_agi_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getFearAgiMtp()))
+        self.fear_agi_entry.grid(row=28, column=1, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.fear_agi_entry)
+
         self.l_atk_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Light Attack MP:")
         self.l_atk_mp_label.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
         self.l_atk_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getLAtkMp()))
@@ -303,33 +351,57 @@ class OptionWindow(ctk.CTkToplevel):
         self.entries.append(self.scan_mp_entry)
 
         self.buff_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Buff MP Cost:")
-        self.buff_mp_label.grid(row=0, column=4, padx=10, pady=10, sticky="nsew")
+        self.buff_mp_label.grid(row=21, column=2, padx=10, pady=10, sticky="nsew")
         self.buff_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getBuffMp()))
-        self.buff_mp_entry.grid(row=0, column=5, padx=10, pady=10, sticky="nsew")
+        self.buff_mp_entry.grid(row=21, column=3, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.buff_mp_entry)
 
         self.buff_all_mp_add_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Buff All MP Increase:")
-        self.buff_all_mp_add_label.grid(row=1, column=4, padx=10, pady=10, sticky="nsew")
+        self.buff_all_mp_add_label.grid(row=22, column=2, padx=10, pady=10, sticky="nsew")
         self.buff_all_mp_add_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getBuffAllMpAdd()))
-        self.buff_all_mp_add_entry.grid(row=1, column=5, padx=10, pady=10, sticky="nsew")
+        self.buff_all_mp_add_entry.grid(row=22, column=3, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.buff_all_mp_add_entry)
 
         self.buff_lvl_mp_add_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Buff Level MP Increase:")
-        self.buff_lvl_mp_add_label.grid(row=2, column=4, padx=10, pady=10, sticky="nsew")
+        self.buff_lvl_mp_add_label.grid(row=23, column=2, padx=10, pady=10, sticky="nsew")
         self.buff_lvl_mp_add_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getBuffLvlMpAdd()))
-        self.buff_lvl_mp_add_entry.grid(row=2, column=5, padx=10, pady=10, sticky="nsew")
+        self.buff_lvl_mp_add_entry.grid(row=23, column=3, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.buff_lvl_mp_add_entry)
 
         self.buff_extra_stat_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Buff Extra Stat MP Increase:")
-        self.buff_extra_stat_mp_label.grid(row=3, column=4, padx=10, pady=10, sticky="nsew")
+        self.buff_extra_stat_mp_label.grid(row=24, column=2, padx=10, pady=10, sticky="nsew")
         self.buff_extra_stat_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getBuffExtraStatMpAdd()))
-        self.buff_extra_stat_mp_entry.grid(row=3, column=5, padx=10, pady=10, sticky="nsew")
+        self.buff_extra_stat_mp_entry.grid(row=24, column=3, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.buff_extra_stat_mp_entry)
 
+        self.ail_one_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Ailment One MP Cost:")
+        self.ail_one_mp_label.grid(row=25, column=2, padx=10, pady=10, sticky="nsew")
+        self.ail_one_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getAilmentOneMp()))
+        self.ail_one_mp_entry.grid(row=25, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.ail_one_mp_entry)
+
+        self.ail_all_mp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Ailment All MP Cost:")
+        self.ail_all_mp_label.grid(row=26, column=2, padx=10, pady=10, sticky="nsew")
+        self.ail_all_mp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getAilmentAllMp()))
+        self.ail_all_mp_entry.grid(row=26, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.ail_all_mp_entry)
+
+        self.ail_mp_one_add_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Ailment MP One Increase:")
+        self.ail_mp_one_add_label.grid(row=27, column=2, padx=10, pady=10, sticky="nsew")
+        self.ail_mp_one_add_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getAilmentMpAddOne()))
+        self.ail_mp_one_add_entry.grid(row=27, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.ail_mp_one_add_entry)
+
+        self.ail_mp_all_add_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Ailment MP All Increase:")
+        self.ail_mp_all_add_label.grid(row=28, column=2, padx=10, pady=10, sticky="nsew")
+        self.ail_mp_all_add_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getAilmentMpAddAll()))
+        self.ail_mp_all_add_entry.grid(row=28, column=3, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.ail_mp_all_add_entry)
+
         self.max_undo_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Max Amount of Undos:")
-        self.max_undo_label.grid(row=3, column=6, padx=10, pady=10, sticky="nsew")
+        self.max_undo_label.grid(row=0, column=4, padx=10, pady=10, sticky="nsew")
         self.max_undo_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getMaxUndos()))
-        self.max_undo_entry.grid(row=3, column=7, padx=10, pady=10, sticky="nsew")
+        self.max_undo_entry.grid(row=0, column=5, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.max_undo_entry)
 
         def conf_changes(): 
@@ -350,6 +422,108 @@ class OptionWindow(ctk.CTkToplevel):
                 self.destroy()
 
 class BattlerContainer(ctk.CTkFrame):
+    class InfoWindow(ctk.CTkToplevel):
+        def __init__(self, master, **kwargs):
+            super().__init__(master, **kwargs)
+            battler = master.battler
+
+            self.title("Battler Stats")
+            self.geometry("1280x720")
+            self.iconbitmap(ico_path)
+    
+            self.grid_rowconfigure(0, weight=1)
+            self.grid_rowconfigure(1, weight=1)
+            self.grid_rowconfigure(2, weight=2)
+            self.grid_rowconfigure(3, weight=1)
+            self.grid_columnconfigure(0, weight=1)
+            self.grid_columnconfigure(1, weight=1)
+            self.grid_columnconfigure(2, weight=1)
+            self.grid_columnconfigure(3, weight=1)
+            self.grid_columnconfigure(4, weight=1)
+            self.grid_columnconfigure(5, weight=1)
+            self.grid_columnconfigure(6, weight=1)
+            self.grid_columnconfigure(7, weight=1)
+            self.grid_columnconfigure(8, weight=1)
+            self.grid_columnconfigure(9, weight=1)
+    
+            self.after(100, self.focus)
+
+            def resistToString(resist:int):
+                match resist:
+                    case 0: return "Normal"
+                    case 1: return "Weak"
+                    case 2: return "Resist"
+                    case 3: return "Null"
+                    case 4: return "Reflect"
+                    case 5: return "Drain"
+                    case _: 
+                        print("Error in info window, resist to string.")
+                        return "Zero"
+
+            self.name_str = "Name: " + battler.name
+            self.name_lbl = ctk.CTkLabel(master=self, text=self.name_str)
+            self.name_lbl.grid(row=0, column=3, padx=10, pady=10)
+
+            self.tag_str = "Label: " + battler.label
+            self.tag_lbl = ctk.CTkLabel(master=self, text=self.tag_str)
+            self.tag_lbl.grid(row=0, column=6, padx=10, pady=10)
+
+            self.stre_str = "Strength: " + str(battler.strength)
+            self.stre_lbl = ctk.CTkLabel(master=self, text=self.stre_str)
+            self.stre_lbl.grid(row=1, column=0, columnspan=2, padx=10, pady=10)
+
+            self.mag_str = "Magic: " + str(battler.magic)
+            self.mag_lbl = ctk.CTkLabel(master=self, text=self.mag_str)
+            self.mag_lbl.grid(row=1, column=2, columnspan=2, padx=10, pady=10)
+
+            self.def_str = "Defense: " + str(battler.defense)
+            self.def_lbl = ctk.CTkLabel(master=self, text=self.def_str)
+            self.def_lbl.grid(row=1, column=4, columnspan=2, padx=10, pady=10)
+
+            self.agi_str = "Agility: " + str(battler.agility)
+            self.agi_lbl = ctk.CTkLabel(master=self, text=self.agi_str)
+            self.agi_lbl.grid(row=1, column=6, columnspan=2, padx=10, pady=10)
+
+            self.luk_str = "Luck: " + str(battler.luck)
+            self.luk_lbl = ctk.CTkLabel(master=self, text=self.luk_str)
+            self.luk_lbl.grid(row=1, column=8, columnspan=2, padx=10, pady=10)
+
+            self.sl_res_str = "Slash:\n" + resistToString(battler.slash_resist)
+            self.sl_res_lbl = ctk.CTkLabel(master=self, text=self.sl_res_str)
+            self.sl_res_lbl.grid(row=2, column=0, padx=10, pady=10)
+
+            self.st_res_str = "Strike:\n" + resistToString(battler.strike_resist)
+            self.st_res_lbl = ctk.CTkLabel(master=self, text=self.st_res_str)
+            self.st_res_lbl.grid(row=2, column=1, padx=10, pady=10)
+
+            self.pi_res_str = "Pierce:\n" + resistToString(battler.pierce_resist)
+            self.pi_res_lbl = ctk.CTkLabel(master=self, text=self.pi_res_str)
+            self.pi_res_lbl.grid(row=2, column=2, padx=10, pady=10)
+
+            self.fi_res_str = "Fire:\n" + resistToString(battler.fire_resist)
+            self.fi_res_lbl = ctk.CTkLabel(master=self, text=self.fi_res_str)
+            self.fi_res_lbl.grid(row=2, column=3, padx=10, pady=10)
+
+            self.wa_res_str = "Water:\n" + resistToString(battler.water_resist)
+            self.wa_res_lbl = ctk.CTkLabel(master=self, text=self.wa_res_str)
+            self.wa_res_lbl.grid(row=2, column=4, padx=10, pady=10)
+
+            self.li_res_str = "Lightning:\n" + resistToString(battler.lightning_resist)
+            self.li_res_lbl = ctk.CTkLabel(master=self, text=self.li_res_str)
+            self.li_res_lbl.grid(row=2, column=5, padx=10, pady=10)
+
+            self.ea_res_str = "Earth:\n" + resistToString(battler.earth_resist)
+            self.ea_res_lbl = ctk.CTkLabel(master=self, text=self.ea_res_str)
+            self.ea_res_lbl.grid(row=2, column=6, padx=10, pady=10)
+
+            self.wi_res_str = "Wind:\n" + resistToString(battler.wind_resist)
+            self.wi_res_lbl = ctk.CTkLabel(master=self, text=self.wi_res_str)
+            self.wi_res_lbl.grid(row=2, column=7, padx=10, pady=10)
+
+            self.ot_res_str = "Other:\n" + resistToString(battler.other_resist)
+            self.ot_res_lbl = ctk.CTkLabel(master=self, text=self.ot_res_str)
+            self.ot_res_lbl.grid(row=2, column=8, padx=10, pady=10)
+
     def __init__(self, master, app, **kwargs):
         super().__init__(master, **kwargs)
         self.app = app
@@ -365,8 +539,13 @@ class BattlerContainer(ctk.CTkFrame):
         self.columnconfigure(5, weight=1)
 
         self.battler = _battler
+        self.info_window = None
 
-        #add hp, mp, atk lvl, def lvl, agi lvl, front/back status, guard status, charge status
+        def info_callback():
+            if self.info_window is None or not self.info_window.winfo_exists():
+                self.info_window = BattlerContainer.InfoWindow(master=self)
+            else:
+                self.info_window.focus()
 
         self.pack(pady=10, padx=10, fill="both", expand=True)
         
@@ -500,6 +679,9 @@ class BattlerContainer(ctk.CTkFrame):
         status_string = "Status: " + self.battler.status
         self.status_label = ctk.CTkLabel(master=self, text=status_string)
         self.status_label.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+
+        self.info_button = ctk.CTkButton(master=self, text="Info", command=info_callback)
+        self.info_button.grid(row=1, column=5, padx=10, pady=10, sticky="nsew")
 
 class SwapFighterWindow(ctk.CTkToplevel):
     class BattlerInfoContainer(ctk.CTkFrame):
@@ -1617,21 +1799,57 @@ class DebugWindow(ctk.CTkToplevel):
                         self.overheal_switch.grid(row=1, column=5, columnspan=2, padx=10, pady=10)
                         self.num_perc_menu.grid(row=2, column=2, padx=10, pady=10, sticky="w")
                         self.stat_menu.grid_forget()
+                        self.resistances_menu.grid_forget()
+                        self.plus_minus_equal_menu.grid(row=2, column=0, padx=10, pady=10)
+                        self.entry.grid(row=2, column=1, padx=10, pady=10)
+                        self.num_perc_menu.grid(row=2, column=2, padx=10, pady=10, sticky="w")
+                        self.resist_lbl.grid_forget()
+                        self.resist_lvl_menu.grid_forget()
+                        self.status_menu.grid_forget()
+                        self.status_lbl.grid_forget()
+                        self.status_change_menu.grid_forget()
                     case "Stats":
                         self.choice_2_lbl.configure(text="Stat Choice:")
                         self.hpmp_menu.grid_forget()
                         self.overheal_switch.grid_forget()
                         self.stat_menu.grid(row=1, column=4, padx=10, pady=10, sticky="w")
+                        self.resistances_menu.grid_forget()
+                        self.plus_minus_equal_menu.grid(row=2, column=0, padx=10, pady=10)
+                        self.entry.grid(row=2, column=1, padx=10, pady=10)
+                        self.num_perc_menu.grid(row=2, column=2, padx=10, pady=10, sticky="w")
+                        self.resist_lbl.grid_forget()
+                        self.resist_lvl_menu.grid_forget()
+                        self.status_menu.grid_forget()
+                        self.status_lbl.grid_forget()
+                        self.status_change_menu.grid_forget()
                     case "Resistances":
                         self.choice_2_lbl.configure(text="Resistance Choice:")
                         self.hpmp_menu.grid_forget()
                         self.overheal_switch.grid_forget()
                         self.stat_menu.grid_forget()
+                        self.resistances_menu.grid(row=1, column=4, padx=10, pady=10, sticky="w")
+                        self.plus_minus_equal_menu.grid_forget()
+                        self.entry.grid_forget()
+                        self.num_perc_menu.grid_forget()
+                        self.resist_lbl.grid(row=2, column=0, columnspan=2, padx=10, pady=10, sticky="e")
+                        self.resist_lvl_menu.grid(row=2, column=2, padx=10, pady=10, sticky="w")
+                        self.status_menu.grid_forget()
+                        self.status_lbl.grid_forget()
+                        self.status_change_menu.grid_forget()
                     case "Status":
                         self.choice_2_lbl.configure(text="Status Choice:")
                         self.hpmp_menu.grid_forget()
                         self.overheal_switch.grid_forget()
                         self.stat_menu.grid_forget()
+                        self.resistances_menu.grid_forget()
+                        self.plus_minus_equal_menu.grid_forget()
+                        self.entry.grid_forget()
+                        self.num_perc_menu.grid_forget()
+                        self.resist_lbl.grid_forget()
+                        self.resist_lvl_menu.grid_forget()
+                        self.status_menu.grid(row=1, column=4, padx=10, pady=10, sticky="w")
+                        self.status_lbl.grid(row=2, column=0, columnspan=2, padx=10, pady=10, sticky="e")
+                        self.status_change_menu.grid(row=2, column=2, padx=10, pady=10, sticky="w")
 
             def hpmp_menu_callback(choice:str):
                 if choice=="HP" or choice=="MP":
@@ -1978,9 +2196,250 @@ class DebugWindow(ctk.CTkToplevel):
                             master.changeBattlerListInfo(is_a, new_battlers)
                             master.log_console.configure(text=s)
                     case "Resistances":
-                        pass
+                        def changeResistance(target:"bu.Battler", resist:str, resist_lvl:str):
+                            s = ""
+
+                            if resist == "Slash":
+                                if resist_lvl == "Normal":
+                                    target.slash_resist = 0
+                                    s += target.name + "'s slash resistance is Normal."
+                                elif resist_lvl == "Weak":
+                                    target.slash_resist = 1
+                                    s += target.name + "'s slash resistance is Weak."
+                                elif resist_lvl == "Resist":
+                                    target.slash_resist = 2
+                                    s += target.name + "'s slash resistance is Resistant."
+                                elif resist_lvl == "Null":
+                                    target.slash_resist = 3
+                                    s += target.name + "'s slash resistance is Null."
+                                elif resist_lvl == "Reflect":
+                                    target.slash_resist = 4
+                                    s += target.name + "'s slash resistance is Reflect."
+                                else:
+                                    target.slash_resist = 5
+                                    s += target.name + "'s slash resistance is Drain."
+                            elif resist == "Strike":
+                                if resist_lvl == "Normal":
+                                    target.strike_resist = 0
+                                    s += target.name + "'s strike resistance is Normal."
+                                elif resist_lvl == "Weak":
+                                    target.strike_resist = 1
+                                    s += target.name + "'s strike resistance is Weak."
+                                elif resist_lvl == "Resist":
+                                    target.strike_resist = 2
+                                    s += target.name + "'s strike resistance is Resistant."
+                                elif resist_lvl == "Null":
+                                    target.strike_resist = 3
+                                    s += target.name + "'s strike resistance is Null."
+                                elif resist_lvl == "Reflect":
+                                    target.strike_resist = 4
+                                    s += target.name + "'s strike resistance is Reflect."
+                                else:
+                                    target.strike_resist = 5
+                                    s += target.name + "'s strike resistance is Drain."
+                            elif resist == "Pierce":
+                                if resist_lvl == "Normal":
+                                    target.pierce_resist = 0
+                                    s += target.name + "'s pierce resistance is Normal."
+                                elif resist_lvl == "Weak":
+                                    target.pierce_resist = 1
+                                    s += target.name + "'s pierce resistance is Weak."
+                                elif resist_lvl == "Resist":
+                                    target.pierce_resist = 2
+                                    s += target.name + "'s pierce resistance is Resistant."
+                                elif resist_lvl == "Null":
+                                    target.pierce_resist = 3
+                                    s += target.name + "'s pierce resistance is Null."
+                                elif resist_lvl == "Reflect":
+                                    target.pierce_resist = 4
+                                    s += target.name + "'s pierce resistance is Reflect."
+                                else:
+                                    target.pierce_resist = 5
+                                    s += target.name + "'s pierce resistance is Drain."
+                            elif resist == "Fire":
+                                if resist_lvl == "Normal":
+                                    target.fire_resist = 0
+                                    s += target.name + "'s fire resistance is Normal."
+                                elif resist_lvl == "Weak":
+                                    target.fire_resist = 1
+                                    s += target.name + "'s fire resistance is Weak."
+                                elif resist_lvl == "Resist":
+                                    target.fire_resist = 2
+                                    s += target.name + "'s fire resistance is Resistant."
+                                elif resist_lvl == "Null":
+                                    target.fire_resist = 3
+                                    s += target.name + "'s fire resistance is Null."
+                                elif resist_lvl == "Reflect":
+                                    target.fire_resist = 4
+                                    s += target.name + "'s fire resistance is Reflect."
+                                else:
+                                    target.fire_resist = 5
+                                    s += target.name + "'s fire resistance is Drain."
+                            elif resist == "Water":
+                                if resist_lvl == "Normal":
+                                    target.water_resist = 0
+                                    s += target.name + "'s water resistance is Normal."
+                                elif resist_lvl == "Weak":
+                                    target.water_resist = 1
+                                    s += target.name + "'s water resistance is Weak."
+                                elif resist_lvl == "Resist":
+                                    target.water_resist = 2
+                                    s += target.name + "'s water resistance is Resistant."
+                                elif resist_lvl == "Null":
+                                    target.water_resist = 3
+                                    s += target.name + "'s water resistance is Null."
+                                elif resist_lvl == "Reflect":
+                                    target.water_resist = 4
+                                    s += target.name + "'s water resistance is Reflect."
+                                else:
+                                    target.water_resist = 5
+                                    s += target.name + "'s water resistance is Drain."
+                            elif resist == "Lightning":
+                                if resist_lvl == "Normal":
+                                    target.lightning_resist = 0
+                                    s += target.name + "'s lightning resistance is Normal."
+                                elif resist_lvl == "Weak":
+                                    target.lightning_resist = 1
+                                    s += target.name + "'s lightning resistance is Weak."
+                                elif resist_lvl == "Resist":
+                                    target.lightning_resist = 2
+                                    s += target.name + "'s lightning resistance is Resistant."
+                                elif resist_lvl == "Null":
+                                    target.lightning_resist = 3
+                                    s += target.name + "'s lightning resistance is Null."
+                                elif resist_lvl == "Reflect":
+                                    target.lightning_resist = 4
+                                    s += target.name + "'s lightning resistance is Reflect."
+                                else:
+                                    target.lightning_resist = 5
+                                    s += target.name + "'s lightning resistance is Drain."
+                            elif resist == "Earth":
+                                if resist_lvl == "Normal":
+                                    target.earth_resist = 0
+                                    s += target.name + "'s earth resistance is Normal."
+                                elif resist_lvl == "Weak":
+                                    target.earth_resist = 1
+                                    s += target.name + "'s earth resistance is Weak."
+                                elif resist_lvl == "Resist":
+                                    target.earth_resist = 2
+                                    s += target.name + "'s earth resistance is Resistant."
+                                elif resist_lvl == "Null":
+                                    target.earth_resist = 3
+                                    s += target.name + "'s earth resistance is Null."
+                                elif resist_lvl == "Reflect":
+                                    target.earth_resist = 4
+                                    s += target.name + "'s earth resistance is Reflect."
+                                else:
+                                    target.earth_resist = 5
+                                    s += target.name + "'s earth resistance is Drain."
+                            elif resist == "Wind":
+                                if resist_lvl == "Normal":
+                                    target.wind_resist = 0
+                                    s += target.name + "'s wind resistance is Normal."
+                                elif resist_lvl == "Weak":
+                                    target.wind_resist = 1
+                                    s += target.name + "'s wind resistance is Weak."
+                                elif resist_lvl == "Resist":
+                                    target.wind_resist = 2
+                                    s += target.name + "'s wind resistance is Resistant."
+                                elif resist_lvl == "Null":
+                                    target.wind_resist = 3
+                                    s += target.name + "'s wind resistance is Null."
+                                elif resist_lvl == "Reflect":
+                                    target.wind_resist = 4
+                                    s += target.name + "'s wind resistance is Reflect."
+                                else:
+                                    target.wind_resist = 5
+                                    s += target.name + "'s wind resistance is Drain."
+                            else:
+                                if resist_lvl == "Normal":
+                                    target.other_resist = 0
+                                    s += target.name + "'s other resistance is Normal."
+                                elif resist_lvl == "Weak":
+                                    target.other_resist = 1
+                                    s += target.name + "'s other resistance is Weak."
+                                elif resist_lvl == "Resist":
+                                    target.other_resist = 2
+                                    s += target.name + "'s other resistance is Resistant."
+                                elif resist_lvl == "Null":
+                                    target.other_resist = 3
+                                    s += target.name + "'s other resistance is Null."
+                                elif resist_lvl == "Reflect":
+                                    target.other_resist = 4
+                                    s += target.name + "'s other resistance is Reflect."
+                                else:
+                                    target.other_resist = 5
+                                    s += target.name + "'s other resistance is Drain."
+                            return [target, s]
+
+                        if self.target_all_var.get() == "Target One":
+                            target = master.findBattlerFromAll(self.target_menu.get())
+
+                            info = changeResistance(target, self.resistances_menu.get(), self.resist_lvl_menu.get())
+
+                            master.changeBattlerInfoFromAll(self.target_menu.get(), info[0])
+                            master.log_console.configure(text=info[1])
+                        else:
+                            if self.target_team_var.get() == "Team A":
+                                is_a = True
+                            else:
+                                is_a = False
+
+                            targets = master.getBattlersInList(is_a)
+                            new_battlers = []
+                            s = ""
+                            for target in targets:
+                                temp_info = changeResistance(target, self.resistances_menu.get(), self.resist_lvl_menu.get())
+
+                                new_battlers.append(temp_info[0])
+                                s += temp_info[1] + "\n"
+
+                            master.changeBattlerListInfo(is_a, new_battlers)
+                            master.log_console.configure(text=s)
                     case "Status":
-                        pass
+                        def changeStatus(target:"bu.Battler", status:str, status_action:str):
+                            s = ""
+
+                            if status == "None":
+                                target.status = "None"
+                                s += target.name + "'s status was set to None."
+                            else:
+                                if status_action == "Inflict":
+                                    target.status = status
+                                    s += target.name + "'s status was set to " + status + "."
+                                else:
+                                    if target.status == status:
+                                        target.status = "None"
+                                        s += target.name + "'s was cured of " + status + "."
+                                    else:
+                                        s += target.name + " did not have " + status + ", and remained the same."
+
+                            return [target, s]
+
+                        if self.target_all_var.get() == "Target One":
+                            target = master.findBattlerFromAll(self.target_menu.get())
+
+                            info = changeStatus(target, self.status_menu.get(), self.status_change_menu.get())
+
+                            master.changeBattlerInfoFromAll(self.target_menu.get(), info[0])
+                            master.log_console.configure(text=info[1])
+                        else:
+                            if self.target_team_var.get() == "Team A":
+                                is_a = True
+                            else:
+                                is_a = False
+
+                            targets = master.getBattlersInList(is_a)
+                            new_battlers = []
+                            s = ""
+                            for target in targets:
+                                temp_info = changeStatus(target, self.status_menu.get(), self.status_change_menu.get())
+
+                                new_battlers.append(temp_info[0])
+                                s += temp_info[1] + "\n"
+
+                            master.changeBattlerListInfo(is_a, new_battlers)
+                            master.log_console.configure(text=s)
                 master.undo_redo_stack.addToUndoList()
                 self.destroy() 
 
@@ -2016,6 +2475,10 @@ class DebugWindow(ctk.CTkToplevel):
 
             self.stat_menu = ctk.CTkOptionMenu(master=self, values=["Strength", "Magic", "Defense", "Agility", "Luck"])
 
+            self.resistances_menu = ctk.CTkOptionMenu(master=self, values=["Slash", "Strike", "Pierce", "Fire", "Water", "Lightning", "Earth", "Wind", "Other"])
+
+            self.status_menu = ctk.CTkOptionMenu(master=self, values=["None", "Burn", "Frostbite", "Shock", "Heavy", "Daze", "Curse", "Charm", "Confusion", "Forget", "Rage", "Fear"])
+
             def overheal_switch(): self.overheal_switch.configure(text=self.overheal_var.get())
             self.overheal_var = ctk.StringVar(value="No Overheal")
             self.overheal_switch = ctk.CTkSwitch(master=self, text="No Overheal", command=overheal_switch, variable=self.overheal_var, onvalue="Overheal", offvalue="No Overheal")
@@ -2031,8 +2494,16 @@ class DebugWindow(ctk.CTkToplevel):
             self.num_perc_menu = ctk.CTkOptionMenu(master=self, values=["Number", "Percent"])
             self.num_perc_menu.grid(row=2, column=2, padx=10, pady=10, sticky="w")
 
+            self.resist_lbl = ctk.CTkLabel(master=self, text="Resistance Level:")
+
+            self.resist_lvl_menu = ctk.CTkOptionMenu(master=self, values=["Normal", "Weak", "Resist", "Null", "Reflect", "Drain"])
+
+            self.status_lbl = ctk.CTkLabel(master=self, text="Status Change:")
+
+            self.status_change_menu = ctk.CTkOptionMenu(master=self, values=["Inflict", "Remove"])
+
             self.confirm_button = ctk.CTkButton(master=self, text="Confirm", command=confirm_button)
-            self.confirm_button.grid(row=2, column=3, columnspan=2, padx=10, pady=10)
+            self.confirm_button.grid(row=2, column=4, columnspan=2, padx=10, pady=10)
 
 class App(ctk.CTk):
     class UndoRedoStack():
@@ -2575,7 +3046,7 @@ class App(ctk.CTk):
         self.misc_button.grid(row=4, column=5, padx=20, pady=20, sticky="nsew")
 
         self.debug_button = ctk.CTkButton(master=self, text="Debug/Items", command=lambda: debug_menu())
-        self.debug_button.grid(row=5, column=0, columnspan=2, padx=20, pady=20, sticky="ew")
+        self.debug_button.grid(row=5, column=0, padx=20, pady=20, sticky="ew")
 
         self.log_container = ctk.CTkScrollableFrame(master=self, orientation="horizontal", corner_radius=10, border_width=2, border_color="#e6f7ff", fg_color="#3a4b5c")
         self.log_container.grid(row=5, column=2, columnspan=5, padx=20, pady=20, sticky="nsew")
