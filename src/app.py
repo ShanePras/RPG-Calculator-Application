@@ -634,6 +634,7 @@ class AttackWindow(ctk.CTkToplevel):
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
         self.grid_rowconfigure(2, weight=1)
+        self.grid_rowconfigure(3, weight=1)
         self.grid_columnconfigure(0, weight=2)
         self.grid_columnconfigure(1, weight=2)
         self.grid_columnconfigure(2, weight=2)
@@ -652,6 +653,11 @@ class AttackWindow(ctk.CTkToplevel):
                     self.mp_limit_switch.grid_forget()
                     self.mp_cost_lbl.configure(text="MP Cost: 0")
 
+                    self.defender_lbl.configure(text="Defender:")
+                    self.defender_menu.grid(row=0, column=3, columnspan=2, padx=10, pady=10, sticky="w")
+                    self.def_team_sw.grid_forget()
+                    self.defender_splash_team_lbl.grid_forget()
+
                     self.mp_cost = 0
 
                     self.severity_lbl.grid_forget()
@@ -666,11 +672,16 @@ class AttackWindow(ctk.CTkToplevel):
 
                     self.row_fm_switch.grid_forget()
                 case "Power Attack":
-                    self.mp_limit_switch.grid(row=1, column=5, columnspan=2, padx=10, pady=10)
+                    self.mp_limit_switch.grid(row=2, column=5, columnspan=2, padx=10, pady=10)
                     severity_menu_callback(self.severity_menu_var.get())
 
-                    self.severity_lbl.grid(row=1, column=0, padx=10, pady=10, sticky="e")
-                    self.severity_menu.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+                    self.defender_lbl.configure(text="Defender:")
+                    self.defender_menu.grid(row=0, column=3, columnspan=2, padx=10, pady=10, sticky="w")
+                    self.def_team_sw.grid_forget()
+                    self.defender_splash_team_lbl.grid_forget()
+
+                    self.severity_lbl.grid(row=2, column=0, padx=10, pady=10, sticky="e")
+                    self.severity_menu.grid(row=2, column=1, padx=10, pady=10, sticky="w")
 
                     self.multi_atk_lbl.grid_forget()
                     self.multi_atk_p_button.grid_forget()
@@ -681,11 +692,16 @@ class AttackWindow(ctk.CTkToplevel):
 
                     self.row_fm_switch.grid_forget()
                 case "Attack All":
-                    self.mp_limit_switch.grid(row=1, column=5, columnspan=2, padx=10, pady=10)
+                    self.mp_limit_switch.grid(row=2, column=5, columnspan=2, padx=10, pady=10)
                     severity_menu_callback(self.severity_menu_var.get())
 
-                    self.severity_lbl.grid(row=1, column=0, padx=10, pady=10, sticky="e")
-                    self.severity_menu.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+                    self.defender_lbl.configure(text="Defending Team:")
+                    self.defender_menu.grid_forget()
+                    self.def_team_sw.grid(row=0, column=3, columnspan=2, padx=10, pady=10, sticky="w")
+                    self.defender_splash_team_lbl.grid_forget()
+
+                    self.severity_lbl.grid(row=2, column=0, padx=10, pady=10, sticky="e")
+                    self.severity_menu.grid(row=2, column=1, padx=10, pady=10, sticky="w")
 
                     self.multi_atk_lbl.grid_forget()
                     self.multi_atk_p_button.grid_forget()
@@ -696,14 +712,19 @@ class AttackWindow(ctk.CTkToplevel):
 
                     self.row_fm_switch.grid_forget()
                 case "Multi Attack":
-                    self.mp_limit_switch.grid(row=1, column=5, columnspan=2, padx=10, pady=10)
+                    self.mp_limit_switch.grid(row=2, column=5, columnspan=2, padx=10, pady=10)
 
-                    self.severity_lbl.grid(row=1, column=0, padx=10, pady=10, sticky="e")
-                    self.severity_menu.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+                    self.defender_lbl.configure(text="Defender:")
+                    self.defender_menu.grid(row=0, column=3, columnspan=2, padx=10, pady=10, sticky="w")
+                    self.def_team_sw.grid_forget()
+                    self.defender_splash_team_lbl.grid_forget()
 
-                    self.multi_atk_lbl.grid(row=1, column=2, padx=10, pady=10, sticky="e")
-                    self.multi_atk_m_button.grid(row=1, column=3, padx=10, pady=10)
-                    self.multi_atk_p_button.grid(row=1, column=4, padx=10, pady=10)
+                    self.severity_lbl.grid(row=2, column=0, padx=10, pady=10, sticky="e")
+                    self.severity_menu.grid(row=2, column=1, padx=10, pady=10, sticky="w")
+
+                    self.multi_atk_lbl.grid(row=2, column=2, padx=10, pady=10, sticky="e")
+                    self.multi_atk_m_button.grid(row=2, column=3, padx=10, pady=10)
+                    self.multi_atk_p_button.grid(row=2, column=4, padx=10, pady=10)
                     severity_menu_callback(self.severity_menu_var.get())
 
                     self.second_element_lbl.grid_forget()
@@ -711,11 +732,16 @@ class AttackWindow(ctk.CTkToplevel):
 
                     self.row_fm_switch.grid_forget()
                 case "Drain Attack":
-                    self.mp_limit_switch.grid(row=1, column=5, columnspan=2, padx=10, pady=10)
+                    self.mp_limit_switch.grid(row=2, column=5, columnspan=2, padx=10, pady=10)
                     severity_menu_callback(self.severity_menu_var.get())
 
-                    self.severity_lbl.grid(row=1, column=0, padx=10, pady=10, sticky="e")
-                    self.severity_menu.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+                    self.defender_lbl.configure(text="Defender:")
+                    self.defender_menu.grid(row=0, column=3, columnspan=2, padx=10, pady=10, sticky="w")
+                    self.def_team_sw.grid_forget()
+                    self.defender_splash_team_lbl.grid_forget()
+
+                    self.severity_lbl.grid(row=2, column=0, padx=10, pady=10, sticky="e")
+                    self.severity_menu.grid(row=2, column=1, padx=10, pady=10, sticky="w")
 
                     self.multi_atk_lbl.grid_forget()
                     self.multi_atk_p_button.grid_forget()
@@ -726,26 +752,37 @@ class AttackWindow(ctk.CTkToplevel):
 
                     self.row_fm_switch.grid_forget()
                 case "Splash Attack":
-                    self.mp_limit_switch.grid(row=1, column=5, columnspan=2, padx=10, pady=10)
+                    self.mp_limit_switch.grid(row=2, column=5, columnspan=2, padx=10, pady=10)
                     severity_menu_callback(self.severity_menu_var.get())
 
-                    self.severity_lbl.grid(row=1, column=0, padx=10, pady=10, sticky="e")
-                    self.severity_menu.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+                    self.defender_lbl.configure(text="Primary Defender:")
+                    self.defender_menu.grid(row=0, column=3, columnspan=2, padx=10, pady=10, sticky="w")
+                    self.defender_splash_team_lbl.grid(row=0, column=5, padx=10, pady=10, sticky="e")
+                    self.def_team_sw.grid(row=0, column=6, padx=10, pady=10, sticky="w")
+                    def_team_sw()
+
+                    self.severity_lbl.grid(row=2, column=0, padx=10, pady=10, sticky="e")
+                    self.severity_menu.grid(row=2, column=1, padx=10, pady=10, sticky="w")
 
                     self.multi_atk_lbl.grid_forget()
                     self.multi_atk_p_button.grid_forget()
                     self.multi_atk_m_button.grid_forget()
 
-                    self.second_element_lbl.grid(row=1, column=2, padx=10, pady=10, sticky="e")
-                    self.second_element_menu.grid(row=1, column=3, columnspan=2, padx=10, pady=10, sticky="w")
+                    self.second_element_lbl.grid(row=2, column=2, padx=10, pady=10, sticky="e")
+                    self.second_element_menu.grid(row=2, column=3, columnspan=2, padx=10, pady=10, sticky="w")
 
                     self.row_fm_switch.grid_forget()
                 case "Row Attack":
-                    self.mp_limit_switch.grid(row=1, column=5, columnspan=2, padx=10, pady=10)
+                    self.mp_limit_switch.grid(row=2, column=5, columnspan=2, padx=10, pady=10)
                     severity_menu_callback(self.severity_menu_var.get())
 
-                    self.severity_lbl.grid(row=1, column=0, padx=10, pady=10, sticky="e")
-                    self.severity_menu.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+                    self.defender_lbl.configure(text="Defending Team:")
+                    self.defender_menu.grid_forget()
+                    self.def_team_sw.grid(row=0, column=3, columnspan=2, padx=10, pady=10, sticky="w")
+                    self.defender_splash_team_lbl.grid_forget()
+
+                    self.severity_lbl.grid(row=2, column=0, padx=10, pady=10, sticky="e")
+                    self.severity_menu.grid(row=2, column=1, padx=10, pady=10, sticky="w")
 
                     self.multi_atk_lbl.grid_forget()
                     self.multi_atk_p_button.grid_forget()
@@ -754,7 +791,7 @@ class AttackWindow(ctk.CTkToplevel):
                     self.second_element_lbl.grid_forget()
                     self.second_element_menu.grid_forget()
 
-                    self.row_fm_switch.grid(row=1, column=2, columnspan=3, padx=10, pady=10)
+                    self.row_fm_switch.grid(row=2, column=2, columnspan=3, padx=10, pady=10)
 
         def severity_menu_callback(choice:str):
             match choice:
@@ -840,6 +877,15 @@ class AttackWindow(ctk.CTkToplevel):
             self.mp_cost_lbl.configure(text=s)
             self.mp_cost = mp_cost
 
+        def def_team_sw(): 
+            self.def_team_sw.configure(text=self.def_team_var.get())
+            if self.def_team_var.get() == "Team A":
+                def_team_lbls = master.getBattlerLabelsInList(True)
+            else:
+                def_team_lbls = master.getBattlerLabelsInList(False)
+            self.defender_menu.configure(values = def_team_lbls)
+            self.defender_menu.set("")
+
         def perform_attack():
             def phys_magic_bool():
                 if self.pm_menu.get() == "Physical": return True
@@ -892,29 +938,17 @@ class AttackWindow(ctk.CTkToplevel):
 
             match self.type_menu_var.get():
                 case "Attack":
-                    if master.is_b.get() == "Team A":
-                        attacker = master.findBattler(master.battlers_a_menu.get(), True)
-                        defender = master.findBattler(master.battlers_b_menu.get(), False)
-                    else:
-                        attacker = master.findBattler(master.battlers_b_menu.get(), False)
-                        defender = master.findBattler(master.battlers_a_menu.get(), True)
+                    attacker = master.findBattlerFromAll(self.attacker_menu.get())
+                    defender = master.findBattlerFromAll(self.defender_menu.get())
     
                     battle_info = bu.basicAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int())
                     master.log_console.configure(text=battle_info[2])
     
-                    if master.is_b.get() == "Team A":
-                        master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[0])
-                        master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[1])
-                    else:
-                        master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
-                        master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[1])
+                    master.changeBattlerInfoFromAll(self.attacker_menu.get(), battle_info[0])
+                    master.changeBattlerInfoFromAll(self.defender_menu.get(), battle_info[1])  
                 case "Power Attack":
-                    if master.is_b.get() == "Team A":
-                        attacker = master.findBattler(master.battlers_a_menu.get(), True)
-                        defender = master.findBattler(master.battlers_b_menu.get(), False)
-                    else:
-                        attacker = master.findBattler(master.battlers_b_menu.get(), False)
-                        defender = master.findBattler(master.battlers_a_menu.get(), True)
+                    attacker = master.findBattlerFromAll(self.attacker_menu.get())
+                    defender = master.findBattlerFromAll(self.defender_menu.get())
     
                     if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
                         messagebox.showerror("Error", "Error. MP too low.")
@@ -922,19 +956,14 @@ class AttackWindow(ctk.CTkToplevel):
                         battle_info = bu.powerAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.mp_cost, False, False)
                         master.log_console.configure(text=battle_info[2])
     
-                        if master.is_b.get() == "Team A":
-                            master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[0])
-                            master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[1])
-                        else:
-                            master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
-                            master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[1])
+                        master.changeBattlerInfoFromAll(self.attacker_menu.get(), battle_info[0])
+                        master.changeBattlerInfoFromAll(self.defender_menu.get(), battle_info[1]) 
                 case "Attack All":
-                    if master.is_b.get() == "Team A":
-                        attacker = master.findBattler(master.battlers_a_menu.get(), True)
-                        defenders = master.getBattlersInList(False)
-                    else:
-                        attacker = master.findBattler(master.battlers_b_menu.get(), False)
+                    attacker = master.findBattlerFromAll(self.attacker_menu.get())
+                    if self.def_team_var.get() == "Team A":
                         defenders = master.getBattlersInList(True)
+                    else:
+                        defenders = master.getBattlersInList(False)
 
                     if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
                         messagebox.showerror("Error", "Error. MP too low.")
@@ -942,19 +971,14 @@ class AttackWindow(ctk.CTkToplevel):
                         battle_info = bu.attackAll(attacker, defenders, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.mp_cost)
                         master.log_console.configure(text=battle_info[2])
 
-                        if master.is_b.get() == "Team A":
-                            master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[0])
-                            master.changeBattlerListInfo(False, battle_info[1])
-                        else:
-                            master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
+                        master.changeBattlerInfoFromAll(self.attacker_menu.get(), battle_info[0])
+                        if self.def_team_var.get() == "Team A":
                             master.changeBattlerListInfo(True, battle_info[1])
+                        else:
+                            master.changeBattlerListInfo(False, battle_info[1])
                 case "Multi Attack":
-                    if master.is_b.get() == "Team A":
-                        attacker = master.findBattler(master.battlers_a_menu.get(), True)
-                        defender = master.findBattler(master.battlers_b_menu.get(), False)
-                    else:
-                        attacker = master.findBattler(master.battlers_b_menu.get(), False)
-                        defender = master.findBattler(master.battlers_a_menu.get(), True)
+                    attacker = master.findBattlerFromAll(self.attacker_menu.get())
+                    defender = master.findBattlerFromAll(self.defender_menu.get())
     
                     if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
                         messagebox.showerror("Error", "Error. MP too low.")
@@ -962,19 +986,11 @@ class AttackWindow(ctk.CTkToplevel):
                         battle_info = bu.multiAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.multi_atk_num.get(), self.mp_cost)
                         master.log_console.configure(text=battle_info[2])
     
-                        if master.is_b.get() == "Team A":
-                            master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[0])
-                            master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[1])
-                        else:
-                            master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
-                            master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[1])
+                        master.changeBattlerInfoFromAll(self.attacker_menu.get(), battle_info[0])
+                        master.changeBattlerInfoFromAll(self.defender_menu.get(), battle_info[1])  
                 case "Drain Attack":
-                    if master.is_b.get() == "Team A":
-                        attacker = master.findBattler(master.battlers_a_menu.get(), True)
-                        defender = master.findBattler(master.battlers_b_menu.get(), False)
-                    else:
-                        attacker = master.findBattler(master.battlers_b_menu.get(), False)
-                        defender = master.findBattler(master.battlers_a_menu.get(), True)
+                    attacker = master.findBattlerFromAll(self.attacker_menu.get())
+                    defender = master.findBattlerFromAll(self.defender_menu.get())
     
                     if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
                         messagebox.showerror("Error", "Error. MP too low.")
@@ -982,21 +998,15 @@ class AttackWindow(ctk.CTkToplevel):
                         battle_info = bu.drainAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.mp_cost)
                         master.log_console.configure(text=battle_info[2])
     
-                        if master.is_b.get() == "Team A":
-                            master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[0])
-                            master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[1])
-                        else:
-                            master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
-                            master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[1])
+                        master.changeBattlerInfoFromAll(self.attacker_menu.get(), battle_info[0])
+                        master.changeBattlerInfoFromAll(self.defender_menu.get(), battle_info[1])  
                 case "Splash Attack":
-                    if master.is_b.get() == "Team A":
-                        attacker = master.findBattler(master.battlers_a_menu.get(), True)
-                        defenders = master.getBattlersInList(False)
-                        primary_defender_tag = master.findBattler(master.battlers_b_menu.get(), False).label
-                    else:
-                        attacker = master.findBattler(master.battlers_b_menu.get(), False)
+                    attacker = master.findBattlerFromAll(self.attacker_menu.get())
+                    primary_defender_tag = self.defender_menu.get()
+                    if self.def_team_var.get() == "Team A":
                         defenders = master.getBattlersInList(True)
-                        primary_defender_tag = master.findBattler(master.battlers_b_menu.get(), True).label
+                    else:
+                        defenders = master.getBattlersInList(False)
 
                     if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
                         messagebox.showerror("Error", "Error. MP too low.")
@@ -1004,19 +1014,17 @@ class AttackWindow(ctk.CTkToplevel):
                         battle_info = bu.splashAttack(attacker, primary_defender_tag, defenders, b_settings, phys_magic_bool(), elem_int(), elem_int_2(), severity_int(), self.mp_cost)
                         master.log_console.configure(text=battle_info[2])
 
-                        if master.is_b.get() == "Team A":
-                            master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[0])
-                            master.changeBattlerListInfo(False, battle_info[1])
-                        else:
-                            master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
+                        master.changeBattlerInfoFromAll(self.attacker_menu.get(), battle_info[0])
+                        if self.def_team_var.get() == "Team A":
                             master.changeBattlerListInfo(True, battle_info[1])
+                        else:
+                            master.changeBattlerListInfo(False, battle_info[1])
                 case "Row Attack":
-                    if master.is_b.get() == "Team A":
-                        attacker = master.findBattler(master.battlers_a_menu.get(), True)
-                        defenders = master.getBattlersInList(False)
-                    else:
-                        attacker = master.findBattler(master.battlers_b_menu.get(), False)
+                    attacker = master.findBattlerFromAll(self.attacker_menu.get())
+                    if self.def_team_var.get() == "Team A":
                         defenders = master.getBattlersInList(True)
+                    else:
+                        defenders = master.getBattlersInList(False)
 
                     if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
                         messagebox.showerror("Error", "Error. MP too low.")
@@ -1024,44 +1032,64 @@ class AttackWindow(ctk.CTkToplevel):
                         battle_info = bu.rowAttack(attacker, defenders, b_settings, phys_magic_bool(), elem_int(), severity_int(), fm_bool(), self.mp_cost)
                         master.log_console.configure(text=battle_info[2])
 
-                        if master.is_b.get() == "Team A":
-                            master.changeBattlerInfo(master.battlers_a_menu.get(), True, battle_info[0])
-                            master.changeBattlerListInfo(False, battle_info[1])
-                        else:
-                            master.changeBattlerInfo(master.battlers_b_menu.get(), False, battle_info[0])
+                        master.changeBattlerInfoFromAll(self.attacker_menu.get(), battle_info[0])
+                        if self.def_team_var.get() == "Team A":
                             master.changeBattlerListInfo(True, battle_info[1])
+                        else:
+                            master.changeBattlerListInfo(False, battle_info[1])
                         
             self.destroy()
             master.undo_redo_stack.addToUndoList()
 
+        battler_values = master.getAllBattlerLabels()
+
+        self.attacker_lbl = ctk.CTkLabel(master=self, text="Attacker:")
+        self.attacker_lbl.grid(row=0, column=0, padx=10, pady=10, sticky="e")
+
+        self.attacker_menu = ctk.CTkOptionMenu(master=self, values=battler_values)
+        self.attacker_menu.set("")
+        self.attacker_menu.grid(row=0, column=1, padx=10, pady=10, sticky="w")
+
+        self.defender_lbl = ctk.CTkLabel(master=self, text="Defender:")
+        self.defender_lbl.grid(row=0, column=2, padx=10, pady=10, sticky="e")
+
+        self.defender_splash_team_lbl = ctk.CTkLabel(master=self, text="Defending Team:")
+
+        self.defender_menu = ctk.CTkOptionMenu(master=self, values=battler_values)
+        self.defender_menu.set("")
+        self.defender_menu.grid(row=0, column=3, columnspan=2, padx=10, pady=10, sticky="w")
+
+        self.def_team_var = ctk.StringVar(value="Team A")
+        self.def_team_sw = ctk.CTkSwitch(master=self, text="Team A", command=lambda: def_team_sw(), variable=self.def_team_var, onvalue="Team B", offvalue="Team A")
+
         self.type_lbl = ctk.CTkLabel(master=self, text="Attack Type:")
-        self.type_lbl.grid(row=0, column=0, padx=10, pady=10, sticky="e")
+        self.type_lbl.grid(row=1, column=0, padx=10, pady=10, sticky="e")
 
         self.type_menu_var = ctk.StringVar(value="Attack")
         self.type_menu = ctk.CTkOptionMenu(master=self, values=["Attack", "Power Attack", "Attack All", "Multi Attack", "Drain Attack", "Splash Attack", "Row Attack"], command=type_menu_callback, variable=self.type_menu_var)
-        self.type_menu.grid(row=0, column=1, padx=10, pady=10, sticky="w")
+        self.type_menu.grid(row=1, column=1, padx=10, pady=10, sticky="w")
 
         self.pm_lbl = ctk.CTkLabel(master=self, text="Physical or Ranged:")
-        self.pm_lbl.grid(row=0, column=2, padx=10, pady=10, sticky="e")
+        self.pm_lbl.grid(row=1, column=2, padx=10, pady=10, sticky="e")
 
         self.pm_menu = ctk.CTkOptionMenu(master=self, values=["Physical", "Ranged"])
-        self.pm_menu.grid(row=0, column=3, columnspan=2, padx=10, pady=10, sticky="w")
+        self.pm_menu.grid(row=1, column=3, columnspan=2, padx=10, pady=10, sticky="w")
 
         self.ele_lbl = ctk.CTkLabel(master=self, text="Element:")
-        self.ele_lbl.grid(row=0, column=5, padx=10, pady=10, sticky="e")
+        self.ele_lbl.grid(row=1, column=5, padx=10, pady=10, sticky="e")
 
         self.ele_menu = ctk.CTkOptionMenu(master=self, values=["Slash", "Strike", "Pierce", "Fire", "Water", "Lightning", "Earth", "Wind", "Other"])
-        self.ele_menu.grid(row=0, column=6, padx=10, pady=10, sticky="w")
+        self.ele_menu.grid(row=1, column=6, padx=10, pady=10, sticky="w")
 
         def mp_limit(): self.mp_limit_switch.configure(text=self.mp_limit_var.get())
         self.mp_limit_var = ctk.StringVar(value=" MP Requirement Enforced ")
         self.mp_limit_switch = ctk.CTkSwitch(master=self, text=" MP Requirement Enforced ", command=lambda: mp_limit(), variable=self.mp_limit_var, onvalue=" MP Requirement Enforced ", offvalue="MP Requirement Unenforced")
 
         self.mp_cost_lbl = ctk.CTkLabel(master=self, text="MP Cost: 0")
-        self.mp_cost_lbl.grid(row=2, column=1, padx=10, pady=10, sticky="s")
+        self.mp_cost_lbl.grid(row=3, column=1, padx=10, pady=10, sticky="s")
 
         self.atk_btn = ctk.CTkButton(master=self, text="Confirm", command=perform_attack)
-        self.atk_btn.grid(row=2, column=3, columnspan=2, padx=10, pady=10, sticky="s")
+        self.atk_btn.grid(row=3, column=3, columnspan=2, padx=10, pady=10, sticky="s")
 
         self.severity_menu_var = ctk.StringVar(value="Light")
         self.severity_lbl = ctk.CTkLabel(master=self, text="Attack Severity:")
@@ -1100,37 +1128,27 @@ class HealWindow(ctk.CTkToplevel):
         self.grid_columnconfigure(5, weight=1)
 
         def fill_name_menus():
-            a_names = master.getBattlerLabelsInList(True)
-            self.a_caster_menu.configure(values=a_names)
-            self.a_target_menu.configure(values=a_names)
+            names = master.getAllBattlerLabels()
+            self.caster_menu.configure(values=names)
+            self.target_menu.configure(values=names)
 
-            b_names = master.getBattlerLabelsInList(False)
-            self.b_caster_menu.configure(values=b_names)
-            self.b_target_menu.configure(values=b_names)
+            #b_names = master.getBattlerLabelsInList(False)
+            #self.b_caster_menu.configure(values=b_names)
+            #self.b_target_menu.configure(values=b_names)
 
         def a_b_switch():
             self.team_sw.configure(text=self.a_b.get())
 
-            if self.a_b.get() == "Team A":
-                self.b_caster_menu.grid_forget()
-                self.b_target_menu.grid_forget()
-
-                self.a_caster_menu.grid(row=0, column=3, padx=10, pady=10, sticky="w")
-                self.a_target_menu.grid(row=0, column=5, padx=10, pady=10, sticky="w")
-                self.a_caster_menu.set("")
-                self.a_target_menu.set("")
-            else:
-                self.a_caster_menu.grid_forget()
-                self.a_target_menu.grid_forget()
-
-                self.b_caster_menu.grid(row=0, column=3, padx=10, pady=10, sticky="w")
-                self.b_target_menu.grid(row=0, column=5, padx=10, pady=10, sticky="w")
-                self.b_caster_menu.set("")
-                self.b_target_menu.set("")
-
         def heal_all_switch():
             self.heal_all_switch.configure(text=self.heal_all_var.get())
             severity_callback(self.severity_var.get())
+
+            if self.heal_all_var.get() == "Heal One":
+                self.target_menu.grid(row=0, column=3, padx=10, pady=10, sticky="w")
+                self.team_sw.grid_forget()
+            else:
+                self.target_menu.grid_forget()
+                self.team_sw.grid(row=0, column=3, padx=10, pady=10, sticky="w")
 
         def severity_callback(choice:str):
             match choice:
@@ -1159,75 +1177,51 @@ class HealWindow(ctk.CTkToplevel):
                         print("Error in severity_val")
                         return 0
 
-            if self.a_b.get() == "Team A":
-                if self.a_target_menu.get() != "" or self.a_caster_menu.get() != "":
-                    caster = master.findBattler(self.a_caster_menu.get(), True)
+            if self.caster_menu.get() == "":
+                messagebox.showerror("Error", "Error. Please input a caster.")
+                return
 
-                    if caster.mp < self.mp_cost.get() and self.mp_limit_var.get() == " MP Requirement Enforced ":
-                        messagebox.showinfo("Error", "Error. MP too low.")
-                    else:
-                        if self.heal_all_var.get() == "Heal One":
-                            target = master.findBattler(self.a_target_menu.get(), True)
-                            battle_info = bu.healOne(caster, target, b_settings, severity_val(), self.mp_cost.get())
-    
-                            master.changeBattlerInfo(self.a_target_menu.get(), True, battle_info[1])
-                        else:
-                            targets = master.getBattlersInList(True)
-                            battle_info = bu.healAll(caster, targets, b_settings, severity_val(), self.mp_cost.get())
-    
-                            master.changeBattlerListInfo(True, battle_info[1])
-                        
-                        master.changeBattlerInfo(self.a_caster_menu.get(), True, battle_info[0])
-                        master.log_console.configure(text=battle_info[2])
-                        master.undo_redo_stack.addToUndoList()
-                        self.destroy()
-                else:
-                    messagebox.showinfo("Error", "Error. Please input a caster and target from Team A.")
+            caster = master.findBattlerFromAll(self.caster_menu.get())
+
+            if self.heal_all_var.get() == "Heal One":
+                if self.target_menu.get() == "":
+                    messagebox.showerror("Error", "Error. Please input a target.")
+                    return
+
+                target = master.findBattlerFromAll(self.target_menu.get())
+                battle_info = bu.healOne(caster, target, b_settings, severity_val(), self.mp_cost.get())
+                master.changeBattlerInfoFromAll(self.target_menu.get(), battle_info[1])
             else:
-                if self.b_target_menu.get() != "" or self.b_caster_menu.get() != "":
-                    caster = master.findBattler(self.b_caster_menu.get(), False)
-                    
-                    if caster.mp < self.mp_cost.get() and self.mp_limit_var.get() == " MP Requirement Enforced ":
-                        messagebox.showinfo("Error", "Error. MP too low.")
-                    else:
-                        if self.heal_all_var.get() == "Heal One":
-                            target = master.findBattler(self.b_target_menu.get(), False)
-                            battle_info = bu.healOne(caster, target, b_settings, severity_val(), self.mp_cost.get())
-    
-                            master.changeBattlerInfo(self.b_target_menu.get(), False, battle_info[1])
-                        else:
-                            targets = master.getBattlersInList(False)
-                            battle_info = bu.healAll(caster, targets, b_settings, severity_val(), self.mp_cost.get())
-    
-                            master.changeBattlerListInfo(False, battle_info[1])
-                        
-                        master.changeBattlerInfo(self.b_caster_menu.get(), False, battle_info[0])
-                        master.log_console.configure(text=battle_info[2])
-                        master.undo_redo_stack.addToUndoList()
-                        self.destroy()
+                if self.a_b.get() == "Team A":
+                    targets = master.getBattlersInList(True)
+                    battle_info = bu.healAll(caster, targets, b_settings, severity_val(), self.mp_cost.get())
+                    master.changeBattlerInfo(self.target_menu.get(), True, battle_info[1])
                 else:
-                    messagebox.showinfo("Error", "Error. Please input a caster and target from Team B.")
+                    targets = master.getBattlersInList(False)
+                    battle_info = bu.healAll(caster, targets, b_settings, severity_val(), self.mp_cost.get())
+                    master.changeBattlerInfo(self.target_menu.get(), False, battle_info[1])
+
+            master.changeBattlerInfoFromAll(self.caster_menu.get(), battle_info[0])
+            master.log_console.configure(text=battle_info[2])
+            master.undo_redo_stack.addToUndoList()
+            self.destroy()     
 
         self.a_b = ctk.StringVar(value="Team A")
         self.team_sw = ctk.CTkSwitch(master=self, text="Team A", command=lambda: a_b_switch(), variable=self.a_b, onvalue="Team B", offvalue="Team A")
-        self.team_sw.grid(row=0, column=0, columnspan=2, padx=10, pady=10)
 
         self.caster_lbl = ctk.CTkLabel(master=self, text="Caster:")
-        self.caster_lbl.grid(row=0, column=2, padx=10, pady=10, sticky="e")
+        self.caster_lbl.grid(row=0, column=0, padx=10, pady=10, sticky="e")
 
         self.target_lbl = ctk.CTkLabel(master=self, text="Target:")
-        self.target_lbl.grid(row=0, column=4, padx=10, pady=10, sticky="e")
+        self.target_lbl.grid(row=0, column=2, padx=10, pady=10, sticky="e")
         
-        self.a_caster_menu = ctk.CTkOptionMenu(master=self, values=[])
-        self.a_caster_menu.set("")
-        self.a_caster_menu.grid(row=0, column=3, padx=10, pady=10, sticky="w")
+        self.caster_menu = ctk.CTkOptionMenu(master=self, values=[])
+        self.caster_menu.set("")
+        self.caster_menu.grid(row=0, column=1, padx=10, pady=10, sticky="w")
 
-        self.a_target_menu = ctk.CTkOptionMenu(master=self, values=[])
-        self.a_target_menu.set("")
-        self.a_target_menu.grid(row=0, column=5, padx=10, pady=10, sticky="w")
-
-        self.b_caster_menu = ctk.CTkOptionMenu(master=self, values=[])
-        self.b_target_menu = ctk.CTkOptionMenu(master=self, values=[])
+        self.target_menu = ctk.CTkOptionMenu(master=self, values=[])
+        self.target_menu.set("")
+        self.target_menu.grid(row=0, column=3, padx=10, pady=10, sticky="w")
 
         fill_name_menus()
 
@@ -1239,7 +1233,7 @@ class HealWindow(ctk.CTkToplevel):
 
         self.heal_all_var = ctk.StringVar(value="Heal One")
         self.heal_all_switch = ctk.CTkSwitch(master=self, text="Heal One", command=heal_all_switch, variable=self.heal_all_var, onvalue="Heal All", offvalue="Heal One")
-        self.heal_all_switch.grid(row=1, column=2, columnspan=2, padx=10, pady=10)
+        self.heal_all_switch.grid(row=0, column=4, columnspan=2, padx=10, pady=10)
 
         def mp_limit(): self.mp_limit_switch.configure(text=self.mp_limit_var.get())
         self.mp_limit_var = ctk.StringVar(value=" MP Requirement Enforced ")
@@ -1478,6 +1472,568 @@ class BuffWindow(ctk.CTkToplevel):
         self.confirm_btn = ctk.CTkButton(master=self, text="Confirm", command=buff_button)
         self.confirm_btn.grid(row=3, column=4, padx=10, pady=10, sticky= "sew")
 
+class MiscWindow(ctk.CTkToplevel):
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)
+
+        self.title("Miscellaneous Menu")
+        self.geometry("1280x720")
+        self.iconbitmap(ico_path)
+
+        self.after(100, self.focus)
+
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_rowconfigure(2, weight=1)
+        self.grid_rowconfigure(3, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_columnconfigure(2, weight=1)
+        self.grid_columnconfigure(3, weight=1)
+        self.grid_columnconfigure(4, weight=1)
+        self.grid_columnconfigure(5, weight=1)
+
+        def choice_callback(choice:str):
+            match choice:
+                case "Scan":
+                    self.target_lbl.configure(text="Target Team")
+                    self.target_menu.grid_forget()
+                    self.target_switch.grid(row=0, column=3, padx=10, pady=10, sticky="w")
+
+            set_mp()
+
+        def set_mp():
+            mp_cost = 0
+
+            match self.choice_var.get():
+                case "Scan":
+                    mp_cost = b_settings.getScanMp()
+
+            self.mp_cost.set(mp_cost)
+            s = "MP Cost: " + str(mp_cost)
+            self.mp_cost_lbl.configure(text=s)
+        
+        def confirm_button():
+            mp_cost = self.mp_cost.get()
+            
+            if self.caster_menu.get() == "":
+                messagebox.showerror("Error", "Please select a caster.")
+                return
+
+            caster = master.findBattlerFromAll(self.caster_menu.get())
+            
+            if caster.mp < mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
+                messagebox.showerror("Error", "MP too low.")
+                return
+
+            match self.choice_var.get():
+                case "Scan":
+                    if self.target_team_var == "Team A":
+                        targets = master.getBattlersInList(True)
+                    else:
+                        targets = master.getBattlersInList(False)
+
+                    info = bu.targetScan(caster, targets, mp_cost)
+                    master.changeBattlerInfoFromAll(self.caster_menu.get(), info[0])
+                    master.log_console.configure(text=info[1])
+
+            master.undo_redo_stack.addToUndoList()
+            self.destroy()
+
+        self.caster_lbl = ctk.CTkLabel(master=self, text="Caster:")
+        self.caster_lbl.grid(row=0, column=0, padx=10, pady=10, sticky="e")
+
+        battler_values = master.getAllBattlerLabels()
+        self.caster_menu = ctk.CTkOptionMenu(master=self, values=battler_values)
+        self.caster_menu.set("")
+        self.caster_menu.grid(row=0, column=1, padx=10, pady=10, sticky="w")
+
+        self.target_lbl = ctk.CTkLabel(master=self, text="Target Team:")
+        self.target_lbl.grid(row=0, column=2, padx=10, pady=10, sticky="e")
+
+        self.target_menu = ctk.CTkOptionMenu(master=self, values=battler_values)
+        self.target_menu.set("")
+
+        def target_team_sw(): self.target_switch.configure(text=self.target_team_var.get())
+        self.target_team_var = ctk.StringVar(value="Team A")
+        self.target_switch = ctk.CTkSwitch(master=self, text="Team A", command=target_team_sw, variable=self.target_team_var, offvalue="Team A", onvalue="Team B")
+        self.target_switch.grid(row=0, column=3, padx=10, pady=10, sticky="w")
+
+        self.choice_lbl = ctk.CTkLabel(master=self, text="Choice:")
+        self.choice_lbl.grid(row=1, column=0, padx=10, pady=10, sticky="e")
+
+        self.choice_var = ctk.StringVar(value="Scan")
+        self.choice_menu = ctk.CTkOptionMenu(master=self, values=["Scan"], command=choice_callback, variable=self.choice_var)
+        self.choice_menu.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+
+        def mp_limit(): self.mp_limit_switch.configure(text=self.mp_limit_var.get())
+        self.mp_limit_var = ctk.StringVar(value=" MP Requirement Enforced ")
+        self.mp_limit_switch = ctk.CTkSwitch(master=self, text=" MP Requirement Enforced ", command=lambda: mp_limit(), variable=self.mp_limit_var, onvalue=" MP Requirement Enforced ", offvalue="MP Requirement Unenforced")
+        self.mp_limit_switch.grid(row=3, column=1, padx=10, pady=10, sticky="s")
+
+        self.mp_cost = ctk.IntVar(value=b_settings.getScanMp())
+        self.mp_cost_lbl = ctk.CTkLabel(master=self, text="MP Cost: 15")
+        self.mp_cost_lbl.grid(row=3, column=2, padx=10, pady=10, sticky="s")
+
+        self.confirm_btn = ctk.CTkButton(master=self, text="Confirm", command=confirm_button)
+        self.confirm_btn.grid(row=3, column=4, padx=10, pady=10, sticky= "sew")
+
+class DebugWindow(ctk.CTkToplevel):
+    def __init__(self, master, **kwargs):
+            super().__init__(master, **kwargs)
+    
+            self.title("Debug/Items Menu")
+            self.geometry("1280x720")
+            self.iconbitmap(ico_path)
+    
+            self.after(100, self.focus)
+
+            self.grid_rowconfigure(0, weight=1)
+            self.grid_rowconfigure(1, weight=1)
+            self.grid_rowconfigure(2, weight=1)
+            self.grid_columnconfigure(0, weight=1)
+            self.grid_columnconfigure(1, weight=1)
+            self.grid_columnconfigure(2, weight=4)
+            self.grid_columnconfigure(3, weight=4)
+            self.grid_columnconfigure(4, weight=4)
+            self.grid_columnconfigure(5, weight=4)
+            self.grid_columnconfigure(6, weight=4)
+
+            def target_all_callback():
+                self.target_all_switch.configure(text=self.target_all_var.get())
+
+                if self.target_all_var.get() == "Target One":
+                    self.target_menu.grid(row=0, column=2, padx=10, pady=10, sticky="w")
+                    self.target_team_switch.grid_forget()
+                else:
+                    self.target_menu.grid_forget()
+                    self.target_team_switch.grid(row=0, column=2, padx=10, pady=10, sticky="w")
+
+            def choice_callback(choice:str):
+                match choice:
+                    case "HP/MP":
+                        self.choice_2_lbl.configure(text="HP/MP Choice:")
+                        self.hpmp_menu.grid(row=1, column=4, padx=10, pady=10, sticky="w")
+                        self.overheal_switch.grid(row=1, column=5, columnspan=2, padx=10, pady=10)
+                        self.num_perc_menu.grid(row=2, column=2, padx=10, pady=10, sticky="w")
+                        self.stat_menu.grid_forget()
+                    case "Stats":
+                        self.choice_2_lbl.configure(text="Stat Choice:")
+                        self.hpmp_menu.grid_forget()
+                        self.overheal_switch.grid_forget()
+                        self.stat_menu.grid(row=1, column=4, padx=10, pady=10, sticky="w")
+                    case "Resistances":
+                        self.choice_2_lbl.configure(text="Resistance Choice:")
+                        self.hpmp_menu.grid_forget()
+                        self.overheal_switch.grid_forget()
+                        self.stat_menu.grid_forget()
+                    case "Status":
+                        self.choice_2_lbl.configure(text="Status Choice:")
+                        self.hpmp_menu.grid_forget()
+                        self.overheal_switch.grid_forget()
+                        self.stat_menu.grid_forget()
+
+            def hpmp_menu_callback(choice:str):
+                if choice=="HP" or choice=="MP":
+                    self.overheal_switch.grid(row=1, column=5, columnspan=2, padx=10, pady=10)
+                else:
+                    self.overheal_switch.grid_forget()
+
+            def confirm_button():
+                if self.target_menu.get() == "" and self.target_all_var.get() == "Target One":
+                    messagebox.showerror("Error", "Please select a target.")
+                    return
+
+                match self.choice_var.get():
+                    case "HP/MP":
+                        try:
+                            int_value = int(self.entry_var.get())
+                        except (ValueError, TypeError):
+                            messagebox.showerror("Error", "Error. Entry field must be an integer.")
+                            return
+
+                        def changeHpMp(target:"bu.Battler", type:str, operation:str, num_or_perc:str):
+                            s = ""
+                            percent_start_value = int_value * 0.01
+
+                            if type == "HP":
+                                if operation == "+":
+                                    if num_or_perc == "Number":
+                                        target.hp += int_value
+                                        s += target.name + " gained " + str(int_value) + " HP."
+                                    else:
+                                        percent_value = percent_start_value + 1
+                                        target.hp *= percent_value
+                                        target.hp = math.floor(target.hp)
+                                        s += target.name + " gained " + str(int_value) + "% HP."
+                                elif operation == "-":
+                                    if num_or_perc == "Number":
+                                        target.hp -= int_value
+                                        s += target.name + " lost " + str(int_value) + " HP."
+                                    else:
+                                        percent_value = 1 - percent_start_value
+                                        target.hp *= percent_value
+                                        target.hp = math.floor(target.hp)
+                                        s += target.name + " lost " + str(int_value) + "% HP."
+                                else:
+                                    if num_or_perc == "Number":
+                                        target.hp = int_value
+                                        s += target.name + " has " + str(int_value) + " HP."
+                                    else:
+                                        percent_value = percent_start_value
+                                        target.hp *= percent_value
+                                        target.hp = math.floor(target.hp)
+                                        s += target.name + " has " + str(int_value) + "% HP."
+                            elif type == "MP":
+                                if operation == "+":
+                                    if num_or_perc == "Number":
+                                        target.mp += int_value
+                                        s += target.name + " gained " + str(int_value) + " MP."
+                                    else:
+                                        percent_value = percent_start_value + 1
+                                        target.mp *= percent_value
+                                        target.mp = math.floor(target.mp)
+                                        s += target.name + " gained " + str(int_value) + "% MP."
+                                elif operation == "-":
+                                    if num_or_perc == "Number":
+                                        target.mp -= int_value
+                                        s += target.name + " lost " + str(int_value) + " MP."
+                                    else:
+                                        percent_value = 1 - percent_start_value
+                                        target.mp *= percent_value
+                                        target.mp = math.floor(target.mp)
+                                        s += target.name + " lost " + str(int_value) + "% MP."
+                                else:
+                                    if num_or_perc == "Number":
+                                        target.mp = int_value
+                                        s += target.name + " has " + str(int_value) + " MP."
+                                    else:
+                                        percent_value = percent_start_value
+                                        target.mp *= percent_value
+                                        target.mp = math.floor(target.mp)
+                                        s += target.name + " has " + str(int_value) + "% MP."
+                            elif type == "MaxHP":
+                                if operation == "+":
+                                    if num_or_perc == "Number":
+                                        target.max_hp += int_value
+                                        s += target.name + " gained " + str(int_value) + " Max HP."
+                                    else:
+                                        percent_value = percent_start_value + 1
+                                        target.max_hp *= percent_value
+                                        target.max_hp = math.floor(target.max_hp)
+                                        s += target.name + " gained " + str(int_value) + "% Max HP."
+                                elif operation == "-":
+                                    if num_or_perc == "Number":
+                                        target.max_hp -= int_value
+                                        s += target.name + " lost " + str(int_value) + " Max HP."
+                                    else:
+                                        percent_value = 1 - percent_start_value
+                                        target.max_hp *= percent_value
+                                        target.max_hp = math.floor(target.max_hp)
+                                        s += target.name + " lost " + str(int_value) + "% Max HP."
+                                else:
+                                    if num_or_perc == "Number":
+                                        target.max_hp = int_value
+                                        s += target.name + " has " + str(int_value) + " Max HP."
+                                    else:
+                                        percent_value = percent_start_value
+                                        target.max_hp *= percent_value
+                                        target.max_hp = math.floor(target.max_hp)
+                                        s += target.name + " has " + str(int_value) + "% Max HP."
+                            elif type == "MaxMP":
+                                if operation == "+":
+                                    if num_or_perc == "Number":
+                                        target.max_mp += int_value
+                                        s += target.name + " gained " + str(int_value) + " Max MP."
+                                    else:
+                                        percent_value = percent_start_value + 1
+                                        target.max_mp *= percent_value
+                                        target.max_mp = math.floor(target.max_mp)
+                                        s += target.name + " gained " + str(int_value) + "% Max MP."
+                                elif operation == "-":
+                                    if num_or_perc == "Number":
+                                        target.max_mp -= int_value
+                                        s += target.name + " lost " + str(int_value) + " Max MP."
+                                    else:
+                                        percent_value = 1 - percent_start_value
+                                        target.max_mp *= percent_value
+                                        target.max_mp = math.floor(target.max_mp)
+                                        s += target.name + " lost " + str(int_value) + "% Max MP."
+                                else:
+                                    if num_or_perc == "Number":
+                                        target.max_mp = int_value
+                                        s += target.name + " has " + str(int_value) + " Max MP."
+                                    else:
+                                        percent_value = percent_start_value
+                                        target.max_mp *= percent_value
+                                        target.max_mp = math.floor(target.max_mp)
+                                        s += target.name + " has " + str(int_value) + "% Max MP."
+                            return [target, s]
+
+                        if self.target_all_var.get() == "Target One":
+                            target = master.findBattlerFromAll(self.target_menu.get())
+
+                            info = changeHpMp(target, self.hpmp_menu.get(), self.plus_minus_equal_menu.get(), self.num_perc_menu.get())
+
+                            if self.overheal_var.get() == "No Overheal" and (self.hpmp_menu.get() == "HP" or self.hpmp_menu.get() == "MP"):
+                                info[0].equalizeHpMp()
+
+                            master.changeBattlerInfoFromAll(self.target_menu.get(), info[0])
+                            master.log_console.configure(text=info[1])
+                        else:
+                            if self.target_team_var.get() == "Team A":
+                                is_a = True
+                            else:
+                                is_a = False
+
+                            targets = master.getBattlersInList(is_a)
+                            new_battlers = []
+                            s = ""
+                            for target in targets:
+                                temp_info = changeHpMp(target, self.hpmp_menu.get(), self.plus_minus_equal_menu.get(), self.num_perc_menu.get())
+
+                                if self.overheal_var.get() == "No Overheal" and (self.hpmp_menu.get() == "HP" or self.hpmp_menu.get() == "MP"):
+                                    temp_info[0].equalizeHpMp()
+
+                                new_battlers.append(temp_info[0])
+                                s += temp_info[1] + "\n"
+
+                            master.changeBattlerListInfo(is_a, new_battlers)
+                            master.log_console.configure(text=s)     
+                    case "Stats":
+                        try:
+                            int_value = int(self.entry_var.get())
+                        except (ValueError, TypeError):
+                            messagebox.showerror("Error", "Error. Entry field must be an integer.")
+                            return
+
+                        def changeStat(target:"bu.Battler", type:str, operation:str, num_or_perc:str):
+                            s = ""
+                            percent_start_value = int_value * 0.01
+
+                            if type=="Strength":
+                                if operation == "+":
+                                    if num_or_perc == "Number":
+                                        target.strength += int_value
+                                        s += target.name + " gained " + str(int_value) + " strength. Now at " + str(target.strength) + " strength."
+                                    else:
+                                        percent_value = percent_start_value + 1
+                                        target.strength *= percent_value
+                                        target.strength = math.floor(target.strength)
+                                        s += target.name + " gained " + str(int_value) + "% Strength. Now at " + str(target.strength) + " strength."
+                                elif operation == "-":
+                                    if num_or_perc == "Number":
+                                        target.strength -= int_value
+                                        s += target.name + " lost " + str(int_value) + " strength. Now at " + str(target.strength) + " strength."
+                                    else:
+                                        percent_value = 1 - percent_start_value
+                                        target.strength *= percent_value
+                                        target.strength = math.floor(target.strength)
+                                        s += target.name + " lost " + str(int_value) + "% Strength. Now at " + str(target.strength) + " strength."
+                                else:
+                                    if num_or_perc == "Number":
+                                        target.strength = int_value
+                                        s += target.name + " has " + str(int_value) + " strength."
+                                    else:
+                                        percent_value = percent_start_value
+                                        target.strength *= percent_value
+                                        target.strength = math.floor(target.strength)
+                                        s += target.name + " has " + str(int_value) + "% Strength. Now at " + str(target.strength) + " strength."
+                            elif type=="Magic":
+                                if operation == "+":
+                                    if num_or_perc == "Number":
+                                        target.magic += int_value
+                                        s += target.name + " gained " + str(int_value) + " magic. Now at " + str(target.magic) + " magic."
+                                    else:
+                                        percent_value = percent_start_value + 1
+                                        target.magic *= percent_value
+                                        target.magic = math.floor(target.magic)
+                                        s += target.name + " gained " + str(int_value) + "% Magic. Now at " + str(target.magic) + " magic."
+                                elif operation == "-":
+                                    if num_or_perc == "Number":
+                                        target.magic -= int_value
+                                        s += target.name + " lost " + str(int_value) + " magic. Now at " + str(target.magic) + " magic."
+                                    else:
+                                        percent_value = 1 - percent_start_value
+                                        target.magic *= percent_value
+                                        target.magic = math.floor(target.magic)
+                                        s += target.name + " lost " + str(int_value) + "% Magic. Now at " + str(target.magic) + " magic."
+                                else:
+                                    if num_or_perc == "Number":
+                                        target.magic = int_value
+                                        s += target.name + " has " + str(int_value) + " magic."
+                                    else:
+                                        percent_value = percent_start_value
+                                        target.magic *= percent_value
+                                        target.magic = math.floor(target.magic)
+                                        s += target.name + " has " + str(int_value) + "% Magic. Now at " + str(target.magic) + " magic."
+                            elif type=="Defense":
+                                if operation == "+":
+                                    if num_or_perc == "Number":
+                                        target.defense += int_value
+                                        s += target.name + " gained " + str(int_value) + " defense. Now at " + str(target.defense) + " defense."
+                                    else:
+                                        percent_value = percent_start_value + 1
+                                        target.defense *= percent_value
+                                        target.defense = math.floor(target.defense)
+                                        s += target.name + " gained " + str(int_value) + "% Defense. Now at " + str(target.defense) + " defense."
+                                elif operation == "-":
+                                    if num_or_perc == "Number":
+                                        target.defense -= int_value
+                                        s += target.name + " lost " + str(int_value) + " defense. Now at " + str(target.defense) + " defense."
+                                    else:
+                                        percent_value = 1 - percent_start_value
+                                        target.defense *= percent_value
+                                        target.defense = math.floor(target.defense)
+                                        s += target.name + " lost " + str(int_value) + "% Defense. Now at " + str(target.defense) + " defense."
+                                else:
+                                    if num_or_perc == "Number":
+                                        target.defense = int_value
+                                        s += target.name + " has " + str(int_value) + " defense."
+                                    else:
+                                        percent_value = percent_start_value
+                                        target.defense *= percent_value
+                                        target.defense = math.floor(target.defense)
+                                        s += target.name + " has " + str(int_value) + "% Defense. Now at " + str(target.defense) + " defense."
+                            elif type=="Agility":
+                                if operation == "+":
+                                    if num_or_perc == "Number":
+                                        target.agility += int_value
+                                        s += target.name + " gained " + str(int_value) + " agility. Now at " + str(target.agility) + " agility."
+                                    else:
+                                        percent_value = percent_start_value + 1
+                                        target.agility *= percent_value
+                                        target.agility = math.floor(target.agility)
+                                        s += target.name + " gained " + str(int_value) + "% Agility. Now at " + str(target.agility) + " agility."
+                                elif operation == "-":
+                                    if num_or_perc == "Number":
+                                        target.agility -= int_value
+                                        s += target.name + " lost " + str(int_value) + " agility. Now at " + str(target.agility) + " agility."
+                                    else:
+                                        percent_value = 1 - percent_start_value
+                                        target.agility *= percent_value
+                                        target.agility = math.floor(target.agility)
+                                        s += target.name + " lost " + str(int_value) + "% Agility. Now at " + str(target.agility) + " agility."
+                                else:
+                                    if num_or_perc == "Number":
+                                        target.agility = int_value
+                                        s += target.name + " has " + str(int_value) + " agility."
+                                    else:
+                                        percent_value = percent_start_value
+                                        target.agility *= percent_value
+                                        target.agility = math.floor(target.agility)
+                                        s += target.name + " has " + str(int_value) + "% Agility. Now at " + str(target.agility) + " agility."
+                            elif type=="Luck":
+                                if operation == "+":
+                                    if num_or_perc == "Number":
+                                        target.luck += int_value
+                                        s += target.name + " gained " + str(int_value) + " luck. Now at " + str(target.luck) + " luck."
+                                    else:
+                                        percent_value = percent_start_value + 1
+                                        target.luck *= percent_value
+                                        target.luck = math.floor(target.luck)
+                                        s += target.name + " gained " + str(int_value) + "%% Luck. Now at " + str(target.luck) + " luck."
+                                elif operation == "-":
+                                    if num_or_perc == "Number":
+                                        target.luck -= int_value
+                                        s += target.name + " lost " + str(int_value) + " luck. Now at " + str(target.luck) + " luck."
+                                    else:
+                                        percent_value = 1 - percent_start_value
+                                        target.luck *= percent_value
+                                        target.luck = math.floor(target.luck)
+                                        s += target.name + " lost " + str(int_value) + "%% Luck. Now at " + str(target.luck) + " luck."
+                                else:
+                                    if num_or_perc == "Number":
+                                        target.luck = int_value
+                                        s += target.name + " has " + str(int_value) + " luck."
+                                    else:
+                                        percent_value = percent_start_value
+                                        target.luck *= percent_value
+                                        target.luck = math.floor(target.luck)
+                                        s += target.name + " has " + str(int_value) + "%% Luck. Now at " + str(target.luck) + " luck."
+                            return [target, s]
+
+                        if self.target_all_var.get() == "Target One":
+                            target = master.findBattlerFromAll(self.target_menu.get())
+
+                            info = changeStat(target, self.stat_menu.get(), self.plus_minus_equal_menu.get(), self.num_perc_menu.get())
+
+                            master.changeBattlerInfoFromAll(self.target_menu.get(), info[0])
+                            master.log_console.configure(text=info[1])
+                        else:
+                            if self.target_team_var.get() == "Team A":
+                                is_a = True
+                            else:
+                                is_a = False
+
+                            targets = master.getBattlersInList(is_a)
+                            new_battlers = []
+                            s = ""
+                            for target in targets:
+                                temp_info = changeStat(target, self.stat_menu.get(), self.plus_minus_equal_menu.get(), self.num_perc_menu.get())
+
+                                new_battlers.append(temp_info[0])
+                                s += temp_info[1] + "\n"
+
+                            master.changeBattlerListInfo(is_a, new_battlers)
+                            master.log_console.configure(text=s)
+                    case "Resistances":
+                        pass
+                    case "Status":
+                        pass
+                master.undo_redo_stack.addToUndoList()
+                self.destroy() 
+
+            self.target_lbl = ctk.CTkLabel(master=self, text="Target:")
+            self.target_lbl.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky="e")
+
+            battler_values = master.getAllBattlerLabels()
+            self.target_menu = ctk.CTkOptionMenu(master=self, values=battler_values)
+            self.target_menu.set("")
+            self.target_menu.grid(row=0, column=2, padx=10, pady=10, sticky="w")
+
+            def team_switch(): self.target_team_switch.configure(text=self.target_team_var.get())
+            self.target_team_var = ctk.StringVar(value="Team A")
+            self.target_team_switch = ctk.CTkSwitch(master=self, text="Team A", command=team_switch, variable=self.target_team_var, onvalue="Team B", offvalue="Team A")
+
+            self.target_all_var = ctk.StringVar(value="Target One")
+            self.target_all_switch = ctk.CTkSwitch(master=self, text="Target One", command=target_all_callback, variable=self.target_all_var, onvalue="Target Team", offvalue="Target One")
+            self.target_all_switch.grid(row=0, column=5, columnspan=2, padx=10, pady=10)
+
+            self.choice_lbl = ctk.CTkLabel(master=self, text="Changing:")
+            self.choice_lbl.grid(row=1, column=0, columnspan=2, padx=10, pady=10, sticky="e")
+
+            self.choice_var = ctk.StringVar(value="HP/MP")
+            self.choice_menu = ctk.CTkOptionMenu(master=self, values=["HP/MP", "Stats", "Resistances", "Status"], command=choice_callback, variable=self.choice_var)
+            self.choice_menu.grid(row=1, column=2, padx=10, pady=10, sticky="w")
+
+            self.choice_2_lbl = ctk.CTkLabel(master=self, text="HP/MP Choice:")
+            self.choice_2_lbl.grid(row=1, column=3, padx=10, pady=10, sticky="e")
+
+            self.hpmp_var = ctk.StringVar(value="HP")
+            self.hpmp_menu = ctk.CTkOptionMenu(master=self, values=["HP", "MP", "MaxHP", "MaxMP"], command=hpmp_menu_callback, variable=self.hpmp_var)
+            self.hpmp_menu.grid(row=1, column=4, padx=10, pady=10, sticky="w")
+
+            self.stat_menu = ctk.CTkOptionMenu(master=self, values=["Strength", "Magic", "Defense", "Agility", "Luck"])
+
+            def overheal_switch(): self.overheal_switch.configure(text=self.overheal_var.get())
+            self.overheal_var = ctk.StringVar(value="No Overheal")
+            self.overheal_switch = ctk.CTkSwitch(master=self, text="No Overheal", command=overheal_switch, variable=self.overheal_var, onvalue="Overheal", offvalue="No Overheal")
+            self.overheal_switch.grid(row=1, column=5, columnspan=2, padx=10, pady=10)
+
+            self.plus_minus_equal_menu = ctk.CTkOptionMenu(master=self, values=["+", "-", "="], width=50)
+            self.plus_minus_equal_menu.grid(row=2, column=0, padx=10, pady=10)
+
+            self.entry_var = ctk.StringVar(value="")
+            self.entry = ctk.CTkEntry(master=self, placeholder_text="Integer Only", textvariable=self.entry_var, width=100)
+            self.entry.grid(row=2, column=1, padx=10, pady=10)
+
+            self.num_perc_menu = ctk.CTkOptionMenu(master=self, values=["Number", "Percent"])
+            self.num_perc_menu.grid(row=2, column=2, padx=10, pady=10, sticky="w")
+
+            self.confirm_button = ctk.CTkButton(master=self, text="Confirm", command=confirm_button)
+            self.confirm_button.grid(row=2, column=3, columnspan=2, padx=10, pady=10)
+
 class App(ctk.CTk):
     class UndoRedoStack():
         def __init__(self, App):
@@ -1541,8 +2097,8 @@ class App(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        self.a_container = []
-        self.b_container = []
+        self.a_battler_containers = []
+        self.b_battler_containers = []
 
         self.a_inactive_battlers = []
         self.b_inactive_battlers = []
@@ -1567,22 +2123,19 @@ class App(ctk.CTk):
         self.rowconfigure(1, weight=1)
         self.rowconfigure(2, weight=1)
         self.rowconfigure(3, weight=16)
-        self.rowconfigure(4, weight=1)
-        self.rowconfigure(5, weight=2)
-        self.rowconfigure(6, weight=4)
-        self.rowconfigure(7, weight=8)
+        self.rowconfigure(4, weight=4)
+        self.rowconfigure(5, weight=8)
 
         self.option_window = None
         self.attack_window = None
         self.heal_window = None
         self.buff_window = None
+        self.misc_window = None
         self.swap_window = None
+        self.debug_window = None
 
         #Need to run the zoom after canvas finishes rendering
         self.after(100, lambda: app.state("zoomed"))
-
-        def a_b_switch():
-            self.team_sw.configure(text=self.is_b.get())
 
         def import_file(frame, is_a:bool):
             file_path = filedialog.askopenfilename(
@@ -1605,8 +2158,7 @@ class App(ctk.CTk):
                                     new_row.append(int(row[i]))
                             data_list.append(new_row)
                         if(is_a): 
-                            self.battlers_a_menu.set("")
-                            for container in self.a_container:
+                            for container in self.a_battler_containers:
                                 container.destroy() #Destroys container elements on canvas for new ones
                             for row in data_list:
                                 #refactor data from data_list in battler classes
@@ -1617,14 +2169,12 @@ class App(ctk.CTk):
                                 cnt.assignBattler(battler)
 
                                 #add buttons to a list so they can be sorted through
-                                self.a_container.append(cnt)
+                                self.a_battler_containers.append(cnt)
 
                                 #Add labels to list to be added to options menu
                                 label_list.append(battler.label)
-                            self.battlers_a_menu.configure(values=label_list)
                         else:
-                            self.battlers_b_menu.set("")
-                            for container in self.b_container:
+                            for container in self.b_battler_containers:
                                 container.destroy() 
                             for row in data_list:
                                 battler = bu.Battler(row)
@@ -1632,10 +2182,9 @@ class App(ctk.CTk):
                                 cnt = BattlerContainer(master=frame, app=self)
                                 cnt.assignBattler(battler)
 
-                                self.b_container.append(cnt)
+                                self.b_battler_containers.append(cnt)
 
                                 label_list.append(battler.label)
-                            self.battlers_b_menu.configure(values=label_list)
                         self.undo_redo_stack.addToUndoList()
                 except SyntaxError:
                     messagebox.showerror("Error", "Error: CSV File is incorrectly formated.")
@@ -1699,7 +2248,7 @@ class App(ctk.CTk):
 
         def swap_battlers(is_a:bool):
             if is_a:
-                if self.battlers_a_menu._values != [] and self.a_inactive_battlers != []:
+                if self.a_battler_containers != [] and self.a_inactive_battlers != []:
                     if self.swap_window is None or not self.swap_window.winfo_exists():
                         self.swap_window = SwapFighterWindow(master=self, is_a=True)
                     else:
@@ -1707,7 +2256,7 @@ class App(ctk.CTk):
                 else:
                     messagebox.showerror("Error", "Please import A fighters and A backup fighters first.")
             else:
-                if self.battlers_b_menu._values != [] and self.b_inactive_battlers != []:
+                if self.b_battler_containers != [] and self.b_inactive_battlers != []:
                     if self.swap_window is None or not self.swap_window.winfo_exists():
                         self.swap_window = SwapFighterWindow(master=self, is_a=False)
                     else:
@@ -1840,8 +2389,7 @@ class App(ctk.CTk):
                         a_label_list = []
                         b_label_list = []
 
-                        self.battlers_a_menu.set("")
-                        for container in self.a_container:
+                        for container in self.a_battler_containers:
                             container.destroy() 
                         for row in a_active_battlers:
                             battler = bu.Battler(["", "", 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
@@ -1850,13 +2398,11 @@ class App(ctk.CTk):
                             cnt = BattlerContainer(master=self.frame_a, app=self)
                             cnt.assignBattler(battler)
 
-                            self.a_container.append(cnt)
+                            self.a_battler_containers.append(cnt)
 
                             a_label_list.append(battler.label)
-                        self.battlers_a_menu.configure(values=a_label_list)
 
-                        self.battlers_b_menu.set("")
-                        for container in self.b_container:
+                        for container in self.b_battler_containers:
                             container.destroy() 
                         for row in b_active_battlers:
                             battler = bu.Battler(["", "", 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
@@ -1865,10 +2411,9 @@ class App(ctk.CTk):
                             cnt = BattlerContainer(master=self.frame_b, app=self)
                             cnt.assignBattler(battler)
 
-                            self.b_container.append(cnt)
+                            self.b_battler_containers.append(cnt)
                             
                             b_label_list.append(battler.label)
-                        self.battlers_b_menu.configure(values=b_label_list)
 
                         for battler in a_inactive_battlers:
                             new_battler = bu.Battler(["", "", 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
@@ -1906,16 +2451,16 @@ class App(ctk.CTk):
                 self.option_window.focus()
 
         def attack_menu():
-            if self.battlers_a_menu.get() != "" and self.battlers_b_menu.get() != "":
+            if self.a_battler_containers != [] and self.b_battler_containers != []:
                 if self.attack_window is None or not self.attack_window.winfo_exists():
                     self.attack_window = AttackWindow(master=self)
                 else:
                     self.attack_window.focus()
             else:
-                messagebox.showerror("Error", "Please select fighters in the A and B dropdown before pressing the command.")
+                messagebox.showerror("Error", "Please import fighters for the A and B dropdowns before pressing the command.")
 
         def heal_menu():
-            if self.battlers_a_menu._values != [] and self.battlers_b_menu._values != []:
+            if self.a_battler_containers != [] and self.b_battler_containers != []:
                 if self.heal_window is None or not self.heal_window.winfo_exists():
                     self.heal_window = HealWindow(master=self)
                 else:
@@ -1924,7 +2469,7 @@ class App(ctk.CTk):
                 messagebox.showerror("Error", "Please import fighters for the A and B dropdowns before pressing the command.")
 
         def buff_menu():
-            if self.battlers_a_menu._values != [] and self.battlers_b_menu._values != []:
+            if self.a_battler_containers != [] and self.b_battler_containers != []:
                 if self.buff_window is None or not self.buff_window.winfo_exists():
                     self.buff_window = BuffWindow(master=self)
                 else:
@@ -1935,52 +2480,26 @@ class App(ctk.CTk):
         def ele_menu():
             pass
 
-        def scan():
-            if self.is_b.get() == "Team A":
-                if self.battlers_a_menu.get() != "" and self.battlers_b_menu._values != []:
-                    scanner = self.findBattler(self.battlers_a_menu.get(), True)
-                    if isinstance(scanner, bu.Battler) and scanner.mp < b_settings.getScanMp():
-                        ask = messagebox.askyesno("Warning", "Warning, not enough MP. Ignore MP cost?")
-                        if ask: 
-                            targets = self.getBattlersInList(False)
-                            info = bu.targetScan(scanner, targets, b_settings.getScanMp())
-                            self.changeBattlerInfo(self.battlers_a_menu.get(), True, info[0])
-                            self.log_console.configure(text=info[1])
-                            self.undo_redo_stack.addToUndoList()
-                        else:
-                            messagebox.showinfo("Info", "Scan action canceled.")
-                    elif isinstance(scanner, bu.Battler):
-                        targets = self.getBattlersInList(False)
-                        info = bu.targetScan(scanner, targets, b_settings.getScanMp())
-                        self.changeBattlerInfo(self.battlers_a_menu.get(), True, info[0])
-                        self.log_console.configure(text=info[1])
-                        self.undo_redo_stack.addToUndoList()
-                else:
-                    messagebox.showerror("Error", "Please select a fighter in the A dropdown, and make sure fighters are imported in Team B.")  
-            else:
-                if self.battlers_b_menu.get() != "" and self.battlers_a_menu._values != []:
-                    scanner = self.findBattler(self.battlers_b_menu.get(), False)
-                    if isinstance(scanner, bu.Battler) and scanner.mp < b_settings.getScanMp():
-                        ask = messagebox.askyesno("Warning", "Warning, not enough MP. Ignore MP cost?")
-                        if ask: 
-                            targets = self.getBattlersInList(True)
-                            info = bu.targetScan(scanner, targets, b_settings.getScanMp())
-                            self.changeBattlerInfo(self.battlers_a_menu.get(), False, info[0])
-                            self.log_console.configure(text=info[1])
-                            self.undo_redo_stack.addToUndoList()
-                        else:
-                            messagebox.showinfo("Info", "Scan action canceled.")
-                    elif isinstance(scanner, bu.Battler):
-                        targets = self.getBattlersInList(True)
-                        info = bu.targetScan(scanner, targets, b_settings.getScanMp())
-                        self.changeBattlerInfo(self.battlers_a_menu.get(), False, info[0])
-                        self.log_console.configure(text=info[1])
-                        self.undo_redo_stack.addToUndoList()
-                else:
-                    messagebox.showerror("Error", "Please select a fighter in the B dropdown, and make sure fighters are imported in Team A.")
-
         def status_menu():
             pass
+
+        def misc_menu():
+            if self.a_battler_containers != [] and self.b_battler_containers != []:
+                if self.misc_window is None or not self.misc_window.winfo_exists():
+                    self.misc_window = MiscWindow(master=self)
+                else:
+                    self.misc_window.focus()
+            else:
+                messagebox.showerror("Error", "Please import fighters for the A and B dropdowns before pressing the command.")
+
+        def debug_menu():
+            if self.a_battler_containers != [] and self.b_battler_containers != []:
+                if self.debug_window is None or not self.debug_window.winfo_exists():
+                    self.debug_window = DebugWindow(master=self)
+                else:
+                    self.debug_window.focus()
+            else:
+                messagebox.showerror("Error", "Please import fighters for the A and B dropdowns before pressing the command.")
         
         self.option_button = ctk.CTkButton(master=self, corner_radius=5, text="Settings", command=lambda: open_settings())
         self.option_button.grid(row=0, column=6, padx=20, pady=20)
@@ -2037,56 +2556,40 @@ class App(ctk.CTk):
         self.swap_battlers_but_b.grid(row=2, column=5, padx=20, pady=20, sticky="new")
         self.swap_battlers_but_b.grid_propagate(False)
 
-        self.sw_label = ctk.CTkLabel(master=self, text="Selected Attacking Team")
-        self.sw_label.grid(row=4, column=2, padx=20, pady=20, sticky="e")
-
-        self.is_b = ctk.StringVar(value="Team A")
-        self.team_sw = ctk.CTkSwitch(master=self, text="Team A", command=lambda: a_b_switch(), variable=self.is_b, onvalue="Team B", offvalue="Team A")
-        self.team_sw.grid(row=4, column=3, padx=10, pady=10, sticky="w")
-
-        self.names_a_lbl = ctk.CTkLabel(master=self, text="Team A - Selected Fighter:")
-        self.names_a_lbl.grid(row=5, column=0, columnspan=2, padx=10, pady=10, sticky="e")
-
-        self.battlers_a_menu = ctk.CTkOptionMenu(master=self, values=[])
-        self.battlers_a_menu.set("")
-        self.battlers_a_menu.grid(row=5, column=2, padx=10, pady=10, sticky="w")
-
-        self.names_b_lbl = ctk.CTkLabel(master=self, text="Team B - Selected Fighter:")
-        self.names_b_lbl.grid(row=5, column=3, padx=10, pady=10, sticky="e")
-
-        self.battlers_b_menu = ctk.CTkOptionMenu(master=self, values=[])
-        self.battlers_b_menu.set("")
-        self.battlers_b_menu.grid(row=5, column=4, columnspan=2, padx=10, pady=10, sticky="w")
-
         self.atk_button = ctk.CTkButton(master=self, text="Attack", command=lambda: attack_menu())
-        self.atk_button.grid(row=6, column=0, padx=20, pady=20, sticky="nsew")
+        self.atk_button.grid(row=4, column=0, padx=20, pady=20, sticky="nsew")
 
         self.heal_button = ctk.CTkButton(master=self, text="Heal", command=lambda: heal_menu())
-        self.heal_button.grid(row=6, column=1, padx=20, pady=20, sticky="nsew")
+        self.heal_button.grid(row=4, column=1, padx=20, pady=20, sticky="nsew")
 
         self.buff_button = ctk.CTkButton(master=self, text="Buff/Debuff", command=lambda: buff_menu())
-        self.buff_button.grid(row=6, column=2, padx=20, pady=20, sticky="nsew")
+        self.buff_button.grid(row=4, column=2, padx=20, pady=20, sticky="nsew")
 
         self.charge_button = ctk.CTkButton(master=self, text="Element Change", command=lambda: ele_menu())
-        self.charge_button.grid(row=6, column=3, padx=20, pady=20, sticky="nsew")
-
-        self.scan_button = ctk.CTkButton(master=self, text="Scan", command=lambda: scan())
-        self.scan_button.grid(row=6, column=4, padx=20, pady=20, sticky="nsew")
+        self.charge_button.grid(row=4, column=3, padx=20, pady=20, sticky="nsew")
 
         self.status_button = ctk.CTkButton(master=self, text="Inflict Status", command=lambda: status_menu())
-        self.status_button.grid(row=6, column=5, padx=20, pady=20, sticky="nsew")
+        self.status_button.grid(row=4, column=4, padx=20, pady=20, sticky="nsew")
 
-        self.log_console = ctk.CTkLabel(master=self, text="", corner_radius=10, border_width=2, border_color="#e6f7ff", fg_color="#3a4b5c", font=("Roboto", 18))
-        self.log_console.grid(row=7, column=2, columnspan=5, padx=20, pady=20, sticky="nsew")
-        self.log_console.grid_propagate(False)
+        self.misc_button = ctk.CTkButton(master=self, text="Miscellaneous", command=lambda: misc_menu())
+        self.misc_button.grid(row=4, column=5, padx=20, pady=20, sticky="nsew")
+
+        self.debug_button = ctk.CTkButton(master=self, text="Debug/Items", command=lambda: debug_menu())
+        self.debug_button.grid(row=5, column=0, columnspan=2, padx=20, pady=20, sticky="ew")
+
+        self.log_container = ctk.CTkScrollableFrame(master=self, orientation="horizontal", corner_radius=10, border_width=2, border_color="#e6f7ff", fg_color="#3a4b5c")
+        self.log_container.grid(row=5, column=2, columnspan=5, padx=20, pady=20, sticky="nsew")
+
+        self.log_console = ctk.CTkLabel(master=self.log_container, text="", justify="center", font=("Roboto", 18))
+        self.log_console.pack(expand=True, anchor="center", padx=20, pady=20)
 
     def findBattler(self, tag:str, is_a:bool):
         if is_a:
-            for cont in self.a_container:
+            for cont in self.a_battler_containers:
                 if cont.battler.label == tag:
                     return cont.battler
         else:
-            for cont in self.b_container:
+            for cont in self.b_battler_containers:
                 if cont.battler.label == tag:
                     return cont.battler
 
@@ -2101,10 +2604,10 @@ class App(ctk.CTk):
                     return battler
 
     def findName(self, tag:str):
-        for cont in self.a_container:
+        for cont in self.a_battler_containers:
             if cont.battler.label == tag:
                 return cont.battler.name
-        for cont in self.b_container:
+        for cont in self.b_battler_containers:
             if cont.battler.label == tag:
                 return cont.battler.name
 
@@ -2118,11 +2621,11 @@ class App(ctk.CTk):
 
     def changeBattlerInfo(self, tag:str, is_a:bool, new_battler:"bu.Battler"):
         if is_a:
-            for cont in self.a_container:
+            for cont in self.a_battler_containers:
                 if cont.battler.label == tag:
                     cont.assignBattler(new_battler)
         else:
-            for cont in self.b_container:
+            for cont in self.b_battler_containers:
                 if cont.battler.label == tag:
                     cont.assignBattler(new_battler)
 
@@ -2139,20 +2642,20 @@ class App(ctk.CTk):
     def getBattlersInList(self, is_a:bool):
         battler_list = []
         if is_a:
-            for cont in self.a_container:
+            for cont in self.a_battler_containers:
                 battler_list.append(cont.battler)
         else:
-            for cont in self.b_container:
+            for cont in self.b_battler_containers:
                 battler_list.append(cont.battler)
         return battler_list
 
     def getBattlerLabelsInList(self, is_a:bool):
         battler_list = []
         if is_a:
-            for cont in self.a_container:
+            for cont in self.a_battler_containers:
                 battler_list.append(cont.battler.label)
         else:
-            for cont in self.b_container:
+            for cont in self.b_battler_containers:
                 battler_list.append(cont.battler.label)
         return battler_list
 
@@ -2168,35 +2671,35 @@ class App(ctk.CTk):
 
     def getAllBattlerLabels(self):
         battler_list = []
-        for cont in self.a_container:
+        for cont in self.a_battler_containers:
             battler_list.append(cont.battler.label)
-        for cont in self.b_container:
+        for cont in self.b_battler_containers:
             battler_list.append(cont.battler.label)
         return battler_list
 
     def findBattlerFromAll(self, tag:str):
-        for cont in self.a_container:
+        for cont in self.a_battler_containers:
             if cont.battler.label == tag:
                 return cont.battler
-        for cont in self.b_container:
+        for cont in self.b_battler_containers:
             if cont.battler.label == tag:
                 return cont.battler
 
     def changeBattlerInfoFromAll(self, tag:str, new_battler:"bu.Battler"):
-        for cont in self.a_container:
+        for cont in self.a_battler_containers:
             if cont.battler.label == tag:
                 cont.assignBattler(new_battler)
-        for cont in self.b_container:
+        for cont in self.b_battler_containers:
             if cont.battler.label == tag:
                 cont.assignBattler(new_battler)
 
     def changeBattlerListInfo(self, is_a:bool, new_battlers:list["bu.Battler"]):
         if is_a:
             for i in range(len(new_battlers)):
-                self.a_container[i].assignBattler(new_battlers[i])
+                self.a_battler_containers[i].assignBattler(new_battlers[i])
         else:
             for i in range(len(new_battlers)):
-                self.b_container[i].assignBattler(new_battlers[i])
+                self.b_battler_containers[i].assignBattler(new_battlers[i])
 
     def changeBattlersInactive(self, is_a:bool, new_battlers:list["bu.Battler"]):
         if is_a:
@@ -2213,15 +2716,6 @@ class App(ctk.CTk):
 
         if type(active) == bu.Battler:
             self.changeInactiveBattlerInfo(inactive_tag, is_a, active)
-
-        new_values = self.getBattlerLabelsInList(is_a)
-
-        if is_a: 
-            self.battlers_a_menu.configure(values=new_values)
-            self.battlers_a_menu.set("")
-        else: 
-            self.battlers_b_menu.configure(values=new_values)
-            self.battlers_b_menu.set("")
 
     def undoRedoChangeBattlers(self, new_battlers_all):
         self.changeBattlerListInfo(True, new_battlers_all[0])
@@ -2246,7 +2740,7 @@ class App(ctk.CTk):
         s += "Scan MP Cost: " + str(b_settings.getScanMp())
         self.scan_mp_lbl.configure(text=s)
 
-#This runs the app, always call it last. 
+#This runs the app. 
 #__name__ = "__main__" makes sure this only runs if called directly from this file
 if __name__ == "__main__":
     app = App()

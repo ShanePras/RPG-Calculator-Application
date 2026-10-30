@@ -71,6 +71,14 @@ class BattleSettings:
 
         self.set_lst.append(9) #max undos; 47
 
+        self.set_lst.append(0.1) #burn damage multiplier; 48
+        self.set_lst.append(2) #frostbite crit multiplier; 49
+        self.set_lst.append(0.7) #shock damage multiplier; 50
+        self.set_lst.append(1.1) #heavy defense multiplier; 51
+        self.set_lst.append(0.5) #daze dodge multiplier; 52
+        self.set_lst.append(1.2) #rage atk multiplier; 53
+        self.set_lst.append(0.4) #rage def multiplier; 54
+
     def getLAtkMtp(self): return self.set_lst[0]
     def getMAtkMtp(self): return self.set_lst[1]
     def getHAtkMtp(self): return self.set_lst[2]
@@ -121,6 +129,14 @@ class BattleSettings:
     def getBuffExtraStatMpAdd(self): return self.set_lst[46]
 
     def getMaxUndos(self): return self.set_lst[47]
+
+    def getBurnDmgMtp(self): return self.set_lst[48]
+    def getFrostbiteCritMtp(self): return self.set_lst[49]
+    def getShockDmgMtp(self): return self.set_lst[50]
+    def getHeavyDefMtp(self): return self.set_lst[51]
+    def getDazeDdgMtp(self): return self.set_lst[52]
+    def getRageAtkMtp(self): return self.set_lst[53]
+    def getRageDefMtp(self): return self.set_lst[54]
 
 class Battler:
     def __init__(self, stats:list):
@@ -255,6 +271,16 @@ def attackInfo(attacker:"Battler", defender:"Battler", b_settings:"BattleSetting
         buffed_defense = defender.defense * buffVal(defender.defense_level) * guardVal()
         dmg = buffed_attack * (40/(40+buffed_defense)) * b_settings.getAtkConst() * formAtkVal() * formDefVal() * sevTypeVal() * elemResVal()
 
+        if attacker.status == "Shock":
+            dmg *= b_settings.getShockDmgMtp()
+        elif attacker.status == "Rage":
+            dmg *= b_settings.getRageAtkMtp()
+
+        if defender.status == "Heavy":
+            dmg *= (1/b_settings.getHeavyDefMtp())
+        elif defender.status == "Rage":
+            dmg *= b_settings.getRageDefMtp()
+
         return math.floor(dmg)
 
     def dodgeCalc():
@@ -272,12 +298,20 @@ def attackInfo(attacker:"Battler", defender:"Battler", b_settings:"BattleSetting
         raw_probability = (atk_agi/def_agi) * b_settings.getDdgConst()
         dodge_num = random.uniform(0.0, 1.0)
 
+        if defender.status == "Heavy":
+            raw_probability = 0.0
+        elif defender.status == "Daze":
+            raw_probability *= b_settings.getDazeDdgMtp()
+
         if(dodge_num<raw_probability): return True
         else: return False
 
     def critCalc():
         crit_probability = (attacker.luck/defender.luck) * b_settings.getCrtConst()
         crit_num = random.uniform(0.0, 1.0)
+
+        if defender.status == "Frostbite":
+            crit_probability *= b_settings.getFrostbiteCritMtp()
 
         if(crit_num<crit_probability): return True
         else: return False
@@ -584,13 +618,16 @@ def healOne(caster:"Battler", target:"Battler", b_settings:"BattleSettings", sev
             case 2: return b_settings.getHHealMtp()
     
     heal = math.floor(caster.magic * severity_val())
-    target.hp += heal
     caster.mp -= mp_cost
-    target.equalizeHpMp()
     caster.equalizeHpMp()
-
     s = ""
-    s += target.name + " recovered " + str(heal) + " HP."
+
+    if target.status == "Curse":
+        s += target.name + " was cursed, and could not recover HP!"
+    else:
+        target.hp += heal
+        target.equalizeHpMp()
+        s += target.name + " recovered " + str(heal) + " HP."
 
     return [caster, target, s]
 
