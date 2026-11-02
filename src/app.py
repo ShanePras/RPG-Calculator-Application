@@ -5,6 +5,7 @@ from tkinter import simpledialog
 from tkinter import messagebox
 import csv
 import math
+import random
 import sys
 import os
 import copy
@@ -853,6 +854,11 @@ class AttackWindow(ctk.CTkToplevel):
                     self.second_element_menu.grid_forget()
 
                     self.row_fm_switch.grid_forget()
+
+                    self.ailment_lbl.grid_forget()
+                    self.ailment_menu.grid_forget()
+                    self.ailment_chance_lbl.grid_forget()
+                    self.ailment_chance_menu.grid_forget()
                 case "Power Attack":
                     self.mp_limit_switch.grid(row=2, column=5, columnspan=2, padx=10, pady=10)
                     severity_menu_callback(self.severity_menu_var.get())
@@ -873,6 +879,11 @@ class AttackWindow(ctk.CTkToplevel):
                     self.second_element_menu.grid_forget()
 
                     self.row_fm_switch.grid_forget()
+
+                    self.ailment_lbl.grid_forget()
+                    self.ailment_menu.grid_forget()
+                    self.ailment_chance_lbl.grid_forget()
+                    self.ailment_chance_menu.grid_forget()
                 case "Attack All":
                     self.mp_limit_switch.grid(row=2, column=5, columnspan=2, padx=10, pady=10)
                     severity_menu_callback(self.severity_menu_var.get())
@@ -893,6 +904,11 @@ class AttackWindow(ctk.CTkToplevel):
                     self.second_element_menu.grid_forget()
 
                     self.row_fm_switch.grid_forget()
+
+                    self.ailment_lbl.grid_forget()
+                    self.ailment_menu.grid_forget()
+                    self.ailment_chance_lbl.grid_forget()
+                    self.ailment_chance_menu.grid_forget()
                 case "Multi Attack":
                     self.mp_limit_switch.grid(row=2, column=5, columnspan=2, padx=10, pady=10)
 
@@ -913,6 +929,61 @@ class AttackWindow(ctk.CTkToplevel):
                     self.second_element_menu.grid_forget()
 
                     self.row_fm_switch.grid_forget()
+
+                    self.ailment_lbl.grid_forget()
+                    self.ailment_menu.grid_forget()
+                    self.ailment_chance_lbl.grid_forget()
+                    self.ailment_chance_menu.grid_forget()
+                case "Ailment Attack":
+                    self.mp_limit_switch.grid(row=2, column=5, columnspan=2, padx=10, pady=10)
+                    severity_menu_callback(self.severity_menu_var.get())
+
+                    self.defender_lbl.configure(text="Defender:")
+                    self.defender_menu.grid(row=0, column=3, columnspan=2, padx=10, pady=10, sticky="w")
+                    self.def_team_sw.grid_forget()
+                    self.defender_splash_team_lbl.grid_forget()
+
+                    self.severity_lbl.grid(row=2, column=0, padx=10, pady=10, sticky="e")
+                    self.severity_menu.grid(row=2, column=1, padx=10, pady=10, sticky="w")
+
+                    self.multi_atk_lbl.grid_forget()
+                    self.multi_atk_p_button.grid_forget()
+                    self.multi_atk_m_button.grid_forget()
+
+                    self.second_element_lbl.grid_forget()
+                    self.second_element_menu.grid_forget()
+
+                    self.row_fm_switch.grid_forget()
+
+                    self.ailment_lbl.grid(row=0, column=5, padx=10, pady=10, sticky="e")
+                    self.ailment_menu.grid(row=0, column=6, padx=10, pady=10, sticky="w")
+                    self.ailment_chance_lbl.grid(row=2, column=2, padx=10, pady=10, sticky="e")
+                    self.ailment_chance_menu.grid(row=2, column=3, columnspan=2, padx=10, pady=10, sticky="w")
+                case "Ailment Attack All":
+                    self.mp_limit_switch.grid(row=2, column=5, columnspan=2, padx=10, pady=10)
+                    severity_menu_callback(self.severity_menu_var.get())
+
+                    self.defender_lbl.configure(text="Defending Team:")
+                    self.defender_menu.grid_forget()
+                    self.def_team_sw.grid(row=0, column=3, columnspan=2, padx=10, pady=10, sticky="w")
+                    self.defender_splash_team_lbl.grid_forget()
+
+                    self.severity_lbl.grid(row=2, column=0, padx=10, pady=10, sticky="e")
+                    self.severity_menu.grid(row=2, column=1, padx=10, pady=10, sticky="w")
+
+                    self.multi_atk_lbl.grid_forget()
+                    self.multi_atk_p_button.grid_forget()
+                    self.multi_atk_m_button.grid_forget()
+
+                    self.second_element_lbl.grid_forget()
+                    self.second_element_menu.grid_forget()
+
+                    self.row_fm_switch.grid_forget()
+
+                    self.ailment_lbl.grid(row=0, column=5, padx=10, pady=10, sticky="e")
+                    self.ailment_menu.grid(row=0, column=6, padx=10, pady=10, sticky="w")
+                    self.ailment_chance_lbl.grid(row=2, column=2, padx=10, pady=10, sticky="e")
+                    self.ailment_chance_menu.grid(row=2, column=3, columnspan=2, padx=10, pady=10, sticky="w")
                 case "Drain Attack":
                     self.mp_limit_switch.grid(row=2, column=5, columnspan=2, padx=10, pady=10)
                     severity_menu_callback(self.severity_menu_var.get())
@@ -933,6 +1004,11 @@ class AttackWindow(ctk.CTkToplevel):
                     self.second_element_menu.grid_forget()
 
                     self.row_fm_switch.grid_forget()
+
+                    self.ailment_lbl.grid_forget()
+                    self.ailment_menu.grid_forget()
+                    self.ailment_chance_lbl.grid_forget()
+                    self.ailment_chance_menu.grid_forget()
                 case "Splash Attack":
                     self.mp_limit_switch.grid(row=2, column=5, columnspan=2, padx=10, pady=10)
                     severity_menu_callback(self.severity_menu_var.get())
@@ -954,6 +1030,11 @@ class AttackWindow(ctk.CTkToplevel):
                     self.second_element_menu.grid(row=2, column=3, columnspan=2, padx=10, pady=10, sticky="w")
 
                     self.row_fm_switch.grid_forget()
+
+                    self.ailment_lbl.grid_forget()
+                    self.ailment_menu.grid_forget()
+                    self.ailment_chance_lbl.grid_forget()
+                    self.ailment_chance_menu.grid_forget()
                 case "Row Attack":
                     self.mp_limit_switch.grid(row=2, column=5, columnspan=2, padx=10, pady=10)
                     severity_menu_callback(self.severity_menu_var.get())
@@ -974,6 +1055,11 @@ class AttackWindow(ctk.CTkToplevel):
                     self.second_element_menu.grid_forget()
 
                     self.row_fm_switch.grid(row=2, column=2, columnspan=3, padx=10, pady=10)
+
+                    self.ailment_lbl.grid_forget()
+                    self.ailment_menu.grid_forget()
+                    self.ailment_chance_lbl.grid_forget()
+                    self.ailment_chance_menu.grid_forget()
 
         def severity_menu_callback(choice:str):
             match choice:
@@ -997,6 +1083,14 @@ class AttackWindow(ctk.CTkToplevel):
                     mp_cost += b_settings.getAtkAllMpAdd()
                 case "Multi Attack":
                     mp_cost += (self.multi_atk_num.get() * b_settings.getMultiattackMpAdd())
+                case "Ailment Attack":
+                    mp_cost += b_settings.getAilmentOneMp()
+                    if self.ailment_chance_menu.get() == "Medium": mp_cost += b_settings.getAilmentChanceMpAdd()
+                    elif self.ailment_chance_menu.get() == "High": mp_cost += (2 * b_settings.getAilmentChanceMpAdd())
+                case "Ailment Attack All":
+                    mp_cost += b_settings.getAilmentAllMp()
+                    if self.ailment_chance_menu.get() == "Medium": mp_cost += b_settings.getAilmentChanceMpAdd()
+                    elif self.ailment_chance_menu.get() == "High": mp_cost += (2 * b_settings.getAilmentChanceMpAdd())
                 case "Drain Attack":
                     mp_cost += b_settings.getDrnSplAtkMpAdd()
                 case "Splash Attack":
@@ -1068,6 +1162,9 @@ class AttackWindow(ctk.CTkToplevel):
             self.defender_menu.configure(values = def_team_lbls)
             self.defender_menu.set("")
 
+        def ailment_lvl_callback(choice:str):
+            severity_menu_callback(self.severity_menu_var.get())
+
         def perform_attack():
             def phys_magic_bool():
                 if self.pm_menu.get() == "Physical": return True
@@ -1118,6 +1215,14 @@ class AttackWindow(ctk.CTkToplevel):
                         print("Type error in severity_int.")
                         return 1
 
+            def ailment_level():
+                if self.ailment_chance_var.get() == "Low": return b_settings.getAilmentChanceL()
+                elif self.ailment_chance_var.get() == "Medium": return b_settings.getAilmentChanceM()
+                elif self.ailment_chance_var.get() == "High": return b_settings.getAilmentChanceH()
+                else:
+                    print("Error in perform attack, ailment level.")
+                    return 0.5
+
             match self.type_menu_var.get():
                 case "Attack":
                     attacker = master.findBattlerFromAll(self.attacker_menu.get())
@@ -1134,6 +1239,7 @@ class AttackWindow(ctk.CTkToplevel):
     
                     if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
                         messagebox.showerror("Error", "Error. MP too low.")
+
                     else:
                         battle_info = bu.powerAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.mp_cost, False, False)
                         master.log_console.configure(text=battle_info[2])
@@ -1170,6 +1276,36 @@ class AttackWindow(ctk.CTkToplevel):
     
                         master.changeBattlerInfoFromAll(self.attacker_menu.get(), battle_info[0])
                         master.changeBattlerInfoFromAll(self.defender_menu.get(), battle_info[1])  
+                case "Ailment Attack":
+                    attacker = master.findBattlerFromAll(self.attacker_menu.get())
+                    defender = master.findBattlerFromAll(self.defender_menu.get())
+    
+                    if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
+                        messagebox.showerror("Error", "Error. MP too low.")
+                    else:
+                        battle_info = bu.ailmentAttackOne(attacker, defender, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.ailment_menu.get(), ailment_level(), self.mp_cost)
+                        master.log_console.configure(text=battle_info[2])
+    
+                        master.changeBattlerInfoFromAll(self.attacker_menu.get(), battle_info[0])
+                        master.changeBattlerInfoFromAll(self.defender_menu.get(), battle_info[1])
+                case "Ailment Attack All":
+                    attacker = master.findBattlerFromAll(self.attacker_menu.get())
+                    if self.def_team_var.get() == "Team A":
+                        defenders = master.getBattlersInList(True)
+                    else:
+                        defenders = master.getBattlersInList(False)
+
+                    if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
+                        messagebox.showerror("Error", "Error. MP too low.")
+                    else:
+                        battle_info = bu.ailmentAttackAll(attacker, defenders, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.ailment_menu.get(), ailment_level(), self.mp_cost)
+                        master.log_console.configure(text=battle_info[2])
+
+                        master.changeBattlerInfoFromAll(self.attacker_menu.get(), battle_info[0])
+                        if self.def_team_var.get() == "Team A":
+                            master.changeBattlerListInfo(True, battle_info[1])
+                        else:
+                            master.changeBattlerListInfo(False, battle_info[1])
                 case "Drain Attack":
                     attacker = master.findBattlerFromAll(self.attacker_menu.get())
                     defender = master.findBattlerFromAll(self.defender_menu.get())
@@ -1219,9 +1355,9 @@ class AttackWindow(ctk.CTkToplevel):
                             master.changeBattlerListInfo(True, battle_info[1])
                         else:
                             master.changeBattlerListInfo(False, battle_info[1])
-                        
+
+            master.undo_redo_stack.addToUndoList()         
             self.destroy()
-            master.undo_redo_stack.addToUndoList()
 
         battler_values = master.getAllBattlerLabels()
 
@@ -1248,7 +1384,7 @@ class AttackWindow(ctk.CTkToplevel):
         self.type_lbl.grid(row=1, column=0, padx=10, pady=10, sticky="e")
 
         self.type_menu_var = ctk.StringVar(value="Attack")
-        self.type_menu = ctk.CTkOptionMenu(master=self, values=["Attack", "Power Attack", "Attack All", "Multi Attack", "Drain Attack", "Splash Attack", "Row Attack"], command=type_menu_callback, variable=self.type_menu_var)
+        self.type_menu = ctk.CTkOptionMenu(master=self, values=["Attack", "Power Attack", "Attack All", "Multi Attack", "Ailment Attack", "Ailment Attack All", "Drain Attack", "Splash Attack", "Row Attack"], command=type_menu_callback, variable=self.type_menu_var)
         self.type_menu.grid(row=1, column=1, padx=10, pady=10, sticky="w")
 
         self.pm_lbl = ctk.CTkLabel(master=self, text="Physical or Ranged:")
@@ -1284,6 +1420,13 @@ class AttackWindow(ctk.CTkToplevel):
 
         self.second_element_lbl = ctk.CTkLabel(master=self, text="Splash Element")
         self.second_element_menu = ctk.CTkOptionMenu(master=self, values=["Slash", "Strike", "Pierce", "Fire", "Water", "Lightning", "Earth", "Wind", "Other"])
+
+        self.ailment_lbl = ctk.CTkLabel(master=self, text="Ailment:")
+        self.ailment_menu = ctk.CTkOptionMenu(master=self, values=["Burn", "Frostbite", "Shock", "Heavy", "Daze", "Curse", "Charm", "Confusion", "Forget", "Rage", "Fear"])
+
+        self.ailment_chance_var = ctk.StringVar(value="Low")
+        self.ailment_chance_lbl = ctk.CTkLabel(master=self, text="Ailment Chance:")
+        self.ailment_chance_menu = ctk.CTkOptionMenu(master=self, values=["Low", "Medium", "High"], command=ailment_lvl_callback, variable=self.ailment_chance_var)
 
         def fm_switch(): self.row_fm_switch.configure(text=self.row_fm_var.get())
         self.row_fm_var = ctk.StringVar(value="Targetting Front")
@@ -1457,10 +1600,12 @@ class BuffWindow(ctk.CTkToplevel):
                 mp_cost += b_settings.getBuffAllMpAdd()
 
             match self.stat_count_var.get():
-                case 2:
+                case "2":
                     mp_cost += b_settings.getBuffExtraStatMpAdd()
-                case 3:
+                case "3":
                     mp_cost += (b_settings.getBuffExtraStatMpAdd() * 2)
+                case "Reset":
+                    mp_cost += b_settings.getBuffExtraStatMpAdd()
 
             match self.buff_lvl_var.get():
                 case 2:
@@ -1496,6 +1641,12 @@ class BuffWindow(ctk.CTkToplevel):
 
                     self.stat_2_type_lbl.grid_forget()
                     self.stat_2_type_menu.grid_forget()
+
+                    self.buff_lvl_lbl.grid(row=1, column=4, padx=10, pady=10, sticky="e")
+                    self.buff_lvl_menu.grid(row=1, column=5, padx=10, pady=10, sticky="w")
+
+                    self.reset_buff_lbl.grid_forget()
+                    self.reset_buff_switch.grid_forget()
                 case "2":
                     self.stat_1_type_lbl.grid(row=1, column=2, padx=10, pady=10, sticky="e")
                     self.stat_1_type_menu.grid(row=1, column=3, padx=10, pady=10, sticky="w")
@@ -1503,12 +1654,36 @@ class BuffWindow(ctk.CTkToplevel):
                     stat_type_menu_callback(self.stat_1_type_menu.get())
                     self.stat_2_type_lbl.grid(row=2, column=1, padx=10, pady=10, sticky="e")
                     self.stat_2_type_menu.grid(row=2, column=2, padx=10, pady=10, sticky="w")
+
+                    self.buff_lvl_lbl.grid(row=1, column=4, padx=10, pady=10, sticky="e")
+                    self.buff_lvl_menu.grid(row=1, column=5, padx=10, pady=10, sticky="w")
+
+                    self.reset_buff_lbl.grid_forget()
+                    self.reset_buff_switch.grid_forget()
                 case "3":
                     self.stat_1_type_lbl.grid_forget()
                     self.stat_1_type_menu.grid_forget()
 
                     self.stat_2_type_lbl.grid_forget()
                     self.stat_2_type_menu.grid_forget()
+
+                    self.buff_lvl_lbl.grid(row=1, column=4, padx=10, pady=10, sticky="e")
+                    self.buff_lvl_menu.grid(row=1, column=5, padx=10, pady=10, sticky="w")
+
+                    self.reset_buff_lbl.grid_forget()
+                    self.reset_buff_switch.grid_forget()
+                case "Reset":
+                    self.stat_1_type_lbl.grid_forget()
+                    self.stat_1_type_menu.grid_forget()
+
+                    self.stat_2_type_lbl.grid_forget()
+                    self.stat_2_type_menu.grid_forget()
+
+                    self.buff_lvl_lbl.grid_forget()
+                    self.buff_lvl_menu.grid_forget()
+
+                    self.reset_buff_lbl.grid(row=1, column=4, padx=10, pady=10, sticky="e")
+                    self.reset_buff_switch.grid(row=1, column=5, padx=10, pady=10, sticky="w")
             set_mp()
 
         def stat_type_menu_callback(choice:str):
@@ -1557,17 +1732,22 @@ class BuffWindow(ctk.CTkToplevel):
                 target = master.findBattlerFromAll(self.target_menu.get())
                 
                 match self.stat_count_var.get():
-                    case 1:
+                    case "1":
                         buff_type_int = stat_to_int(self.stat_1_type_menu.get())
                         
                         info = bu.buffOneStatOne(caster, target, buff_type_int, buff_level, mp_cost)
-                    case 2:
+                    case "2":
                         buff_type_int_1 = stat_to_int(self.stat_1_type_menu.get())
                         buff_type_int_2 = stat_to_int(self.stat_2_type_menu.get())
                                                 
                         info = bu.buffTwoStatOne(caster, target, buff_type_int_1, buff_type_int_2, buff_level, mp_cost)
-                    case 3:
+                    case "3":
                         info = bu.buffAllStatOne(caster, target, buff_level, mp_cost)
+                    case "Reset":
+                        if self.reset_buff_var.get() == "Buffs":
+                            info = bu.resetBuffsOne(caster, target, mp_cost)
+                        else:
+                            info = bu.resetDebuffsOne(caster, target, mp_cost)
 
                 master.changeBattlerInfoFromAll(self.caster_menu.get(), info[0])
                 master.changeBattlerInfoFromAll(self.target_menu.get(), info[1])
@@ -1577,17 +1757,22 @@ class BuffWindow(ctk.CTkToplevel):
                 elif self.target_all_var.get() == "Team B": targets = master.getBattlersInList(False)
 
                 match self.stat_count_var.get():
-                    case 1:
+                    case "1":
                         buff_type_int = stat_to_int(self.stat_1_type_menu.get())
                         
                         info = bu.buffOneStatAll(caster, targets, buff_type_int, buff_level, mp_cost)
-                    case 2:
+                    case "2":
                         buff_type_int_1 = stat_to_int(self.stat_1_type_menu.get())
                         buff_type_int_2 = stat_to_int(self.stat_2_type_menu.get())
                                                 
                         info = bu.buffTwoStatAll(caster, targets, buff_type_int_1, buff_type_int_2, buff_level, mp_cost)
-                    case 3:
+                    case "3":
                         info = bu.buffAllStatAll(caster, targets, buff_level, mp_cost)
+                    case "Reset":
+                        if self.reset_buff_var.get() == "Buffs":
+                            info = bu.resetBuffsAll(caster, targets, mp_cost)
+                        else:
+                            info = bu.resetDebuffsAll(caster, targets, mp_cost)
 
                 master.changeBattlerInfoFromAll(self.caster_menu.get(), info[0])
                 if self.target_all_var.get() == "Team A": master.changeBattlerListInfo(True, info[1])
@@ -1622,8 +1807,8 @@ class BuffWindow(ctk.CTkToplevel):
         self.stat_count_lbl = ctk.CTkLabel(master=self, text="Number of Stats to Buff:")
         self.stat_count_lbl.grid(row=1, column=0, padx=10, pady=10, sticky="e")
 
-        self.stat_count_var = ctk.IntVar(value=1)
-        self.stat_count_menu = ctk.CTkOptionMenu(master=self, values=["1", "2", "3"], command=stat_count_callback, variable=self.stat_count_var)
+        self.stat_count_var = ctk.StringVar(value="1")
+        self.stat_count_menu = ctk.CTkOptionMenu(master=self, values=["1", "2", "3", "Reset"], command=stat_count_callback, variable=self.stat_count_var)
         self.stat_count_menu.grid(row=1, column=1, padx=10, pady=10, sticky="e")
 
         self.stat_1_type_lbl = ctk.CTkLabel(master=self, text="Buffing Stat:")
@@ -1642,6 +1827,12 @@ class BuffWindow(ctk.CTkToplevel):
         self.stat_2_type_lbl = ctk.CTkLabel(master=self, text="Buffing Second Stat:")
         self.stat_2_type_menu = ctk.CTkOptionMenu(master=self, values=["Attack Level", "Defense Level", "Agility Level"])
 
+        self.reset_buff_lbl = ctk.CTkLabel(master=self, text="Resetting:")
+
+        def reset_buff_callback(): self.reset_buff_switch.configure(text=self.reset_buff_var.get())
+        self.reset_buff_var = ctk.StringVar(value="Buffs")
+        self.reset_buff_switch = ctk.CTkSwitch(master=self, text="Buffs", command=reset_buff_callback, variable=self.reset_buff_var, onvalue="Buffs", offvalue="Debuffs")
+
         def mp_limit(): self.mp_limit_switch.configure(text=self.mp_limit_var.get())
         self.mp_limit_var = ctk.StringVar(value=" MP Requirement Enforced ")
         self.mp_limit_switch = ctk.CTkSwitch(master=self, text=" MP Requirement Enforced ", command=lambda: mp_limit(), variable=self.mp_limit_var, onvalue=" MP Requirement Enforced ", offvalue="MP Requirement Unenforced")
@@ -1653,6 +1844,164 @@ class BuffWindow(ctk.CTkToplevel):
 
         self.confirm_btn = ctk.CTkButton(master=self, text="Confirm", command=buff_button)
         self.confirm_btn.grid(row=3, column=4, padx=10, pady=10, sticky= "sew")
+
+class StatusWindow(ctk.CTkToplevel):
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)
+
+        self.title("Buff Menu")
+        self.geometry("1280x720")
+        self.iconbitmap(ico_path)
+
+        self.after(100, self.focus)
+
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_rowconfigure(2, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_columnconfigure(2, weight=1)
+        self.grid_columnconfigure(3, weight=1)
+        self.grid_columnconfigure(4, weight=1)
+        self.grid_columnconfigure(5, weight=1)
+
+        def target_one_callback(): 
+            self.target_one_switch.configure(text=self.target_one_var.get())
+
+            if self.target_one_var.get() == "Target One":
+                self.target_menu.grid(row=0, column=3, padx=10, pady=10, sticky="w")
+                self.target_team_switch.grid_forget()
+            else:
+                self.target_menu.grid_forget()
+                self.target_team_switch.grid(row=0, column=3, padx=10, pady=10, sticky="w")
+
+            set_mp(self.status_chance_var.get())
+
+        def set_mp(choice:str):
+            mp_cost = 0
+            if self.target_one_var.get() == "Target One":
+                mp_cost += b_settings.getAilmentOneMp()
+
+                match choice:
+                    case "Medium":
+                        mp_cost += b_settings.getAilmentMpAddOne()
+                    case "High":
+                        mp_cost += (2 * b_settings.getAilmentMpAddOne())
+                    case "Cure":
+                        mp_cost += b_settings.getAilmentMpAddOne()
+            else:
+                mp_cost += b_settings.getAilmentAllMp()
+
+                match choice:
+                    case "Medium":
+                        mp_cost += b_settings.getAilmentMpAddAll()
+                    case "High":
+                        mp_cost += (2 * b_settings.getAilmentMpAddAll())
+                    case "Cure":
+                        mp_cost += b_settings.getAilmentMpAddAll()
+
+            self.mp_cost.set(math.floor(mp_cost))
+            s = "MP Cost: " + str(mp_cost)
+            self.mp_cost_lbl.configure(text=s)
+
+        def command_callback():
+            def chance_to_float():
+                if self.status_chance_var.get() == "Low": return b_settings.getAilmentChanceL()
+                elif self.status_chance_var.get() == "Medium": return b_settings.getAilmentChanceM()
+                elif self.status_chance_var.get() == "High": return b_settings.getAilmentChanceH()
+                else:
+                    print("Error in status menu, command callback, chance_to_float.")
+                    return 0.3
+            mp_cost = self.mp_cost.get()
+            
+            if self.caster_menu.get() == "":
+                if self.target_one_var.get() == "One" and self.target_menu.get() == "":
+                    messagebox.showerror("Error", "Please select a caster and a target.")
+                    return
+                else:
+                    messagebox.showerror("Error", "Please select a caster.")
+                    return
+
+            caster = master.findBattlerFromAll(self.caster_menu.get())
+
+            if caster.mp < mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
+                messagebox.showerror("Error", "MP too low.")
+                return
+
+            if self.target_one_var.get() == "Target One":
+                target = master.findBattlerFromAll(self.target_menu.get())
+
+                if self.status_chance_var.get() == "Cure":
+                    info = bu.cureAilmentOne(caster, target, self.status_menu.get(), mp_cost)
+                else:
+                    info = bu.ailmentInflictOne(caster, target, b_settings, self.status_menu.get(), chance_to_float(), mp_cost)
+
+                master.changeBattlerInfoFromAll(self.target_menu.get(), info[1])
+            else:
+                if self.target_team_var.get() == "Team A": is_a = True
+                else: is_a = False
+
+                targets = master.getBattlersInList(is_a)
+
+                if self.status_chance_var.get() == "Cure":
+                    info = bu.cureAilmentAll(caster, targets, self.status_menu.get(), mp_cost)
+                else:
+                    info = bu.ailmentInflictAll(caster, targets, b_settings, self.status_menu.get(), chance_to_float(), mp_cost)
+
+                master.changeBattlerListInfo(is_a, info[1])   
+            
+            master.changeBattlerInfoFromAll(self.caster_menu.get(), info[0])    
+            master.log_console.configure(text=info[2])
+            master.undo_redo_stack.addToUndoList()
+            self.destroy()
+            
+        self.caster_lbl = ctk.CTkLabel(master=self, text="Caster:")
+        self.caster_lbl.grid(row=0, column=0, padx=10, pady=10, sticky="e")
+
+        battler_values = master.getAllBattlerLabels()
+        self.caster_menu = ctk.CTkOptionMenu(master=self, values=battler_values)
+        self.caster_menu.set("")
+        self.caster_menu.grid(row=0, column=1, padx=10, pady=10, sticky="w")
+
+        self.target_lbl = ctk.CTkLabel(master=self, text="Target:")
+        self.target_lbl.grid(row=0, column=2, padx=10, pady=10, sticky="e")
+
+        self.target_menu = ctk.CTkOptionMenu(master=self, values=battler_values)
+        self.target_menu.set("")
+        self.target_menu.grid(row=0, column=3, padx=10, pady=10, sticky="w")
+
+        def target_team_callback(): self.target_team_switch.configure(text=self.target_team_var.get())
+        self.target_team_var = ctk.StringVar(value="Team A")
+        self.target_team_switch = ctk.CTkSwitch(master=self, text="Team A", command=target_team_callback, variable=self.target_team_var, onvalue="Team B", offvalue="Team A")
+
+        self.target_one_var = ctk.StringVar(value="Target One")
+        self.target_one_switch = ctk.CTkSwitch(master=self, text="Target One", command=target_one_callback, variable=self.target_one_var, onvalue="Target Team", offvalue="Target One")
+        self.target_one_switch.grid(row=0, column=4, columnspan=2, padx=10, pady=10)
+
+        self.status_lbl = ctk.CTkLabel(master=self, text="Status:")
+        self.status_lbl.grid(row=1, column=0, padx=10, pady=10, sticky="e")
+
+        self.status_menu = ctk.CTkOptionMenu(master=self, values=["Burn", "Frostbite", "Shock", "Heavy", "Daze", "Poison", "Curse", "Charm", "Confusion", "Forget", "Rage", "Fear"])
+        self.status_menu.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+
+        self.status_chance_lbl = ctk.CTkLabel(master=self, text="Ailment Chance/Cure:")
+        self.status_chance_lbl.grid(row=1, column=2, padx=10, pady=10, sticky="e")
+
+        self.status_chance_var = ctk.StringVar(value="Low")
+        self.status_chance_menu = ctk.CTkOptionMenu(master=self, values=["Low", "Medium", "High", "Cure"], command=set_mp, variable=self.status_chance_var)
+        self.status_chance_menu.grid(row=1, column=3, padx=10, pady=10, sticky="w")
+
+        def mp_limit(): self.mp_limit_switch.configure(text=self.mp_limit_var.get())
+        self.mp_limit_var = ctk.StringVar(value=" MP Requirement Enforced ")
+        self.mp_limit_switch = ctk.CTkSwitch(master=self, text=" MP Requirement Enforced ", command=lambda: mp_limit(), variable=self.mp_limit_var, onvalue=" MP Requirement Enforced ", offvalue="MP Requirement Unenforced")
+        self.mp_limit_switch.grid(row=1, column=4, columnspan=2, padx=10, pady=10)
+
+        self.mp_cost = ctk.IntVar(value=b_settings.getAilmentOneMp())
+        self.mp_cost_lbl = ctk.CTkLabel(master=self, text="MP Cost: 8")
+        self.mp_cost_lbl.grid(row=2, column=1, padx=10, pady=10, sticky="s")
+
+        self.confirm_button = ctk.CTkButton(master=self, text="Confirm", command=command_callback)
+        self.confirm_button.grid(row=2, column=4, padx=10, pady=10, sticky="s")
 
 class MiscWindow(ctk.CTkToplevel):
     def __init__(self, master, **kwargs):
@@ -2477,7 +2826,7 @@ class DebugWindow(ctk.CTkToplevel):
 
             self.resistances_menu = ctk.CTkOptionMenu(master=self, values=["Slash", "Strike", "Pierce", "Fire", "Water", "Lightning", "Earth", "Wind", "Other"])
 
-            self.status_menu = ctk.CTkOptionMenu(master=self, values=["None", "Burn", "Frostbite", "Shock", "Heavy", "Daze", "Curse", "Charm", "Confusion", "Forget", "Rage", "Fear"])
+            self.status_menu = ctk.CTkOptionMenu(master=self, values=["None", "Burn", "Frostbite", "Shock", "Heavy", "Daze", "Poison", "Curse", "Charm", "Confusion", "Forget", "Rage", "Fear"])
 
             def overheal_switch(): self.overheal_switch.configure(text=self.overheal_var.get())
             self.overheal_var = ctk.StringVar(value="No Overheal")
@@ -2504,6 +2853,51 @@ class DebugWindow(ctk.CTkToplevel):
 
             self.confirm_button = ctk.CTkButton(master=self, text="Confirm", command=confirm_button)
             self.confirm_button.grid(row=2, column=4, columnspan=2, padx=10, pady=10)
+
+class RngWindow(ctk.CTkToplevel):
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)
+
+        self.title("RNG Menu")
+        self.geometry("1280x720")
+        self.iconbitmap(ico_path)
+
+        self.after(100, self.focus)
+
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_columnconfigure(2, weight=4)
+
+        def confirm_callback():
+            try:
+                float_value = float(self.perc_var.get())
+            except (ValueError, TypeError):
+                messagebox.showerror("Error", "Error. Entry field must be an float/decimal.")
+                return
+
+            perc_value = float_value * 0.01
+
+            chance_num = random.uniform(0.0, 1.0)
+
+            if chance_num<=perc_value: 
+                self.result_lbl.configure(text="Result: Pass")
+            else:
+                self.result_lbl.configure(text="Result: Fail")
+
+        self.perc_lbl = ctk.CTkLabel(master=self, text="Input Probability to Roll")
+        self.perc_lbl.grid(row=0, column=0, padx=10, pady=10, sticky="e")
+
+        self.perc_var = ctk.StringVar(value="")
+        self.perc_entry = ctk.CTkEntry(master=self, textvariable=self.perc_var)
+        self.perc_entry.grid(row=0, column=1, padx=10, pady=10, sticky="w")
+
+        self.confirm_btn = ctk.CTkButton(master=self, text="Roll", command=lambda: confirm_callback())
+        self.confirm_btn.grid(row=1, column=1, padx=10, pady=10)
+
+        self.result_lbl = ctk.CTkLabel(master=self, text="Result")
+        self.result_lbl.grid(row=0, column=2, padx=10, pady=10)
 
 class App(ctk.CTk):
     class UndoRedoStack():
@@ -2602,8 +2996,10 @@ class App(ctk.CTk):
         self.heal_window = None
         self.buff_window = None
         self.misc_window = None
+        self.status_window = None
         self.swap_window = None
         self.debug_window = None
+        self.rng_window = None
 
         #Need to run the zoom after canvas finishes rendering
         self.after(100, lambda: app.state("zoomed"))
@@ -2896,6 +3292,7 @@ class App(ctk.CTk):
                             new_battler.setAllStats(battler)
                             self.b_inactive_battlers.append(new_battler)
 
+                        self.undo_redo_stack.addToUndoList() 
                         messagebox.showinfo("Success", "Save successfully loaded.")
                 except SyntaxError:
                     messagebox.showerror("Error", "Error: CSV File is incorrectly formated.")
@@ -2952,7 +3349,13 @@ class App(ctk.CTk):
             pass
 
         def status_menu():
-            pass
+            if self.a_battler_containers != [] and self.b_battler_containers != []:
+                if self.status_window is None or not self.status_window.winfo_exists():
+                    self.status_window = StatusWindow(master=self)
+                else:
+                    self.status_window.focus()
+            else:
+                messagebox.showerror("Error", "Please import fighters for the A and B dropdowns before pressing the command.")
 
         def misc_menu():
             if self.a_battler_containers != [] and self.b_battler_containers != []:
@@ -2971,7 +3374,13 @@ class App(ctk.CTk):
                     self.debug_window.focus()
             else:
                 messagebox.showerror("Error", "Please import fighters for the A and B dropdowns before pressing the command.")
-        
+
+        def rng_menu():
+            if self.rng_window is None or not self.rng_window.winfo_exists():
+                self.rng_window = RngWindow(master=self)
+            else:
+                self.rng_window.focus()
+
         self.option_button = ctk.CTkButton(master=self, corner_radius=5, text="Settings", command=lambda: open_settings())
         self.option_button.grid(row=0, column=6, padx=20, pady=20)
 
@@ -3039,7 +3448,7 @@ class App(ctk.CTk):
         self.charge_button = ctk.CTkButton(master=self, text="Element Change", command=lambda: ele_menu())
         self.charge_button.grid(row=4, column=3, padx=20, pady=20, sticky="nsew")
 
-        self.status_button = ctk.CTkButton(master=self, text="Inflict Status", command=lambda: status_menu())
+        self.status_button = ctk.CTkButton(master=self, text="Status", command=lambda: status_menu())
         self.status_button.grid(row=4, column=4, padx=20, pady=20, sticky="nsew")
 
         self.misc_button = ctk.CTkButton(master=self, text="Miscellaneous", command=lambda: misc_menu())
@@ -3047,6 +3456,9 @@ class App(ctk.CTk):
 
         self.debug_button = ctk.CTkButton(master=self, text="Debug/Items", command=lambda: debug_menu())
         self.debug_button.grid(row=5, column=0, padx=20, pady=20, sticky="ew")
+
+        self.rng_button = ctk.CTkButton(master=self, text="RNG", command=lambda: rng_menu())
+        self.rng_button.grid(row=5, column=1, padx=20, pady=20, sticky="ew")
 
         self.log_container = ctk.CTkScrollableFrame(master=self, orientation="horizontal", corner_radius=10, border_width=2, border_color="#e6f7ff", fg_color="#3a4b5c")
         self.log_container.grid(row=5, column=2, columnspan=5, padx=20, pady=20, sticky="nsew")

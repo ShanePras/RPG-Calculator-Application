@@ -85,6 +85,11 @@ class BattleSettings:
 
         self.set_lst.append(9) #max undos; 59
 
+        self.set_lst.append(0.3) #ailment chance low; 60
+        self.set_lst.append(0.5) #ailment chance med; 61
+        self.set_lst.append(0.7) #ailment chance high; 62
+        self.set_lst.append(3) #ailment chance mp add; 63
+
     def getLAtkMtp(self): return self.set_lst[0]
     def getMAtkMtp(self): return self.set_lst[1]
     def getHAtkMtp(self): return self.set_lst[2]
@@ -147,6 +152,11 @@ class BattleSettings:
     def getAilmentMpAddAll(self): return self.set_lst[58]
 
     def getMaxUndos(self): return self.set_lst[59]
+
+    def getAilmentChanceL(self): return self.set_lst[60]
+    def getAilmentChanceM(self): return self.set_lst[61]
+    def getAilmentChanceH(self): return self.set_lst[62]
+    def getAilmentChanceMpAdd(self): return self.set_lst[63]
 
 class Battler:
     def __init__(self, stats:list):
@@ -635,6 +645,30 @@ def drainAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettin
 
     return battle_info
 
+def ailmentAttackOne(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", pm_phys:bool, element:int, severity:int, ailment:str, ailment_chance:float, mp_cost:int):
+    s = ""
+    
+    info = powerAttack(attacker, defender, b_settings, pm_phys, element, severity, mp_cost, False, False)
+
+    new_info = ailmentInflictOne(info[0], info[1], b_settings, ailment, ailment_chance, 0)
+
+    s += info[2] + " " + new_info[2]
+
+    return [new_info[0], new_info[1], s]
+
+def ailmentAttackAll(attacker:"Battler", defenders:list["Battler"], b_settings:"BattleSettings", pm_phys:bool, element:int, severity:int, ailment:str, ailment_chance:float, mp_cost:int):
+    attacker.mp -= mp_cost
+    s = ""
+    new_defenders = []
+
+    for defender in defenders:
+        temp_info = ailmentAttackOne(attacker, defender, b_settings, pm_phys, element, severity, ailment, ailment_chance, 0)
+        attacker = temp_info[0]
+        new_defenders.append(temp_info[1])
+        s += temp_info[2] + "\n"
+
+    return [attacker, new_defenders, s]
+
 def splashAttack(attacker:"Battler", primary_defender_tag:str, defenders:list["Battler"], b_settings:"BattleSettings", pm_phys:bool, element:int, splash_element:int, severity:int, mp_cost:int):
     attacker.mp -= mp_cost
     s = ""
@@ -795,6 +829,128 @@ def buffAllStatAll(caster:"Battler", targets:list["Battler"], level:int, mp_cost
 
     for target in targets:
         info = buffAllStatOne(caster, target, level, 0)
+        caster = info[0]
+        new_targets.append(info[1])
+        s += info[2] + "\n"
+
+    return [caster, new_targets, s]
+
+def resetBuffsOne(caster:"Battler", target:"Battler", mp_cost:int):
+    caster.mp -= mp_cost
+    caster.equalizeHpMp()
+
+    if target.attack_level > 0: target.attack_level = 0
+    if target.defense_level > 0: target.defense_level = 0
+    if target.agility_level > 0: target.agility_level = 0
+
+    s = ""
+    s += target.name + " had buffs reset to 0."
+
+    return [caster, target, s]
+
+def resetDebuffsOne(caster:"Battler", target:"Battler", mp_cost:int):
+    caster.mp -= mp_cost
+    caster.equalizeHpMp()
+
+    if target.attack_level < 0: target.attack_level = 0
+    if target.defense_level < 0: target.defense_level = 0
+    if target.agility_level < 0: target.agility_level = 0
+
+    s = ""
+    s += target.name + " had debuffs reset to 0."
+
+    return [caster, target, s]
+
+def resetBuffsAll(caster:"Battler", targets:list["Battler"], mp_cost:int):
+    caster.mp -= mp_cost
+    caster.equalizeHpMp()
+    s = ""
+    new_targets = []
+
+    for target in targets:
+        info = resetBuffsOne(caster, target, 0)
+        new_targets.append(info[1])
+        s += info[2] + "\n"
+
+    return [caster, new_targets, s]
+
+def resetDebuffsAll(caster:"Battler", targets:list["Battler"], mp_cost:int):
+    caster.mp -= mp_cost
+    caster.equalizeHpMp()
+    s = ""
+    new_targets = []
+
+    for target in targets:
+        info = resetDebuffsOne(caster, target, 0)
+        new_targets.append(info[1])
+        s += info[2] + "\n"
+
+    return [caster, new_targets, s]
+
+#AILMENTS
+def ailmentInflictOne(caster:"Battler", target:"Battler", b_settings:"BattleSettings", ailment:str, ailment_chance:float, mp_cost:int):
+    def doesAilment():
+        raw_probability = caster.luck / target.luck
+        raw_probability *= ailment_chance
+        ailment_num = random.uniform(0.0, 1.0)
+
+        if ailment_num<raw_probability:
+            return True
+        else:
+            return False
+
+    s = ""
+    caster.mp -= mp_cost
+    caster.equalizeHpMp()
+
+    does_ailment = doesAilment()
+
+    if does_ailment:
+        target.status = ailment
+        s += target.name + " was hit with " + ailment + "."
+    else:
+        mp_gain = math.floor(target.max_mp * b_settings.getDodgeMPGain())
+        target.mp += mp_gain
+        target.equalizeHpMp()
+        s += target.name + " dodged the ailment infliction."
+
+    return [caster, target, s]
+
+def ailmentInflictAll(caster:"Battler", targets:list["Battler"], b_settings:"BattleSettings", ailment:str, ailment_chance:float, mp_cost:int):
+    s = ""
+    caster.mp -= mp_cost
+    caster.equalizeHpMp()
+    new_targets = []
+
+    for target in targets:
+        info = ailmentInflictOne(caster, target, b_settings, ailment, ailment_chance, 0)
+        caster = info[0]
+        new_targets.append(info[1])
+        s += info[2] + "\n"
+
+    return [caster, new_targets, s]
+
+def cureAilmentOne(caster:"Battler", target:"Battler", ailment:str, mp_cost:int):
+    s = ""
+    caster.mp -= mp_cost
+    caster.equalizeHpMp()
+
+    if target.status == ailment:
+        target.status = "None"
+        s += target.name + " was cured from " + ailment + "."
+    else:
+        s += target.name + " didn't have " + ailment + "."
+
+    return [caster, target, s]
+
+def cureAilmentAll(caster:"Battler", targets:list["Battler"], ailment:str, mp_cost:int):
+    s = ""
+    caster.mp -= mp_cost
+    caster.equalizeHpMp()
+    new_targets = []
+
+    for target in targets:
+        info = cureAilmentOne(caster, target, ailment, 0)
         caster = info[0]
         new_targets.append(info[1])
         s += info[2] + "\n"
