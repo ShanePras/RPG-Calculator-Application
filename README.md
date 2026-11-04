@@ -14,7 +14,19 @@ All "resists" control what kinds of attacks characters can resist or not resist.
 - 4-Reflect
 - 5-Drain\
 \
-Current Goals:
+Status: \
+- Burn: Extra 10% MaxHP dmg when attacked (auto)
+- Frostbite: 2x chance to get critical striked (auto)
+- Shock: Damage output reduced by 30% (auto)
+- Heavy: Unable to dodge, defense increase by 10% (auto)
+- Daze: Dodge chance cut in half. (auto)
+- Curse: Unable to be healed/buffed (auto)
+- Poison: 10% MaxHP damage after an action (manual, use debug menu to do this)
+- Charm: Attacks allies or buffs/heals enemies (manual)
+- Confusion: 50% chance to ignore commands (manual)
+- Forget: Restricted to basic attacks, guards, or items (manual)
+- Rage: Forced basic attacks (manual). Increased damaged by 20%, decrease defense by 60% (auto)
+- Fear: May ignore commands (manual), agility reduced by 40% (auto). 
+Current Goals: \
 - Finish Element Break/Wall Menu
-- Finish Status Effects Menu
 - Add a character creator window to help with imports
