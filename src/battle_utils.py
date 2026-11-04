@@ -53,7 +53,7 @@ class BattleSettings:
         self.set_lst.append(100) #colossal atk 1 mp; 34
 
         self.set_lst.append(15) #attack all mp cost add; 35
-        self.set_lst.append(3) #multiattack mp cost add; 36
+        self.set_lst.append(5) #multiattack mp cost add; 36
         self.set_lst.append(18) #drain/splash attack mp cost add; 37
         self.set_lst.append(12) #row attack mp cost add; 38
 
@@ -299,7 +299,7 @@ def attackInfo(attacker:"Battler", defender:"Battler", b_settings:"BattleSetting
         if defender.status == "Heavy":
             dmg *= (1/b_settings.getHeavyDefMtp())
         elif defender.status == "Rage":
-            dmg *= b_settings.getRageDefMtp()
+            dmg *= (1/b_settings.getRageDefMtp())
 
         return math.floor(dmg)
 
