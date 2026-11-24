@@ -405,6 +405,12 @@ class OptionWindow(ctk.CTkToplevel):
         self.max_undo_entry.grid(row=0, column=5, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.max_undo_entry)
 
+        self.multi_degrade_mtp_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Multihit Degrade Multiplier:")
+        self.multi_degrade_mtp_label.grid(row=1, column=4, padx=10, pady=10, sticky="nsew")
+        self.multi_degrade_mtp_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getMultiHitDegradeMtp()))
+        self.multi_degrade_mtp_entry.grid(row=1, column=5, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.multi_degrade_mtp_entry)
+
         def conf_changes(): 
             any_value_updated = False
             try:               
@@ -818,6 +824,7 @@ class AttackWindow(ctk.CTkToplevel):
         self.grid_rowconfigure(1, weight=1)
         self.grid_rowconfigure(2, weight=1)
         self.grid_rowconfigure(3, weight=1)
+        self.grid_rowconfigure(4, weight=1)
         self.grid_columnconfigure(0, weight=2)
         self.grid_columnconfigure(1, weight=2)
         self.grid_columnconfigure(2, weight=2)
@@ -1223,40 +1230,59 @@ class AttackWindow(ctk.CTkToplevel):
                     print("Error in perform attack, ailment level.")
                     return 0.5
 
-            match self.type_menu_var.get():
-                case "Attack":
-                    attacker = master.findBattlerFromAll(self.attacker_menu.get())
-                    defender = master.findBattlerFromAll(self.defender_menu.get())
-    
-                    battle_info = bu.basicAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int())
-                    master.log_console.configure(text=battle_info[2])
-    
-                    master.changeBattlerInfoFromAll(self.attacker_menu.get(), battle_info[0])
-                    master.changeBattlerInfoFromAll(self.defender_menu.get(), battle_info[1])  
-                case "Power Attack":
-                    attacker = master.findBattlerFromAll(self.attacker_menu.get())
-                    defender = master.findBattlerFromAll(self.defender_menu.get())
-    
-                    if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
-                        messagebox.showerror("Error", "Error. MP too low.")
+            try:
+                if self.atk_mtp_entry.get() == "": atk_mtp = 1.0
+                else: atk_mtp = float(self.atk_mtp_entry.get())
 
-                    else:
-                        battle_info = bu.powerAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.mp_cost, False, False)
+                if self.agi_mtp_entry.get() == "": agi_mtp = 1.0
+                else: agi_mtp = float(self.agi_mtp_entry.get())
+                
+                if self.crt_mtp_entry.get() == "": crt_mtp = 1.0
+                else: crt_mtp = float(self.crt_mtp_entry.get())
+
+                match self.type_menu_var.get():
+                    case "Attack":
+                        attacker = master.findBattlerFromAll(self.attacker_menu.get())
+                        defender = master.findBattlerFromAll(self.defender_menu.get())
+        
+                        battle_info = bu.basicAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int(), atk_mtp, agi_mtp, crt_mtp)
                         master.log_console.configure(text=battle_info[2])
-    
+        
+                        master.changeBattlerInfoFromAll(self.attacker_menu.get(), battle_info[0])
+                        master.changeBattlerInfoFromAll(self.defender_menu.get(), battle_info[1])  
+                    case "Power Attack":
+                        temp_mp_cost = self.mp_cost
+                        attacker = master.findBattlerFromAll(self.attacker_menu.get())
+                        defender = master.findBattlerFromAll(self.defender_menu.get())
+        
+                        if attacker.mp < self.mp_cost:
+                            if self.mp_limit_var.get() == " MP Requirement Enforced ":
+                                messagebox.showerror("Error", "Error. MP too low.")
+                                self.destroy()
+                            else:
+                                temp_mp_cost = 0
+                        
+                        battle_info = bu.powerAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int(), severity_int(), temp_mp_cost, False, False, atk_mtp, agi_mtp, crt_mtp)
+                        master.log_console.configure(text=battle_info[2])
+
                         master.changeBattlerInfoFromAll(self.attacker_menu.get(), battle_info[0])
                         master.changeBattlerInfoFromAll(self.defender_menu.get(), battle_info[1]) 
-                case "Attack All":
-                    attacker = master.findBattlerFromAll(self.attacker_menu.get())
-                    if self.def_team_var.get() == "Team A":
-                        defenders = master.getBattlersInList(True)
-                    else:
-                        defenders = master.getBattlersInList(False)
+                    case "Attack All":
+                        temp_mp_cost = self.mp_cost
+                        attacker = master.findBattlerFromAll(self.attacker_menu.get())
+                        if self.def_team_var.get() == "Team A":
+                            defenders = master.getBattlersInList(True)
+                        else:
+                            defenders = master.getBattlersInList(False)
 
-                    if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
-                        messagebox.showerror("Error", "Error. MP too low.")
-                    else:
-                        battle_info = bu.attackAll(attacker, defenders, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.mp_cost)
+                        if attacker.mp < self.mp_cost:
+                            if self.mp_limit_var.get() == " MP Requirement Enforced ":
+                                messagebox.showerror("Error", "Error. MP too low.")
+                                self.destroy()
+                            else:
+                                temp_mp_cost = 0
+                        
+                        battle_info = bu.attackAll(attacker, defenders, b_settings, phys_magic_bool(), elem_int(), severity_int(), temp_mp_cost, atk_mtp, agi_mtp, crt_mtp)
                         master.log_console.configure(text=battle_info[2])
 
                         master.changeBattlerInfoFromAll(self.attacker_menu.get(), battle_info[0])
@@ -1264,41 +1290,56 @@ class AttackWindow(ctk.CTkToplevel):
                             master.changeBattlerListInfo(True, battle_info[1])
                         else:
                             master.changeBattlerListInfo(False, battle_info[1])
-                case "Multi Attack":
-                    attacker = master.findBattlerFromAll(self.attacker_menu.get())
-                    defender = master.findBattlerFromAll(self.defender_menu.get())
-    
-                    if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
-                        messagebox.showerror("Error", "Error. MP too low.")
-                    else:
-                        battle_info = bu.multiAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.multi_atk_num.get(), self.mp_cost)
+                    case "Multi Attack":
+                        temp_mp_cost = self.mp_cost
+                        attacker = master.findBattlerFromAll(self.attacker_menu.get())
+                        defender = master.findBattlerFromAll(self.defender_menu.get())
+        
+                        if attacker.mp < self.mp_cost:
+                            if self.mp_limit_var.get() == " MP Requirement Enforced ":
+                                messagebox.showerror("Error", "Error. MP too low.")
+                                self.destroy()
+                            else:
+                                temp_mp_cost = 0
+                        
+                        battle_info = bu.multiAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.multi_atk_num.get(), temp_mp_cost, atk_mtp, agi_mtp, crt_mtp)
                         master.log_console.configure(text=battle_info[2])
-    
+
                         master.changeBattlerInfoFromAll(self.attacker_menu.get(), battle_info[0])
                         master.changeBattlerInfoFromAll(self.defender_menu.get(), battle_info[1])  
-                case "Ailment Attack":
-                    attacker = master.findBattlerFromAll(self.attacker_menu.get())
-                    defender = master.findBattlerFromAll(self.defender_menu.get())
-    
-                    if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
-                        messagebox.showerror("Error", "Error. MP too low.")
-                    else:
-                        battle_info = bu.ailmentAttackOne(attacker, defender, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.ailment_menu.get(), ailment_level(), self.mp_cost)
+                    case "Ailment Attack":
+                        temp_mp_cost = self.mp_cost
+                        attacker = master.findBattlerFromAll(self.attacker_menu.get())
+                        defender = master.findBattlerFromAll(self.defender_menu.get())
+        
+                        if attacker.mp < self.mp_cost:
+                            if self.mp_limit_var.get() == " MP Requirement Enforced ":
+                                messagebox.showerror("Error", "Error. MP too low.")
+                                self.destroy()
+                            else:
+                                temp_mp_cost = 0
+                        
+                        battle_info = bu.ailmentAttackOne(attacker, defender, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.ailment_menu.get(), ailment_level(), temp_mp_cost, atk_mtp, agi_mtp, crt_mtp)
                         master.log_console.configure(text=battle_info[2])
-    
+
                         master.changeBattlerInfoFromAll(self.attacker_menu.get(), battle_info[0])
                         master.changeBattlerInfoFromAll(self.defender_menu.get(), battle_info[1])
-                case "Ailment Attack All":
-                    attacker = master.findBattlerFromAll(self.attacker_menu.get())
-                    if self.def_team_var.get() == "Team A":
-                        defenders = master.getBattlersInList(True)
-                    else:
-                        defenders = master.getBattlersInList(False)
+                    case "Ailment Attack All":
+                        temp_mp_cost = self.mp_cost
+                        attacker = master.findBattlerFromAll(self.attacker_menu.get())
+                        if self.def_team_var.get() == "Team A":
+                            defenders = master.getBattlersInList(True)
+                        else:
+                            defenders = master.getBattlersInList(False)
 
-                    if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
-                        messagebox.showerror("Error", "Error. MP too low.")
-                    else:
-                        battle_info = bu.ailmentAttackAll(attacker, defenders, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.ailment_menu.get(), ailment_level(), self.mp_cost)
+                        if attacker.mp < self.mp_cost:
+                            if self.mp_limit_var.get() == " MP Requirement Enforced ":
+                                messagebox.showerror("Error", "Error. MP too low.")
+                                self.destroy()
+                            else:
+                                temp_mp_cost = 0
+                        
+                        battle_info = bu.ailmentAttackAll(attacker, defenders, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.ailment_menu.get(), ailment_level(), temp_mp_cost, atk_mtp, agi_mtp, crt_mtp)
                         master.log_console.configure(text=battle_info[2])
 
                         master.changeBattlerInfoFromAll(self.attacker_menu.get(), battle_info[0])
@@ -1306,30 +1347,40 @@ class AttackWindow(ctk.CTkToplevel):
                             master.changeBattlerListInfo(True, battle_info[1])
                         else:
                             master.changeBattlerListInfo(False, battle_info[1])
-                case "Drain Attack":
-                    attacker = master.findBattlerFromAll(self.attacker_menu.get())
-                    defender = master.findBattlerFromAll(self.defender_menu.get())
-    
-                    if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
-                        messagebox.showerror("Error", "Error. MP too low.")
-                    else:
-                        battle_info = bu.drainAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int(), severity_int(), self.mp_cost)
+                    case "Drain Attack":
+                        temp_mp_cost = self.mp_cost
+                        attacker = master.findBattlerFromAll(self.attacker_menu.get())
+                        defender = master.findBattlerFromAll(self.defender_menu.get())
+        
+                        if attacker.mp < self.mp_cost:
+                            if self.mp_limit_var.get() == " MP Requirement Enforced ":
+                                messagebox.showerror("Error", "Error. MP too low.")
+                                self.destroy()
+                            else:
+                                temp_mp_cost = 0
+                        
+                        battle_info = bu.drainAttack(attacker, defender, b_settings, phys_magic_bool(), elem_int(), severity_int(), temp_mp_cost, atk_mtp, agi_mtp, crt_mtp)
                         master.log_console.configure(text=battle_info[2])
-    
+
                         master.changeBattlerInfoFromAll(self.attacker_menu.get(), battle_info[0])
                         master.changeBattlerInfoFromAll(self.defender_menu.get(), battle_info[1])  
-                case "Splash Attack":
-                    attacker = master.findBattlerFromAll(self.attacker_menu.get())
-                    primary_defender_tag = self.defender_menu.get()
-                    if self.def_team_var.get() == "Team A":
-                        defenders = master.getBattlersInList(True)
-                    else:
-                        defenders = master.getBattlersInList(False)
+                    case "Splash Attack":
+                        temp_mp_cost = self.mp_cost
+                        attacker = master.findBattlerFromAll(self.attacker_menu.get())
+                        primary_defender_tag = self.defender_menu.get()
+                        if self.def_team_var.get() == "Team A":
+                            defenders = master.getBattlersInList(True)
+                        else:
+                            defenders = master.getBattlersInList(False)
 
-                    if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
-                        messagebox.showerror("Error", "Error. MP too low.")
-                    else:
-                        battle_info = bu.splashAttack(attacker, primary_defender_tag, defenders, b_settings, phys_magic_bool(), elem_int(), elem_int_2(), severity_int(), self.mp_cost)
+                        if attacker.mp < self.mp_cost:
+                            if self.mp_limit_var.get() == " MP Requirement Enforced ":
+                                messagebox.showerror("Error", "Error. MP too low.")
+                                self.destroy()
+                            else:
+                                temp_mp_cost = 0
+                        
+                        battle_info = bu.splashAttack(attacker, primary_defender_tag, defenders, b_settings, phys_magic_bool(), elem_int(), elem_int_2(), severity_int(), temp_mp_cost, atk_mtp, agi_mtp, crt_mtp)
                         master.log_console.configure(text=battle_info[2])
 
                         master.changeBattlerInfoFromAll(self.attacker_menu.get(), battle_info[0])
@@ -1337,17 +1388,22 @@ class AttackWindow(ctk.CTkToplevel):
                             master.changeBattlerListInfo(True, battle_info[1])
                         else:
                             master.changeBattlerListInfo(False, battle_info[1])
-                case "Row Attack":
-                    attacker = master.findBattlerFromAll(self.attacker_menu.get())
-                    if self.def_team_var.get() == "Team A":
-                        defenders = master.getBattlersInList(True)
-                    else:
-                        defenders = master.getBattlersInList(False)
+                    case "Row Attack":
+                        temp_mp_cost = self.mp_cost
+                        attacker = master.findBattlerFromAll(self.attacker_menu.get())
+                        if self.def_team_var.get() == "Team A":
+                            defenders = master.getBattlersInList(True)
+                        else:
+                            defenders = master.getBattlersInList(False)
 
-                    if attacker.mp < self.mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
-                        messagebox.showerror("Error", "Error. MP too low.")
-                    else:
-                        battle_info = bu.rowAttack(attacker, defenders, b_settings, phys_magic_bool(), elem_int(), severity_int(), fm_bool(), self.mp_cost)
+                        if attacker.mp < self.mp_cost:
+                            if self.mp_limit_var.get() == " MP Requirement Enforced ":
+                                messagebox.showerror("Error", "Error. MP too low.")
+                                self.destroy()
+                            else:
+                                temp_mp_cost = 0
+                        
+                        battle_info = bu.rowAttack(attacker, defenders, b_settings, phys_magic_bool(), elem_int(), severity_int(), fm_bool(), temp_mp_cost, atk_mtp, agi_mtp, crt_mtp)
                         master.log_console.configure(text=battle_info[2])
 
                         master.changeBattlerInfoFromAll(self.attacker_menu.get(), battle_info[0])
@@ -1356,8 +1412,11 @@ class AttackWindow(ctk.CTkToplevel):
                         else:
                             master.changeBattlerListInfo(False, battle_info[1])
 
-            master.undo_redo_stack.addToUndoList()         
-            self.destroy()
+                master.undo_redo_stack.addToUndoList()         
+                self.destroy()
+            except ValueError:
+                messagebox.showerror("Error", "Error, the multiplier values must be float values.")
+                self.destroy()
 
         battler_values = master.getAllBattlerLabels()
 
@@ -1403,11 +1462,29 @@ class AttackWindow(ctk.CTkToplevel):
         self.mp_limit_var = ctk.StringVar(value=" MP Requirement Enforced ")
         self.mp_limit_switch = ctk.CTkSwitch(master=self, text=" MP Requirement Enforced ", command=lambda: mp_limit(), variable=self.mp_limit_var, onvalue=" MP Requirement Enforced ", offvalue="MP Requirement Unenforced")
 
+        self.atk_mtp_lbl = ctk.CTkLabel(master=self, text="Attack Multiplier")
+        self.atk_mtp_lbl.grid(row=3, column=0, padx=10, pady=10, sticky="e")
+
+        self.atk_mtp_entry = ctk.CTkEntry(master=self, placeholder_text="1.0")
+        self.atk_mtp_entry.grid(row=3, column=1, padx=10, pady=10, sticky="w")
+
+        self.agi_mtp_lbl = ctk.CTkLabel(master=self, text="Agility Multiplier")
+        self.agi_mtp_lbl.grid(row=3, column=2, padx=10, pady=10, sticky="e")
+
+        self.agi_mtp_entry = ctk.CTkEntry(master=self, placeholder_text="1.0")
+        self.agi_mtp_entry.grid(row=3, column=3, columnspan=2, padx=10, pady=10, sticky="w")
+
+        self.crt_mtp_lbl = ctk.CTkLabel(master=self, text="Crit Rate Multiplier")
+        self.crt_mtp_lbl.grid(row=3, column=5, padx=10, pady=10, sticky="e")
+
+        self.crt_mtp_entry = ctk.CTkEntry(master=self, placeholder_text="1.0")
+        self.crt_mtp_entry.grid(row=3, column=6, padx=10, pady=10, sticky="w")
+
         self.mp_cost_lbl = ctk.CTkLabel(master=self, text="MP Cost: 0")
-        self.mp_cost_lbl.grid(row=3, column=1, padx=10, pady=10, sticky="s")
+        self.mp_cost_lbl.grid(row=4, column=1, padx=10, pady=10, sticky="s")
 
         self.atk_btn = ctk.CTkButton(master=self, text="Confirm", command=perform_attack)
-        self.atk_btn.grid(row=3, column=3, columnspan=2, padx=10, pady=10, sticky="s")
+        self.atk_btn.grid(row=4, column=3, columnspan=2, padx=10, pady=10, sticky="s")
 
         self.severity_menu_var = ctk.StringVar(value="Light")
         self.severity_lbl = ctk.CTkLabel(master=self, text="Attack Severity:")
@@ -1507,6 +1584,13 @@ class HealWindow(ctk.CTkToplevel):
                 return
 
             caster = master.findBattlerFromAll(self.caster_menu.get())
+
+            if caster.mp < self.mp_cost.get():
+                if self.mp_limit_var.get() == " MP Requirement Enforced ":
+                    messagebox.showerror("Error", "Error. MP too low.")
+                    return
+                else:
+                    self.mp_cost.set(0)
 
             if self.heal_all_var.get() == "Heal One":
                 if self.target_menu.get() == "":
@@ -1710,7 +1794,7 @@ class BuffWindow(ctk.CTkToplevel):
                     print("Error in stat to int", stat_type)
                     return 0
 
-            mp_cost = self.mp_cost.get()
+            temp_mp_cost = self.mp_cost.get()
 
             if self.caster_menu.get() == "":
                 if self.target_all_var.get() == "One" and self.target_menu.get() == "":
@@ -1722,9 +1806,12 @@ class BuffWindow(ctk.CTkToplevel):
 
             caster = master.findBattlerFromAll(self.caster_menu.get())
 
-            if caster.mp < mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
-                messagebox.showerror("Error", "MP too low.")
-                return
+            if caster.mp < temp_mp_cost:
+                if self.mp_limit_var.get() == " MP Requirement Enforced ":
+                    messagebox.showerror("Error", "MP too low.")
+                    return
+                else:
+                    temp_mp_cost = 0
 
             buff_level = self.buff_lvl_var.get()
 
@@ -1735,19 +1822,19 @@ class BuffWindow(ctk.CTkToplevel):
                     case "1":
                         buff_type_int = stat_to_int(self.stat_1_type_menu.get())
                         
-                        info = bu.buffOneStatOne(caster, target, buff_type_int, buff_level, mp_cost)
+                        info = bu.buffOneStatOne(caster, target, buff_type_int, buff_level, temp_mp_cost)
                     case "2":
                         buff_type_int_1 = stat_to_int(self.stat_1_type_menu.get())
                         buff_type_int_2 = stat_to_int(self.stat_2_type_menu.get())
                                                 
-                        info = bu.buffTwoStatOne(caster, target, buff_type_int_1, buff_type_int_2, buff_level, mp_cost)
+                        info = bu.buffTwoStatOne(caster, target, buff_type_int_1, buff_type_int_2, buff_level, temp_mp_cost)
                     case "3":
-                        info = bu.buffAllStatOne(caster, target, buff_level, mp_cost)
+                        info = bu.buffAllStatOne(caster, target, buff_level, temp_mp_cost)
                     case "Reset":
                         if self.reset_buff_var.get() == "Buffs":
-                            info = bu.resetBuffsOne(caster, target, mp_cost)
+                            info = bu.resetBuffsOne(caster, target, temp_mp_cost)
                         else:
-                            info = bu.resetDebuffsOne(caster, target, mp_cost)
+                            info = bu.resetDebuffsOne(caster, target, temp_mp_cost)
 
                 master.changeBattlerInfoFromAll(self.caster_menu.get(), info[0])
                 master.changeBattlerInfoFromAll(self.target_menu.get(), info[1])
@@ -1760,19 +1847,19 @@ class BuffWindow(ctk.CTkToplevel):
                     case "1":
                         buff_type_int = stat_to_int(self.stat_1_type_menu.get())
                         
-                        info = bu.buffOneStatAll(caster, targets, buff_type_int, buff_level, mp_cost)
+                        info = bu.buffOneStatAll(caster, targets, buff_type_int, buff_level, temp_mp_cost)
                     case "2":
                         buff_type_int_1 = stat_to_int(self.stat_1_type_menu.get())
                         buff_type_int_2 = stat_to_int(self.stat_2_type_menu.get())
                                                 
-                        info = bu.buffTwoStatAll(caster, targets, buff_type_int_1, buff_type_int_2, buff_level, mp_cost)
+                        info = bu.buffTwoStatAll(caster, targets, buff_type_int_1, buff_type_int_2, buff_level, temp_mp_cost)
                     case "3":
-                        info = bu.buffAllStatAll(caster, targets, buff_level, mp_cost)
+                        info = bu.buffAllStatAll(caster, targets, buff_level, temp_mp_cost)
                     case "Reset":
                         if self.reset_buff_var.get() == "Buffs":
-                            info = bu.resetBuffsAll(caster, targets, mp_cost)
+                            info = bu.resetBuffsAll(caster, targets, temp_mp_cost)
                         else:
-                            info = bu.resetDebuffsAll(caster, targets, mp_cost)
+                            info = bu.resetDebuffsAll(caster, targets, temp_mp_cost)
 
                 master.changeBattlerInfoFromAll(self.caster_menu.get(), info[0])
                 if self.target_all_var.get() == "Team A": master.changeBattlerListInfo(True, info[1])
@@ -1912,7 +1999,7 @@ class StatusWindow(ctk.CTkToplevel):
                 else:
                     print("Error in status menu, command callback, chance_to_float.")
                     return 0.3
-            mp_cost = self.mp_cost.get()
+            temp_mp_cost = self.mp_cost.get()
             
             if self.caster_menu.get() == "":
                 if self.target_one_var.get() == "One" and self.target_menu.get() == "":
@@ -1924,17 +2011,20 @@ class StatusWindow(ctk.CTkToplevel):
 
             caster = master.findBattlerFromAll(self.caster_menu.get())
 
-            if caster.mp < mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
-                messagebox.showerror("Error", "MP too low.")
-                return
+            if caster.mp < temp_mp_cost:
+                if self.mp_limit_var.get() == " MP Requirement Enforced ":
+                    messagebox.showerror("Error", "MP too low.")
+                    return
+                else:
+                    temp_mp_cost = 0
 
             if self.target_one_var.get() == "Target One":
                 target = master.findBattlerFromAll(self.target_menu.get())
 
                 if self.status_chance_var.get() == "Cure":
-                    info = bu.cureAilmentOne(caster, target, self.status_menu.get(), mp_cost)
+                    info = bu.cureAilmentOne(caster, target, self.status_menu.get(), temp_mp_cost)
                 else:
-                    info = bu.ailmentInflictOne(caster, target, b_settings, self.status_menu.get(), chance_to_float(), mp_cost)
+                    info = bu.ailmentInflictOne(caster, target, b_settings, self.status_menu.get(), chance_to_float(), temp_mp_cost)
 
                 master.changeBattlerInfoFromAll(self.target_menu.get(), info[1])
             else:
@@ -1944,9 +2034,9 @@ class StatusWindow(ctk.CTkToplevel):
                 targets = master.getBattlersInList(is_a)
 
                 if self.status_chance_var.get() == "Cure":
-                    info = bu.cureAilmentAll(caster, targets, self.status_menu.get(), mp_cost)
+                    info = bu.cureAilmentAll(caster, targets, self.status_menu.get(), temp_mp_cost)
                 else:
-                    info = bu.ailmentInflictAll(caster, targets, b_settings, self.status_menu.get(), chance_to_float(), mp_cost)
+                    info = bu.ailmentInflictAll(caster, targets, b_settings, self.status_menu.get(), chance_to_float(), temp_mp_cost)
 
                 master.changeBattlerListInfo(is_a, info[1])   
             
@@ -2045,7 +2135,7 @@ class MiscWindow(ctk.CTkToplevel):
             self.mp_cost_lbl.configure(text=s)
         
         def confirm_button():
-            mp_cost = self.mp_cost.get()
+            temp_mp_cost = self.mp_cost.get()
             
             if self.caster_menu.get() == "":
                 messagebox.showerror("Error", "Please select a caster.")
@@ -2053,9 +2143,12 @@ class MiscWindow(ctk.CTkToplevel):
 
             caster = master.findBattlerFromAll(self.caster_menu.get())
             
-            if caster.mp < mp_cost and self.mp_limit_var.get() == " MP Requirement Enforced ":
-                messagebox.showerror("Error", "MP too low.")
-                return
+            if caster.mp < temp_mp_cost:
+                if self.mp_limit_var.get() == " MP Requirement Enforced ":
+                    messagebox.showerror("Error", "MP too low.")
+                    return
+                else:
+                    temp_mp_cost = 0
 
             match self.choice_var.get():
                 case "Scan":
@@ -2064,7 +2157,7 @@ class MiscWindow(ctk.CTkToplevel):
                     else:
                         targets = master.getBattlersInList(False)
 
-                    info = bu.targetScan(caster, targets, mp_cost)
+                    info = bu.targetScan(caster, targets, temp_mp_cost)
                     master.changeBattlerInfoFromAll(self.caster_menu.get(), info[0])
                     master.log_console.configure(text=info[1])
 
@@ -2229,8 +2322,8 @@ class DebugWindow(ctk.CTkToplevel):
                                         target.hp += int_value
                                         s += target.name + " gained " + str(int_value) + " HP."
                                     else:
-                                        percent_value = percent_start_value + 1
-                                        target.hp *= percent_value
+                                        percent_value = percent_start_value
+                                        target.hp += percent_value * target.max_hp
                                         target.hp = math.floor(target.hp)
                                         s += target.name + " gained " + str(int_value) + "% HP."
                                 elif operation == "-":
@@ -2238,8 +2331,8 @@ class DebugWindow(ctk.CTkToplevel):
                                         target.hp -= int_value
                                         s += target.name + " lost " + str(int_value) + " HP."
                                     else:
-                                        percent_value = 1 - percent_start_value
-                                        target.hp *= percent_value
+                                        percent_value = percent_start_value
+                                        target.hp -= percent_value * target.max_hp
                                         target.hp = math.floor(target.hp)
                                         s += target.name + " lost " + str(int_value) + "% HP."
                                 else:
@@ -2248,7 +2341,7 @@ class DebugWindow(ctk.CTkToplevel):
                                         s += target.name + " has " + str(int_value) + " HP."
                                     else:
                                         percent_value = percent_start_value
-                                        target.hp *= percent_value
+                                        target.hp = percent_value * target.max_hp
                                         target.hp = math.floor(target.hp)
                                         s += target.name + " has " + str(int_value) + "% HP."
                             elif type == "MP":
@@ -2257,8 +2350,8 @@ class DebugWindow(ctk.CTkToplevel):
                                         target.mp += int_value
                                         s += target.name + " gained " + str(int_value) + " MP."
                                     else:
-                                        percent_value = percent_start_value + 1
-                                        target.mp *= percent_value
+                                        percent_value = percent_start_value
+                                        target.mp += percent_value * target.max_mp
                                         target.mp = math.floor(target.mp)
                                         s += target.name + " gained " + str(int_value) + "% MP."
                                 elif operation == "-":
@@ -2266,8 +2359,8 @@ class DebugWindow(ctk.CTkToplevel):
                                         target.mp -= int_value
                                         s += target.name + " lost " + str(int_value) + " MP."
                                     else:
-                                        percent_value = 1 - percent_start_value
-                                        target.mp *= percent_value
+                                        percent_value = percent_start_value
+                                        target.mp -= percent_value * target.max_mp
                                         target.mp = math.floor(target.mp)
                                         s += target.name + " lost " + str(int_value) + "% MP."
                                 else:
@@ -2276,7 +2369,7 @@ class DebugWindow(ctk.CTkToplevel):
                                         s += target.name + " has " + str(int_value) + " MP."
                                     else:
                                         percent_value = percent_start_value
-                                        target.mp *= percent_value
+                                        target.mp = percent_value * target.max_mp
                                         target.mp = math.floor(target.mp)
                                         s += target.name + " has " + str(int_value) + "% MP."
                             elif type == "MaxHP":

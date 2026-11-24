@@ -53,7 +53,7 @@ class BattleSettings:
         self.set_lst.append(100) #colossal atk 1 mp; 34
 
         self.set_lst.append(15) #attack all mp cost add; 35
-        self.set_lst.append(5) #multiattack mp cost add; 36
+        self.set_lst.append(9) #multiattack mp cost add; 36
         self.set_lst.append(18) #drain/splash attack mp cost add; 37
         self.set_lst.append(12) #row attack mp cost add; 38
 
@@ -89,6 +89,8 @@ class BattleSettings:
         self.set_lst.append(0.5) #ailment chance med; 61
         self.set_lst.append(0.7) #ailment chance high; 62
         self.set_lst.append(3) #ailment chance mp add; 63
+
+        self.set_lst.append(0.75) #multi hit degrade mtp; 64
 
     def getLAtkMtp(self): return self.set_lst[0]
     def getMAtkMtp(self): return self.set_lst[1]
@@ -157,6 +159,7 @@ class BattleSettings:
     def getAilmentChanceM(self): return self.set_lst[61]
     def getAilmentChanceH(self): return self.set_lst[62]
     def getAilmentChanceMpAdd(self): return self.set_lst[63]
+    def getMultiHitDegradeMtp(self): return self.set_lst[64]
 
 class Battler:
     def __init__(self, stats:list):
@@ -227,7 +230,7 @@ class Battler:
 
 #ATTACK METHODS
 #ATTACK INFO
-def attackInfo(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", pm_phys:bool, severity:int, element:int):
+def attackInfo(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", pm_phys:bool, severity:int, element:int, atk_multiplier:float, agi_multiplier:float, crit_multiplier:float):
     def damageCalc():
         def buffVal(buff_val:int):
             if buff_val==1: return b_settings.getBuff1Mtp()
@@ -287,7 +290,7 @@ def attackInfo(attacker:"Battler", defender:"Battler", b_settings:"BattleSetting
                 case 8: return elemDef(defender.other_resist)
                 case _: return 1.0
 
-        buffed_attack = atkPMVal() * buffVal(attacker.attack_level) * chargeVal()
+        buffed_attack = atkPMVal() * buffVal(attacker.attack_level) * chargeVal() * atk_multiplier
         buffed_defense = defender.defense * buffVal(defender.defense_level) * guardVal()
         dmg = buffed_attack * (40/(40+buffed_defense)) * b_settings.getAtkConst() * formAtkVal() * formDefVal() * sevTypeVal() * elemResVal()
 
@@ -313,7 +316,7 @@ def attackInfo(attacker:"Battler", defender:"Battler", b_settings:"BattleSetting
             elif buff_val==-3: return b_settings.getBuffn3Mtp()
             else: return 1.0
 
-        atk_agi = attacker.agility * buffVal(attacker.agility_level)
+        atk_agi = attacker.agility * buffVal(attacker.agility_level) * agi_multiplier
         def_agi = defender.agility * buffVal(defender.agility_level)
         raw_probability = (atk_agi/def_agi) * b_settings.getDdgConst()
         dodge_num = random.uniform(0.0, 1.0)
@@ -329,7 +332,7 @@ def attackInfo(attacker:"Battler", defender:"Battler", b_settings:"BattleSetting
         else: return False
 
     def critCalc():
-        crit_probability = (attacker.luck/defender.luck) * b_settings.getCrtConst()
+        crit_probability = (attacker.luck/defender.luck) * b_settings.getCrtConst() * crit_multiplier
         crit_num = random.uniform(0.0, 1.0)
 
         if defender.status == "Frostbite":
@@ -496,8 +499,8 @@ def norResAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSetti
     return [attacker, defender, s]
 
 #ATTACKS
-def basicAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", pm_phys:bool, element:int):
-    info = attackInfo(attacker, defender, b_settings, pm_phys, 0, element)
+def basicAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", pm_phys:bool, element:int, atk_multiplier:float, agi_multiplier:float, crit_multiplier:float):
+    info = attackInfo(attacker, defender, b_settings, pm_phys, 0, element, atk_multiplier, agi_multiplier, crit_multiplier)
     dmg = info[0]
     does_dodge = info[1]
     does_crit = info[2]
@@ -524,8 +527,8 @@ def basicAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettin
 
     return battle_info
 
-def powerAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", pm_phys:bool, element:int, severity:int, mp_cost:int, force_hit:bool, force_dodge:bool):
-    info = attackInfo(attacker, defender, b_settings, pm_phys, severity, element)
+def powerAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", pm_phys:bool, element:int, severity:int, mp_cost:int, force_hit:bool, force_dodge:bool, atk_multiplier:float, agi_multiplier:float, crit_multiplier:float):
+    info = attackInfo(attacker, defender, b_settings, pm_phys, severity, element, atk_multiplier, agi_multiplier, crit_multiplier)
     dmg = info[0]
     does_dodge = info[1]
     does_crit = info[2]
@@ -558,21 +561,21 @@ def powerAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettin
 
     return battle_info
 
-def attackAll(attacker:"Battler", defenders:list["Battler"], b_settings:"BattleSettings", pm_phys:bool, element:int, severity:int, mp_cost:int):
+def attackAll(attacker:"Battler", defenders:list["Battler"], b_settings:"BattleSettings", pm_phys:bool, element:int, severity:int, mp_cost:int, atk_multiplier:float, agi_multiplier:float, crit_multiplier:float):
     attacker.mp -= mp_cost
     s = ""
     new_defenders = []
 
     for defender in defenders:
-        temp_info = powerAttack(attacker, defender, b_settings, pm_phys, element, severity, 0, False, False)
+        temp_info = powerAttack(attacker, defender, b_settings, pm_phys, element, severity, 0, False, False, atk_multiplier, agi_multiplier, crit_multiplier)
         attacker = temp_info[0]
         new_defenders.append(temp_info[1])
         s += temp_info[2] + "\n"
 
     return [attacker, new_defenders, s]
 
-def multiAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", pm_phys:bool, element:int, severity:int, attack_amount:int, mp_cost:int):
-    info = attackInfo(attacker, defender, b_settings, pm_phys, severity, element)
+def multiAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", pm_phys:bool, element:int, severity:int, attack_amount:int, mp_cost:int, atk_multiplier:float, agi_multiplier:float, crit_multiplier:float):
+    info = attackInfo(attacker, defender, b_settings, pm_phys, severity, element, atk_multiplier, agi_multiplier, crit_multiplier)
     dmg = info[0]
     does_dodge = info[1]
     does_crit = info[2]
@@ -601,12 +604,13 @@ def multiAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettin
 
         attacker = battle_info[0]
         defender = battle_info[1]
+        dmg = math.floor(dmg * b_settings.getMultiHitDegradeMtp())
         s += battle_info[2] + "\n"
 
     return [attacker, defender, s]
 
-def drainAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", pm_phys:bool, element:int, severity:int, mp_cost:int):
-    info = attackInfo(attacker, defender, b_settings, pm_phys, severity, element)
+def drainAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", pm_phys:bool, element:int, severity:int, mp_cost:int, atk_multiplier:float, agi_multiplier:float, crit_multiplier:float):
+    info = attackInfo(attacker, defender, b_settings, pm_phys, severity, element, atk_multiplier, agi_multiplier, crit_multiplier)
     dmg = info[0]
     does_dodge = info[1]
     does_crit = info[2]
@@ -645,10 +649,10 @@ def drainAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettin
 
     return battle_info
 
-def ailmentAttackOne(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", pm_phys:bool, element:int, severity:int, ailment:str, ailment_chance:float, mp_cost:int):
+def ailmentAttackOne(attacker:"Battler", defender:"Battler", b_settings:"BattleSettings", pm_phys:bool, element:int, severity:int, ailment:str, ailment_chance:float, mp_cost:int, atk_multiplier:float, agi_multiplier:float, crit_multiplier:float):
     s = ""
     
-    info = powerAttack(attacker, defender, b_settings, pm_phys, element, severity, mp_cost, False, False)
+    info = powerAttack(attacker, defender, b_settings, pm_phys, element, severity, mp_cost, False, False, atk_multiplier, agi_multiplier, crit_multiplier)
 
     new_info = ailmentInflictOne(info[0], info[1], b_settings, ailment, ailment_chance, 0)
 
@@ -656,45 +660,45 @@ def ailmentAttackOne(attacker:"Battler", defender:"Battler", b_settings:"BattleS
 
     return [new_info[0], new_info[1], s]
 
-def ailmentAttackAll(attacker:"Battler", defenders:list["Battler"], b_settings:"BattleSettings", pm_phys:bool, element:int, severity:int, ailment:str, ailment_chance:float, mp_cost:int):
+def ailmentAttackAll(attacker:"Battler", defenders:list["Battler"], b_settings:"BattleSettings", pm_phys:bool, element:int, severity:int, ailment:str, ailment_chance:float, mp_cost:int, atk_multiplier:float, agi_multiplier:float, crit_multiplier:float):
     attacker.mp -= mp_cost
     s = ""
     new_defenders = []
 
     for defender in defenders:
-        temp_info = ailmentAttackOne(attacker, defender, b_settings, pm_phys, element, severity, ailment, ailment_chance, 0)
+        temp_info = ailmentAttackOne(attacker, defender, b_settings, pm_phys, element, severity, ailment, ailment_chance, 0, atk_multiplier, agi_multiplier, crit_multiplier)
         attacker = temp_info[0]
         new_defenders.append(temp_info[1])
         s += temp_info[2] + "\n"
 
     return [attacker, new_defenders, s]
 
-def splashAttack(attacker:"Battler", primary_defender_tag:str, defenders:list["Battler"], b_settings:"BattleSettings", pm_phys:bool, element:int, splash_element:int, severity:int, mp_cost:int):
+def splashAttack(attacker:"Battler", primary_defender_tag:str, defenders:list["Battler"], b_settings:"BattleSettings", pm_phys:bool, element:int, splash_element:int, severity:int, mp_cost:int, atk_multiplier:float, agi_multiplier:float, crit_multiplier:float):
     attacker.mp -= mp_cost
     s = ""
     new_defenders = []
 
     for defender in defenders:
         if defender.label == primary_defender_tag:
-            temp_info = powerAttack(attacker, defender, b_settings, pm_phys, element, severity, 0, False, False)
+            temp_info = powerAttack(attacker, defender, b_settings, pm_phys, element, severity, 0, False, False, atk_multiplier, agi_multiplier, crit_multiplier)
         else:
-            temp_info = basicAttack(attacker, defender, b_settings, False, splash_element)
+            temp_info = basicAttack(attacker, defender, b_settings, False, splash_element, atk_multiplier, agi_multiplier, crit_multiplier)
         attacker = temp_info[0]
         new_defenders.append(temp_info[1])
         s += temp_info[2] + "\n"
 
     return [attacker, new_defenders, s]
 
-def rowAttack(attacker:"Battler", defenders:list["Battler"], b_settings:"BattleSettings", pm_phys:bool, element:int, severity:int, fb_front:bool, mp_cost:int):
+def rowAttack(attacker:"Battler", defenders:list["Battler"], b_settings:"BattleSettings", pm_phys:bool, element:int, severity:int, fb_front:bool, mp_cost:int, atk_multiplier:float, agi_multiplier:float, crit_multiplier:float):
     attacker.mp -= mp_cost
     s = ""
     new_defenders = []
 
     for defender in defenders:
         if defender.formation == fb_front:
-            temp_info = powerAttack(attacker, defender, b_settings, pm_phys, element, severity, 0, True, False)
+            temp_info = powerAttack(attacker, defender, b_settings, pm_phys, element, severity, 0, True, False, atk_multiplier, agi_multiplier, crit_multiplier)
         else:
-            temp_info = powerAttack(attacker, defender, b_settings, pm_phys, element, severity, 0, False, True)
+            temp_info = powerAttack(attacker, defender, b_settings, pm_phys, element, severity, 0, False, True, atk_multiplier, agi_multiplier, crit_multiplier)
         attacker = temp_info[0]
         new_defenders.append(temp_info[1])
         s += temp_info[2] + "\n"
