@@ -8,10 +8,10 @@ class BattleSettings:
         self.set_lst = []
 
         self.set_lst.append(1.3) #light attack multiplier; 0
-        self.set_lst.append(1.9) #medium attack multiplier; 1
-        self.set_lst.append(2.6) #heavy attack multiplier; 2
-        self.set_lst.append(3.2) #severe attack multiplier; 3
-        self.set_lst.append(3.6) #colossal attack multiplier; 4
+        self.set_lst.append(2.0) #medium attack multiplier; 1
+        self.set_lst.append(2.8) #heavy attack multiplier; 2
+        self.set_lst.append(4.0) #severe attack multiplier; 3
+        self.set_lst.append(5.3) #colossal attack multiplier; 4
 
         self.set_lst.append(1.5) #resistance WEAK multiplier; 5
         self.set_lst.append(0.5) #resistance RESIST multiplier; 6
@@ -53,7 +53,7 @@ class BattleSettings:
         self.set_lst.append(100) #colossal atk 1 mp; 34
 
         self.set_lst.append(15) #attack all mp cost add; 35
-        self.set_lst.append(9) #multiattack mp cost add; 36
+        self.set_lst.append(8) #multiattack mp cost add; 36
         self.set_lst.append(18) #drain/splash attack mp cost add; 37
         self.set_lst.append(12) #row attack mp cost add; 38
 
@@ -90,7 +90,9 @@ class BattleSettings:
         self.set_lst.append(0.7) #ailment chance high; 62
         self.set_lst.append(3) #ailment chance mp add; 63
 
-        self.set_lst.append(0.75) #multi hit degrade mtp; 64
+        self.set_lst.append(0.71) #multi hit degrade mtp; 64
+
+        self.set_lst.append(0.12) #attack variance; 65
 
     def getLAtkMtp(self): return self.set_lst[0]
     def getMAtkMtp(self): return self.set_lst[1]
@@ -160,6 +162,8 @@ class BattleSettings:
     def getAilmentChanceH(self): return self.set_lst[62]
     def getAilmentChanceMpAdd(self): return self.set_lst[63]
     def getMultiHitDegradeMtp(self): return self.set_lst[64]
+
+    def getAttackVariance(self): return self.set_lst[65]
 
 class Battler:
     def __init__(self, stats:list):
@@ -374,7 +378,7 @@ def severityToString(severity:int):
         case 3: return "heavy "
         case 4: return "severe "
         case 5: return "colossal "
-        case _: return " "
+        case _: return ""
 
 #ATTACK INTERACTIONS
 def burnDmg(defender:"Battler", b_settings:"BattleSettings"):
@@ -506,6 +510,11 @@ def basicAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettin
     does_crit = info[2]
     element_resistance = info[3]
 
+    low_bound = 1 - b_settings.getAttackVariance()
+    high_bound = 1 + b_settings.getAttackVariance()
+    attack_mtp = random.uniform(low_bound, high_bound)
+    dmg = math.floor(dmg * attack_mtp)
+
     #0-Normal, 1-Weak, 2-Resists, 3-Null, 4-Reflect, 5-Drain
 
     if(element_resistance==5):
@@ -533,6 +542,11 @@ def powerAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettin
     does_dodge = info[1]
     does_crit = info[2]
     element_resistance = info[3]
+
+    low_bound = 1 - b_settings.getAttackVariance()
+    high_bound = 1 + b_settings.getAttackVariance()
+    attack_mtp = random.uniform(low_bound, high_bound)
+    dmg = math.floor(dmg * attack_mtp)
 
     #Used for row attack
     if force_hit == True: does_dodge = False
@@ -585,6 +599,12 @@ def multiAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettin
     s = ""
 
     for i in range(attack_amount):
+        low_bound = 1 - b_settings.getAttackVariance()
+        high_bound = 1 + b_settings.getAttackVariance()
+        attack_mtp = random.uniform(low_bound, high_bound)
+        #print("Low_High", low_bound, high_bound, "Damage", math.floor(dmg))
+        dmg = math.floor(dmg * attack_mtp)
+
         if(element_resistance==5):
             battle_info = drainResAttack(attacker, defender, b_settings, element, dmg)
         elif(element_resistance==4):
@@ -618,6 +638,11 @@ def drainAttack(attacker:"Battler", defender:"Battler", b_settings:"BattleSettin
 
     attacker.mp -= mp_cost
     does_drain = False
+
+    low_bound = 1 - b_settings.getAttackVariance()
+    high_bound = 1 + b_settings.getAttackVariance()
+    attack_mtp = random.uniform(low_bound, high_bound)
+    dmg = math.floor(dmg * attack_mtp)
 
     #0-Normal, 1-Weak, 2-Resists, 3-Null, 4-Reflect, 5-Drain
 

@@ -411,6 +411,12 @@ class OptionWindow(ctk.CTkToplevel):
         self.multi_degrade_mtp_entry.grid(row=1, column=5, padx=10, pady=10, sticky="nsew")
         self.entries.append(self.multi_degrade_mtp_entry)
 
+        self.attack_variance_label = ctk.CTkLabel(master=self.scroll_frame_1, text="Attack Variance Percent:")
+        self.attack_variance_label.grid(row=2, column=4, padx=10, pady=10, sticky="nsew")
+        self.attack_variance_entry = ctk.CTkEntry(master=self.scroll_frame_1, placeholder_text=str(b_settings.getAttackVariance()))
+        self.attack_variance_entry.grid(row=2, column=5, padx=10, pady=10, sticky="nsew")
+        self.entries.append(self.attack_variance_entry)
+
         def conf_changes(): 
             any_value_updated = False
             try:               
@@ -1259,6 +1265,7 @@ class AttackWindow(ctk.CTkToplevel):
                             if self.mp_limit_var.get() == " MP Requirement Enforced ":
                                 messagebox.showerror("Error", "Error. MP too low.")
                                 self.destroy()
+                                return
                             else:
                                 temp_mp_cost = 0
                         
@@ -1279,6 +1286,7 @@ class AttackWindow(ctk.CTkToplevel):
                             if self.mp_limit_var.get() == " MP Requirement Enforced ":
                                 messagebox.showerror("Error", "Error. MP too low.")
                                 self.destroy()
+                                return
                             else:
                                 temp_mp_cost = 0
                         
@@ -1299,6 +1307,7 @@ class AttackWindow(ctk.CTkToplevel):
                             if self.mp_limit_var.get() == " MP Requirement Enforced ":
                                 messagebox.showerror("Error", "Error. MP too low.")
                                 self.destroy()
+                                return
                             else:
                                 temp_mp_cost = 0
                         
@@ -1316,6 +1325,7 @@ class AttackWindow(ctk.CTkToplevel):
                             if self.mp_limit_var.get() == " MP Requirement Enforced ":
                                 messagebox.showerror("Error", "Error. MP too low.")
                                 self.destroy()
+                                return
                             else:
                                 temp_mp_cost = 0
                         
@@ -1336,6 +1346,7 @@ class AttackWindow(ctk.CTkToplevel):
                             if self.mp_limit_var.get() == " MP Requirement Enforced ":
                                 messagebox.showerror("Error", "Error. MP too low.")
                                 self.destroy()
+                                return
                             else:
                                 temp_mp_cost = 0
                         
@@ -1356,6 +1367,7 @@ class AttackWindow(ctk.CTkToplevel):
                             if self.mp_limit_var.get() == " MP Requirement Enforced ":
                                 messagebox.showerror("Error", "Error. MP too low.")
                                 self.destroy()
+                                return
                             else:
                                 temp_mp_cost = 0
                         
@@ -1377,6 +1389,7 @@ class AttackWindow(ctk.CTkToplevel):
                             if self.mp_limit_var.get() == " MP Requirement Enforced ":
                                 messagebox.showerror("Error", "Error. MP too low.")
                                 self.destroy()
+                                return
                             else:
                                 temp_mp_cost = 0
                         
@@ -1400,6 +1413,7 @@ class AttackWindow(ctk.CTkToplevel):
                             if self.mp_limit_var.get() == " MP Requirement Enforced ":
                                 messagebox.showerror("Error", "Error. MP too low.")
                                 self.destroy()
+                                return
                             else:
                                 temp_mp_cost = 0
                         
