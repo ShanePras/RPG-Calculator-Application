@@ -26,7 +26,7 @@ Status: \
 - Confusion: 50% chance to ignore commands (manual)
 - Forget: Restricted to basic attacks, guards, or items (manual)
 - Rage: Forced basic attacks (manual). Increased damaged by 20%, decrease defense by 60% (auto)
-- Fear: May ignore commands (manual), agility reduced by 40% (auto). 
+- Fear: May ignore commands (manual), agility reduced by 40% (auto). \
 Current Goals: \
 - Finish Element Break/Wall Menu
 - Add a character creator window to help with imports
